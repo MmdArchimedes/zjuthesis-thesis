@@ -1,0 +1,59 @@
+<mxfile host="app.diagrams.net" modified="2026-04-10T00:00:00.000Z" agent="Cursor" version="24.7.17">
+  <diagram id="mm-fusion-flow" name="多模态融合与冲突消解流程">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="v1" value="手势 / 语音 / 射线 / LLM&#xa;原始事件输入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="160" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="v2" value="事件标准化&#xa;E = { type, ts, conf, src, payload }" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="240" y="220" width="200" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="v3" value="通道内有效性筛选&#xa;（手势 / 语音 / 射线）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="480" y="220" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="v4" value="跨通道冲突仲裁&#xa;（优先级 + 时间戳 + 置信度）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="220" width="200" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="v5" value="是否通过&#xa;一致性校验" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="200" width="150" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="v6" value="写入统一事件队列&#xa;串行提交状态" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f4e6;strokeColor=#0d9488;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="220" width="180" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="v7" value="保守拒绝&#xa;轻提示反馈" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="360" width="150" height="56" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;strokeWidth=1.5;" edge="1" parent="1" source="v1" target="v2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeWidth=1.5;" edge="1" parent="1" source="v2" target="v3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeWidth=1.5;" edge="1" parent="1" source="v3" target="v4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;strokeWidth=1.5;" edge="1" parent="1" source="v4" target="v5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="是" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=11;" edge="1" parent="1" source="v5" target="v6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="否" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=11;" edge="1" parent="1" source="v5" target="v7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="等待下一事件窗" style="endArrow=block;html=1;strokeWidth=1.5;dashed=1;dashPattern=8 8;fontSize=11;fontColor=#666666;" edge="1" parent="1" source="v7" target="v1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="388"/>
+              <mxPoint x="120" y="284"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

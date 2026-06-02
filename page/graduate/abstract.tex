@@ -1,0 +1,25 @@
+\cleardoublepage
+\chapternonum{摘要}
+
+在”双碳”目标与数字化转型并行推进的背景下，数字经济对能源结构优化的作用机制已成为重要研究议题。针对现有研究”计量分析充分但可视化呈现与交互手段不足”的问题，本文以中国省域数据为对象，重点构建面向经济能源分析的增强现实（Augmented Reality，AR）沉浸式分析系统，形成”多模态交互—沉浸式可视化—计量分析—应用验证”的一体化研究框架。
+
+在系统实现层面，本文围绕 AR 穿戴场景下的自然交互与沉浸式可视化两大核心技术展开。在交互侧，提出基于深度骨骼约束的边沿触发—时间窗离散化手势管线（DBEW--Gesture），以骨骼坐标建模、几何判据分型与边沿触发—冷却窗—稳定帧三重门控实现低误触、低连发的高频短指令交互；构建离线自动语音识别与大语言模型（Large Language Model，LLM）约束式增强的语音链路，通过词表约束、模板约束与拒识机制保障指令准确性；设计通道内稳定化—跨通道时间窗仲裁—队列串行提交（TSTQ--Fusion）的多模态融合机制，实现手势、射线、语音与 LLM 语义层四通道协同。在可视化侧，提出状态驱动的条件刷新多视图可视化管线（SDCR--Vis），以统一状态向量驱动省域地图、时间轴、结果面板与机制图的协同刷新，并通过归一化—通道映射—状态提交的形式化公式保证计量证据与空间呈现同源可控。系统基于 Unity 与 Rokid AR Studio（Station Pro + Max Pro）原型实现，经手势识别（宏平均 F1=0.912）、语音增强（词错误率由18.4\%降至7.2\%）、多模态仲裁（正确率96.4\%）、可视化对比实验（任务时间缩短35\%--45\%）与端侧性能监测（30--45 FPS）的定量验证。
+
+在应用验证层面，本文将上述系统应用于省域数字经济与能源结构关系的分析场景。基于2014--2022年中国30个省份面板数据，以熵值法与熵权—决策树融合方法构建数字经济发展水平综合指数与能源结构优化综合指数，经面板固定效应基准回归、中介效应检验与区域异质性分析形成结构化数据资产。以一次完整的沉浸式分析会话串联”全国格局把握—计量证据核对—分区差异讨论—省域下钻阅读”全流程，验证了系统在实际分析任务中的可用性。
+
+研究表明，本文提出的技术方案能够有效打通”计量结论—空间表达—智能解读”的链路，为经济能源领域研究成果的沉浸式呈现与决策支持提供了可复现、可部署的系统方案。
+
+\textbf{关键词：}增强现实；多模态交互；大语言模型；沉浸式可视化；数字经济；能源结构优化
+
+\cleardoublepage
+\chapternonum{Abstract}
+
+Against the dual background of China's carbon neutrality goals and digital transformation, understanding how the digital economy affects energy structure optimization has become a key research topic. To address the gap between rigorous econometric analysis and limited visualization and interaction capabilities, this thesis focuses on building an Augmented Reality (AR) immersive analytics system for economic-energy analysis, forming an integrated framework of "multimodal interaction -- immersive visualization -- econometric analysis -- application validation."
+
+At the system implementation level, this thesis addresses two core technical challenges: natural interaction and immersive visualization in wearable AR scenarios. On the interaction side, a depth-skeleton-constrained edge-triggered time-window discretized gesture pipeline (DBEW--Gesture) is proposed, which combines skeletal coordinate modeling, geometric criterion-based classification, and triple-gate control (edge triggering, cooldown window, and stable-frame filtering) to achieve low false-trigger and low burst rates for high-frequency short commands. A speech chain integrating offline Automatic Speech Recognition (ASR) with constrained Large Language Model (LLM) enhancement is built, employing vocabulary constraints, template constraints, and rejection mechanisms to ensure command accuracy. A channel-stabilized, cross-channel time-window arbitration, and queue-sequential submission (TSTQ--Fusion) multimodal fusion mechanism is designed to coordinate gesture, ray-casting, speech, and LLM semantic channels. On the visualization side, a State-driven Conditional Refresh multi-view Visualization pipeline (SDCR--Vis) is proposed, which uses a unified state vector to drive synchronized refreshing of the provincial map, timeline, result panels, and mechanism graph, with formalized normalization--channel mapping--state submission formulas ensuring that econometric evidence and spatial presentation share the same data provenance. The system is prototyped on Unity and Rokid AR Studio (Station Pro + Max Pro), and quantitatively validated through gesture recognition experiments (macro-average F1 = 0.912), speech enhancement comparisons (word error rate reduced from 18.4\% to 7.2\%), multimodal arbitration statistics (96.4\% correctness), visualization comparison experiments (35\%--45\% task time reduction), and on-device performance monitoring (30--45 FPS).
+
+At the application validation level, the above system is applied to the analysis of provincial digital economy and energy structure relationships. Using panel data from 30 Chinese provinces during 2014--2022, a digital economy development index and an energy structure optimization index are constructed via entropy-weight and entropy-weighted decision tree fusion methods. Structured data assets are generated through panel fixed-effects baseline regression, mediation testing, and regional heterogeneity analysis. A complete immersive analysis session is conducted, connecting "national pattern overview -- econometric evidence verification -- regional comparison discussion -- single-province drill-down reading," demonstrating the system's usability in practical analysis tasks.
+
+The results show that the proposed technical framework effectively bridges econometric conclusions, spatial presentation, and intelligent interpretation, providing a reproducible and deployable system solution for immersive analytics and decision support in the energy-economy domain.
+
+\textbf{Keywords:} augmented reality; multimodal interaction; large language model; immersive visualization; digital economy; energy structure optimization

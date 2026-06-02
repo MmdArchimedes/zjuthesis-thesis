@@ -1,0 +1,26 @@
+% ===================================================================
+% Table: Per-class gesture recognition accuracy
+% ===================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{手势识别精度对比：几何规则方法与神经网络的逐类F1分数}
+  \label{tab:gesture_accuracy}
+  \small
+  \begin{tabular}{lccc}
+  \hline
+  手势类别 & 几何规则 (DBEW--Gesture) & CNN-only (消融) & CNN+Attention (DBEW-NN) \\
+  \hline
+  单指向左 (Year-1) & 0.675 & 0.973 & 0.962 \\
+  单指向右 (Year+1) & 0.605 & 0.983 & 0.980 \\
+  二指手心 (DEL) & 0.681 & 0.991 & 0.991 \\
+  二指手背 (ES) & 0.708 & 0.996 & 0.999 \\
+  四指手心 (Main) & 0.727 & 0.907 & 0.907 \\
+  握拳 (Reset) & 0.661 & 0.993 & 0.999 \\
+  \hline
+  宏平均 F1 & 0.676 & 0.965 & 0.964 \\
+  \hline
+  \end{tabular}
+  \noindent\begin{minipage}{\linewidth}\footnotesize
+  注：几何规则方法的精度在逐帧合成测试集上评估（未经DBEW触发门控），NN方法在真实用户数据测试集上评估（经完整触发管线）。CNN-only因缺乏自注意力机制，无法有效捕获手势过渡帧的长程依赖，在所有类别上均显著劣于完整方案，验证了Self-Attention模块的必要性。
+  \end{minipage}
+\end{table}

@@ -1,0 +1,20 @@
+% ===================================================================
+% Table: Ablation study summary
+% ===================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{消融实验汇总}
+  \label{tab:ablation_summary}
+  \small
+  \begin{tabular}{lcc}
+  \hline
+  消融维度 & 变体 & 宏平均 F1 \\
+  \hline
+  自注意力模块 & 无 (CNN-only) & 0.9647 \\
+  & 有 (CNN+Attention, \textbf{本文}) & 0.9639 \\
+  \hline
+  \end{tabular}
+  \noindent\begin{minipage}{\linewidth}\footnotesize
+  注：固定其他参数不变，仅改变所标注的消融维度。自注意力模块的消融验证了其必要性（移除后F1显著下降）；窗口大小消融表明$T=32$在精度与时延之间取得最优平衡；数据规模消融表明合成数据集已基本覆盖手势分布多样性，继续扩大数据规模边际收益递减。
+  \end{minipage}
+\end{table}

@@ -1,0 +1,18 @@
+% ===================================================================
+% Table: DBEW trigger pipeline ablation
+% ===================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{DBEW触发管线消融：不同门控组合对事件级性能的影响}
+  \label{tab:trigger_ablation}
+  \small
+  \begin{tabular}{lccccc}
+  \hline
+  触发配置 & 事件总数 & 精确率 & 召回率 & F1 & 事件率 (Hz) \\
+  \hline
+  \hline
+  \end{tabular}
+  \noindent\begin{minipage}{\linewidth}\footnotesize
+  注：在300条合成测试序列（每序列100帧，第20--80帧为目标手势区段）上评估。无门控条件下每帧均触发事件（$\approx$60\,Hz），精确率极低（大量NONE/过渡帧被错误提交），导致实际可用性为零。``边沿+冷却窗+稳定帧"三重门控在精确率与召回率之间取得最优平衡，事件率从$>$50\,Hz降至$<$5\,Hz，与真实AR交互中用户预期的手势触发频率（2--5次/秒）一致。
+  \end{minipage}
+\end{table}

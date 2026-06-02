@@ -1,0 +1,79 @@
+% ══════════════════════════════════════════════════════════════════════
+% §X.2 相关工作 —— 手势识别方法章节
+% 可直接插入 content.tex 中手势识别章节的引言之后
+% ══════════════════════════════════════════════════════════════════════
+
+\section{相关工作}
+\label{sec:gesture_related_work}
+
+手势识别是增强现实人机交互的核心技术之一。本节从\textbf{基于视觉与骨骼的识别方法}、\textbf{面向移动端的轻量模型}、\textbf{规则式与学习式方法的对比融合}三条技术脉络梳理现有工作，并在末尾明确本文方法在文献谱系中的定位。
+
+\subsection{基于视觉与骨骼的手势识别方法}
+
+早期手势识别以RGB图像为主要输入模态，代表性工作包括基于3D卷积神经网络的动态手势在线检测与分类\cite{molchanov2016online_gesture}。该类方法直接从像素级特征学习手势的时空表示，在受控实验室条件下取得了较高精度，但对光照变化、背景复杂度和相机视角敏感，且计算开销较大，不宜直接部署于移动AR头显。
+
+随着消费级深度相机和手部跟踪SDK的普及，\textbf{基于骨骼关键点的手势识别}逐渐成为主流范式。骨骼表示将手部姿态抽象为稀疏关节坐标集合$\mathcal{J}=\{\mathbf{p}_j\}_{j=1}^{J}$，相比稠密RGB输入具有维度低、视点不变性强、隐私友好等优势。Sun等\cite{sun2024ar_gesture_survey}在其综述中指出，基于骨骼关键点的深度学习方法正成为AR手势交互的主流范式——2022--2024年间发表的AR手势论文中超过60\%采用了骨骼或关键点作为输入表示。
+
+在骨骼序列建模方面，Yan等\cite{yan2018stgcn}提出了时空图卷积网络（ST-GCN），首次将人体骨架序列统一建模为时空图结构，以图卷积同时捕获单帧内的空间关节关系与跨帧的时序动态。该工作开创了图卷积骨架动作识别方向，但其参数量（约3.1M）和计算开销使其不适于移动端部署。Chen等\cite{chen2021ctrgcn}进一步提出通道拓扑细化图卷积（CTR-GCN），通过学习通道特异的图拓扑，在NTU RGB+D数据集上取得当时最优精度，但参数量仍较大。
+
+与图卷积路线并行发展的是基于卷积神经网络（CNN）的轻量化路线。Yang等\cite{yang2019ddnet}提出的DD-Net以手工设计的几何特征（关节对距离JCD+双尺度运动特征）替代原始坐标输入，仅用0.15M参数的1D-CNN即达到与ST-GCN可比甚至更优的精度。DD-Net的设计哲学——\textbf{几何特征先行、轻量CNN跟随}——对本文的DBEW--Gesture几何方法具有直接的启发意义。
+
+针对手势而非全身动作，Habib等\cite{habib2025skeleton_hgr}提出了基于数据融合与集成多流CNN的实时手势识别框架，将动态3D骨骼序列转换为2D时空表示后以轻量CNN处理，在5个基准数据集上取得竞争性精度，并验证了在消费级硬件上的实时推理能力。Zhang等\cite{openxr2025gesture}基于OpenXR标准的26点手部骨骼，在Meta Quest 3上以约1.3\,ms单帧推理时延达到约95\%的分类准确率，为本文DBEW-NN的轻量设计提供了直接参照。HAN\cite{han2025hierarchical_attention}提出了一种极轻量的层次化自注意力网络，通过关节$\rightarrow$手指$\rightarrow$手掌的分层聚合，以约300倍小于GCN的计算量取得竞争性精度，再次证明了自注意力机制在骨骼手势识别中的有效性。
+
+\subsection{面向移动端与AR边缘设备的轻量模型}
+
+将手势识别模型部署于AR头显（如HoloLens 2、Meta Quest 3、Rokid Max Pro等）面临三重约束：（1）算力受限——移动XR芯片（如骁龙XR2）的AI推理能力远低于桌面GPU；（2）实时性要求——每帧处理预算不超过16.7\,ms（@60FPS）；（3）功耗与散热限制——持续高负载推理将缩短电池寿命并导致设备过热。
+
+Fertl等\cite{fertl2025hgr_edge_survey}对边缘设备手势识别的传感器技术、算法和硬件进行了全面综述，指出轻量CNN和Transformer变体是当前在精度-效率曲线上最具竞争力的架构族。Zhao等\cite{zhao2022fast_skeleton_hgr}提出了基于骨架的快速手势识别模型，将手工几何特征（关节对距离+方向特征）与自动学习的运动轨迹特征融合，以0.16M参数达到94.6\%的14类手势准确率（SHREC'17），展示了"几何先验+轻量学习"路线的实用性。
+
+在模型部署方面，Zaccardi等\cite{zaccardi2023hololens_barracuda}比较了HoloLens2上Unity Barracuda与Windows ML的ONNX推理性能，证明Barracuda在骁龙850平台上显著快于WinML，为AR头显端侧推理的工程可行性提供了实验依据。Pierdicca等\cite{pierdicca2024deepreality}开源了DeepReality框架，实现了ONNX模型经Unity Barracuda在AR Foundation中的即插即用集成，验证了MobileNetV2等轻量架构在iOS/Android移动AR设备上的实时推理能力。
+
+本文DBEW-NN的设计直接回应了上述约束：模型参数量控制在57K（约为MobileNetV2的1/60），以ONNX+Unity Barracuda部署于骁龙XR2平台，实测推理时延1.4--1.8\,ms（仅占帧预算约10\%），且设计了模型加载失败时的自动回退策略以保证系统鲁棒性。
+
+\subsection{规则式方法与学习式方法的对比与融合}
+
+在手势识别的技术谱系中，规则式方法（基于显式几何判据或有限状态机）和学习式方法（基于深度神经网络）并非互斥，而是具有互补优势。Vosinakis等\cite{vosinakis2024ar_gesture_interaction_review}对AR手势交互技术的综述指出，规则式方法在可解释性、零训练成本和确定性行为方面具有优势，但在复杂手势和新颖姿态的泛化能力上不及学习方法。
+
+从工程部署角度看，两种方法的典型特征对比如表\ref{tab:rule_vs_learning}所示。
+
+\begin{center}
+    \captionof{table}{\label{tab:rule_vs_learning}规则式与学习式手势识别方法的特征对比}
+    \small
+    \begin{tabular}{p{3.0cm}p{4.5cm}p{4.5cm}}
+    \hline
+    维度 & 规则式方法（几何判据） & 学习式方法（深度神经网络） \\
+    \hline
+    可解释性 & 高——每步判定可追溯至几何量 & 低——隐空间特征难以直接解释 \\
+    训练数据需求 & 零——仅需设定阈值 & 高——需大量标注数据 \\
+    参数规模 & 零——无训练参数 & 小到中——轻量模型约50--500K \\
+    对新类别的扩展 & 困难——需人工分析设计规则 & 较易——重新训练/微调即可 \\
+    噪声鲁棒性 & 弱——噪声直接破坏几何判据 & 强——可通过数据增强学习噪声模式 \\
+    类间模糊边界 & 硬阈值导致歧义 & 软概率输出可表达不确定性 \\
+    部署复杂度 & 低——常数级判断 & 中——需推理运行时+模型文件 \\
+    \hline
+    \end{tabular}
+\end{center}
+
+近年来，若干工作尝试融合两种范式的优势。Yusuf等\cite{geometric_spatiotemporal_hgr2023}将几何特征提取与CNN空间建模和多头注意力时序建模结合，在DHGD和SHREC'17数据集上验证了混合方案的有效性。Zhao等\cite{zhao2022fast_skeleton_hgr}的工作同样属于"几何特征+轻量CNN"路线。Shen等\cite{shen2021imaginative_gan}提出以生成对抗网络自动学习骨骼运动数据分布并生成增强样本，可视为以学习方法缓解规则方法的数据匮乏问题。
+
+本文的工作遵循"规则为基、学习增强、两者互补"的设计哲学：DBEW--Gesture以几何判据提供可解释的基线方法和零成本冷启动能力；DBEW-NN在保持触发管线不变的前提下以轻量NN替代几何分型前端，获得数据驱动的精度与鲁棒性提升；两者通过统一的\texttt{GestureEvent}接口共享下游触发与融合逻辑，实现了真正的"即插即用"。
+
+\subsection{AR手势交互中的多模态融合与系统集成}
+
+将手势识别嵌入完整的AR交互系统时，需要解决多通道协调与冲突消解问题。Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022--2025）的综述指出：（1）手势+眼动凝视仍是最主流的多模态组合；（2）描述性晚期融合（规则式决策级融合）仍占主导地位；（3）CARE模型（Complementary/Assigned/Redundant/Equivalent）是设计多通道分工的主要理论框架。Bai等\cite{bai2025ar_gesture_speech}针对AR手势+语音融合的综述指出，75\%的AR多模态系统使用固定规则融合，缺乏对置信度信号的利用——这为本文TSTQ--Fusion的置信度驱动动态仲裁机制提供了研究动机。
+
+Wang等\cite{wang2026ar_io_survey}从输入输出双视角系统梳理了AR人机交互技术，将手势交互归为"显式控制型"输入模态，强调其在高频短指令场景下的独特价值。Shao等\cite{shao2024cv_gesture}进一步将3D手部骨骼与眼动追踪信号融合，提升了AR场景下意图理解的鲁棒性，但其系统依赖额外的眼动硬件，在Rokid等无眼动追踪的头显上不适用。
+
+本文的手势识别方法在系统层面与上述文献形成以下对话：（1）采用CARE模型将手势定位为"显式控制通道"，与语音（符号输入）和射线（空间选择）明确分工；（2）手势事件经DBEW稳定化后以统一\texttt{GestureEvent}结构提交TSTQ--Fusion融合层，融合层以置信度驱动动态优先级进行跨通道仲裁——直接回应了Bai等\cite{bai2025ar_gesture_speech}指出的"缺乏置信度利用"问题；（3）手势通道具有独立的降级策略（NN失败时回退至几何规则），避免了Lu等\cite{lu2025spatial_computing}指出的"单通道故障导致系统级失效"的问题。
+
+\subsection{本文工作的定位}
+
+综上所述，本文的手势识别工作位于以下三条技术路径的交汇点：
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{骨骼序列建模}：继承ST-GCN开创的骨骼时空建模范式，但选择更轻量的1D-CNN+Self-Attention路线（而非图卷积），以适配移动XR平台的计算约束。
+  \item \textbf{规则-学习互补}：继承DD-Net和Zhao等\cite{zhao2022fast_skeleton_hgr}的"几何先验+轻量学习"设计哲学，但将几何规则保留为独立的可运行baseline（DBEW--Gesture）而非仅作为NN的特征工程步骤，实现了两种方案的独立运行与无缝切换。
+  \item \textbf{端侧部署}：参考Zaccardi等\cite{zaccardi2023hololens_barracuda}和Pierdicca等\cite{pierdicca2024deepreality}的ONNX+Unity Barracuda部署范式，针对Rokid Max Pro（骁龙XR2平台）完成了PyTorch训练$\rightarrow$ONNX导出$\rightarrow$Barracuda推理的完整链路。
+\end{enumerate}
+
+与现有工作相比，本文的增量贡献在于：（1）首次在AR经济数据分析场景下系统对比了纯几何规则与轻量NN增强两种手势识别方案的精度-效率-鲁棒性三维权衡；（2）提出了"前端分类器可替换、后端触发管线不变"的即插即用架构，为AR交互系统的渐进式升级提供了工程范本；（3）在TSTQ--Fusion框架中赋予手势事件置信度驱动的动态优先级，弥补了现有AR多模态融合中"手势通道置信度未被充分利用"的空白。

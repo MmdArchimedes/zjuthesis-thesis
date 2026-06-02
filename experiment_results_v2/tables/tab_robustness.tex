@@ -1,0 +1,22 @@
+% ===================================================================
+% Table: Robustness comparison across environmental conditions
+% ===================================================================
+\begin{table}[htbp]
+  \centering
+  \caption{不同环境条件下手势识别鲁棒性对比（F1分数）}
+  \label{tab:gesture_robustness}
+  \small
+  \begin{tabular}{lccc}
+  \hline
+  条件 & 几何规则 & CNN+Attention (DBEW-NN) & $\Delta$ \\
+  \hline
+  正常光照 & 0.628 & 0.978 & +0.350 \\
+  弱光（3x噪声） & 0.182 & 0.718 & +0.537 \\
+  部分遮挡（30\%） & 0.282 & 0.442 & +0.160 \\
+  弱光+遮挡 & 0.180 & 0.373 & +0.193 \\
+  \hline
+  \end{tabular}
+  \noindent\begin{minipage}{\linewidth}\footnotesize
+  注：正常光照：$\sigma_\mathrm{noise}=1.5$\,mm；弱光：$\sigma_\mathrm{noise}=5$\,mm（3.3倍传感器噪声）；部分遮挡：30\%关节随机置零；弱光+遮挡：两种条件叠加。几何规则方法在噪声增大时精度急剧退化（几何判据被噪声破坏），NN方法因训练时引入数据增强而保持了相对鲁棒性。
+  \end{minipage}
+\end{table}
