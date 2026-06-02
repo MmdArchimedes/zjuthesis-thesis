@@ -425,31 +425,29 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{T\times 
   \captionof{figure}{DBEW-NN模型架构：四阶段流水线——空间嵌入$\rightarrow$多尺度时序CNN$\rightarrow$轻量自注意力$\rightarrow$分类头。\label{fig:dbew_nn_architecture}}
 \end{center}
 
-\textbf{阶段一：空间嵌入层。}以$1\times1$卷积核对每帧独立操作，将每个关节的3维坐标$(x,y,z)$线性投影至$d_{\mathrm{model}}=64$维隐空间，再经LayerNorm归一化。此阶段的作用是将原始的稀疏关节坐标转化为稠密特征表示，为后续时序建模提供良好的初始表征。计算复杂度为$O(T\cdot J\cdot C\cdot d_{\mathrm{model}})$。
+网络的第一计算阶段为空间嵌入层，以$1\times1$卷积核对每帧独立操作，将每个关节的3维坐标$(x,y,z)$线性投影至$d_{\mathrm{model}}=64$维隐空间，再经LayerNorm归一化，将原始的稀疏关节坐标转化为稠密特征表示，为后续时序建模提供良好的初始表征，其计算复杂度为$O(T\cdot J\cdot C\cdot d_{\mathrm{model}})$。空间嵌入之后依次经过两个轻量中间步骤：关节点均值池化在关节维度$J=26$上取平均，将$[B,T,J,d_{\mathrm{model}}]$压缩为$[B,T,d_{\mathrm{model}}]$以消除关节间冗余；正弦位置编码为压缩后的每帧特征叠加由正弦与余弦函数生成的唯一时间戳编码，使后续的CNN与自注意力层能够区分帧的先后顺序。
 
-空间嵌入之后，依次经过两个轻量中间步骤：（1）\textbf{关节点均值池化}——在关节维度$J=26$上取平均，将$[B,T,J,d_{\mathrm{model}}]$压缩为$[B,T,d_{\mathrm{model}}]$，消除关节间冗余并大幅降低后续计算量；（2）\textbf{正弦位置编码}——为压缩后的每帧特征叠加由正弦/余弦函数生成的唯一时间戳编码，使后续的CNN与自注意力层能够区分帧的先后顺序，而非将所有$T$帧视作无序集合。
+第二计算阶段为多尺度时序卷积层，由3层一维空洞卷积堆叠而成，卷积核大小$k=3$，扩张率分别取$d\in\{1,2,4\}$，每层后接BatchNorm与GELU激活，层间以残差连接保持梯度流动。三个扩张率对应三种互补的时间感受野：$d=1$捕捉约50\,ms量级的短时抖动，$d=2$感知约100\,ms的手势过渡动态，$d=4$建模约200\,ms的完整姿态保持。该设计在仅3层的轻量约束下实现了多尺度时序特征提取。
 
-\textbf{阶段二：多尺度时序卷积层。}由3层一维空洞卷积堆叠而成，卷积核大小$k=3$，扩张率分别为$d\in\{1,2,4\}$，每层后接BatchNorm与GELU激活，层间以残差连接保持梯度流动。三个扩张率分别对应三种时间感受野：$d=1$捕捉短时抖动（~50\,ms），$d=2$感知手势过渡阶段（~100\,ms），$d=4$建模完整姿态保持（~200\,ms）。该设计在保持轻量（仅3层）的前提下实现了多尺度时序特征提取。
-
-\textbf{阶段三：轻量自注意力层。}单层4头缩放点积注意力（Scaled Dot-Product Attention），仅在时序维度$T$上计算全局上下文：
+第三计算阶段为轻量自注意力层，采用单层4头缩放点积注意力（Scaled Dot-Product Attention），仅在时序维度$T$上计算全局上下文：
 \begin{equation}
   \mathrm{Attention}(\mathbf{Q},\mathbf{K},\mathbf{V}) = \mathrm{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}\right)\mathbf{V},
   \label{eq:dbew_nn_attention}
 \end{equation}
-其中$\mathbf{Q},\mathbf{K},\mathbf{V}\in\mathbb{R}^{T\times d_{\mathrm{model}}}$经同一个输入线性投影得到（自注意力），$d_k = d_{\mathrm{model}}/4 = 16$。4头并行计算后拼接经线性层投影回$d_{\mathrm{model}}$维，并施加Dropout（$p=0.1$）与残差连接+LayerNorm。此阶段使模型能够关联手势准备阶段的手指预动作与保持阶段的稳定姿态，从而提升对类间过渡的判别力。CNN-only消融实验（第\ref{sec:ch3_nn_accuracy}节）已证实该模块对分类精度不可或缺。
+其中$\mathbf{Q},\mathbf{K},\mathbf{V}\in\mathbb{R}^{T\times d_{\mathrm{model}}}$经同一个输入线性投影得到，$d_k = d_{\mathrm{model}}/4 = 16$。4头并行计算结果拼接后经线性层投影回$d_{\mathrm{model}}$维，并施加Dropout（$p=0.1$）与残差连接加LayerNorm。该层使模型能够跨越任意帧距离关联手势准备阶段的手指预动作与保持阶段的稳定姿态，从而提升对类间过渡的判别力。第\ref{sec:ch3_nn_ablation}节的CNN-only消融实验已证实该模块对分类精度的关键贡献——移除自注意力后宏平均F1由0.967降至0.955。
 
-\textbf{阶段四：分类头。}在时序维度上做全局平均池化（Global Average Pooling），将$T\times d_{\mathrm{model}}$压缩为$d_{\mathrm{model}}$维全局特征向量$\mathbf{h}$，再经两层MLP（$64\rightarrow32\rightarrow7$，中间含GELU激活与Dropout）输出类别logits，最终经Softmax得到概率分布$\mathbf{p}\in\mathbb{R}^{7}$。取最大概率类别$g_{\mathrm{NN}}=\arg\max\mathbf{p}$及对应置信度$s=\max\mathbf{p}$作为输出。
+第四计算阶段为分类头，在时序维度上做全局平均池化将$T\times d_{\mathrm{model}}$压缩为$d_{\mathrm{model}}$维全局特征向量$\mathbf{h}$，再经两层MLP（$64\rightarrow32\rightarrow7$，中间含GELU激活与Dropout）输出类别logits，最终经Softmax得到概率分布$\mathbf{p}\in\mathbb{R}^{7}$，取最大概率类别$g_{\mathrm{NN}}=\arg\max\mathbf{p}$及对应置信度$s=\max\mathbf{p}$作为输出。
 
 模型总参数量为56,711（CNN+Attention完整版），CNN-only消融变体为40,199参数。二者均远小于通用视觉模型（如ResNet-18约11M），参数占用内存约221.5\,KB（float32），适合骁龙XR2等移动XR平台的L2缓存。
 
 \subsection{训练策略与优化}
 
-\textbf{损失函数。}采用Focal Loss\cite{focal_loss_lin2017}作为主损失函数：
+模型训练采用Focal Loss\cite{focal_loss_lin2017}作为主损失函数：
 \begin{equation}
   \mathcal{L}_{\mathrm{focal}} = -\frac{1}{B}\sum_{i=1}^{B} \sum_{c=1}^{7} \alpha_c (1-p_{i,c})^{\gamma} y_{i,c} \log p_{i,c},
   \label{eq:focal_loss}
 \end{equation}
-其中$\gamma=2.0$为聚焦参数，$\alpha_c$为各类别的逆频率权重。Focal Loss的选择动机为：NONE/过渡态类帧数占总帧数的约22.9\%（见表\ref{tab:ch3_none_stats}），标准交叉熵在此类不平衡场景下易使模型偏向多数类。
+其中$\gamma=2.0$为聚焦参数，$\alpha_c$为各类别的逆频率权重。选择Focal Loss而非标准交叉熵的直接原因是类不平衡：NONE/过渡态类帧数占总帧数的约22.9\%（见表\ref{tab:ch3_none_stats}），若不加处理，模型将倾向于将所有输入预测为NONE以最小化经验损失。Focal Loss通过$(1-p_{i,c})^\gamma$因子降低已正确分类样本的损失贡献，使训练聚焦于难分样本，配合$\alpha_c$逆频率权重共同抑制了多数类的偏向。
 
 \begin{center}
     \captionof{table}{\label{tab:ch3_none_stats}滑动窗口数据集的类别分布统计}
@@ -470,88 +468,39 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{T\times 
     \hline
     \end{tabular}
     \noindent\begin{minipage}{\linewidth}\footnotesize
-    注：NONE类占比最高（22.9\%），源于手势生命周期的准备阶段（~0.3\,s）与释放阶段（~0.3\,s）均被标记为过渡态。若不加处理直接使用标准交叉熵训练，模型易倾向于将所有输入预测为NONE以最小化损失。Focal Loss通过$(1-p)^\gamma$降低多数类（NONE）中已正确分类样本的损失贡献，配合$\alpha_c$逆频率权重，有效抑制了该偏向。
+    注：NONE类占比最高（22.9\%），源于手势生命周期的准备阶段（~0.3\,s）与释放阶段（~0.3\,s）均被标记为过渡态。Focal Loss通过$(1-p)^\gamma$降低多数类中已正确分类样本的损失贡献，配合$\alpha_c$逆频率权重，有效抑制了类不平衡偏向。
     \end{minipage}
 \end{center}
 
-此外，引入相邻训练批次间预测分布的KL散度作为时序平滑正则项$\mathcal{L}_{\mathrm{smooth}}$，惩罚模型在连续窗口上的剧烈预测跳变。总损失为$\mathcal{L}=\mathcal{L}_{\mathrm{focal}}+0.1\cdot\mathcal{L}_{\mathrm{smooth}}$。
+除主损失外，引入相邻训练批次间预测分布的KL散度作为时序平滑正则项$\mathcal{L}_{\mathrm{smooth}}$，惩罚模型在连续窗口上的剧烈预测跳变，总损失为$\mathcal{L}=\mathcal{L}_{\mathrm{focal}}+0.1\cdot\mathcal{L}_{\mathrm{smooth}}$。
 
-\textbf{优化配置。}优化器为AdamW（初始学习率$10^{-3}$，权重衰减$10^{-4}$，$\beta_1=0.9,\beta_2=0.999$），批次大小64，余弦退火学习率调度（$T_{\max}=80$，最低$10^{-6}$），早停耐心值10个epoch。前5个epoch冻结自注意力层参数（仅训练CNN模块），以稳定底层时序特征提取；第6个epoch起解冻全部参数联合微调。
-
-\textbf{正则化与数据增强。}Dropout（$p=0.1$）应用于自注意力层和分类头MLP中间层。训练时数据增强包括：随机时间裁剪（$\pm5$帧滑动窗口偏移）、关节坐标高斯噪声（$\sigma=2$\,mm）和随机左右手镜像（概率0.5，$x$坐标取反）。
+优化器选用AdamW（初始学习率$10^{-3}$，权重衰减$10^{-4}$，$\beta_1=0.9,\beta_2=0.999$），批次大小64，采用余弦退火学习率调度（$T_{\max}=80$，最低$10^{-6}$），早停耐心值设为10个epoch。前5个epoch冻结自注意力层参数以稳定底层CNN的时序特征提取，第6个epoch起解冻全部参数进行联合微调。正则化方面，Dropout（$p=0.1$）施加于自注意力层和分类头MLP的中间层；数据增强包括随机时间裁剪（$\pm5$帧滑动窗口偏移）、关节坐标高斯噪声（$\sigma=2$\,mm）和随机左右手镜像（概率0.5，$x$坐标取反）。
 
 \subsection{与DBEW触发管线的集成}
 
-\subsubsection{在线推理数据流}
+\subsection{在线推理与系统集成}
+\label{sec:ch3_nn_inference}
 
-DBEW-NN在运行时的在线推理流程与训练时的离线滑动窗口采样存在关键差异。训练时以步长4帧滑动以扩充样本量；推理时每帧到达即执行一次完整前向传播（等效步长1），以保证最低的指令响应延迟。在线推理的帧级处理循环如下（每帧执行，帧预算约16.7\,ms@60FPS）：
+DBEW-NN在运行时与训练时存在关键的数据流差异：训练时以步长4帧滑动窗口以扩充样本量，而推理时每帧到达即执行一次完整前向传播（等效步长1），以保证最低的指令响应延迟。在线推理的每帧处理预算约16.7\,ms（@60FPS），涵盖从骨骼采集到事件提交的完整流程。
 
-\begin{enumerate}[leftmargin=*]
-  \item \textbf{骨骼采集}：Rokid UXR手部追踪SDK通过回调输出当前帧骨骼点集$\mathcal{J}^{(t)}$（26关节$\times$3坐标，世界坐标系或设备跟踪坐标系），含各关节的追踪置信度标志位。
-  \item \textbf{有效性校验}：检查SDK返回的追踪状态标志，若关键关节（腕、食指尖、中指MCP等）无效或关节数不足26，丢弃该帧，继承上一帧的$g_{\mathrm{NN}}$与$n_{\mathrm{stable}}$不变。
-  \item \textbf{坐标预处理}：依次执行腕部归一化（以joint 0为原点，$x_j\leftarrow x_j-x_0$）与全局缩放归一化（除以所有关节坐标标准差的10倍），确保与训练分布严格一致。若标准差$<10^{-6}$\,m（手部几乎静止），跳过本帧NN推理，直接输出NONE。
-  \item \textbf{环形缓冲区写入}：将预处理后的骨骼帧追加至固定容量的环形缓冲区（容量$T=32$帧）。缓冲区满后，取最近$T=32$帧构成输入张量$\mathbf{X}^{(t)}\in\mathbb{R}^{1\times32\times26\times3}$。
-  \item \textbf{NN前向传播}：Unity Barracuda引擎加载ONNX模型，调用\texttt{worker.Execute(inputTensor)}执行推理，得到概率向量$\mathbf{p}^{(t)}\in\mathbb{R}^{7}$。典型推理时延1.4--1.8\,ms（含CPU$\rightarrow$GPU数据传输）。
-  \item \textbf{类别判定与置信度过滤}：$g_{\mathrm{NN}}^{(t)}=\arg\max\mathbf{p}^{(t)}$，$s^{(t)}_{\mathrm{NN}}=\max\mathbf{p}^{(t)}$。若$s^{(t)}_{\mathrm{NN}}<\theta_g$（默认$\theta_g=0.85$），将$g_{\mathrm{NN}}^{(t)}$强制置为NONE，并在后续触发判定中自然被过滤（NONE不触发边沿事件）。
-  \item \textbf{替换几何分型输出}：以$(g_{\mathrm{NN}}^{(t)},s^{(t)}_{\mathrm{NN}})$替代原几何分型输出$(g^{(t)},s^{(t)})$，作为DBEW触发管线的输入。
-  \item \textbf{DBEW触发判定}：经边沿触发（式~\ref{eq:gesture_edge}）、冷却窗约束（式~\ref{eq:gesture_cooldown}）与稳定帧条件（式~\ref{eq:gesture_trigger_final}）三重门控。
-  \item \textbf{事件封装与提交}：仅当$u^{(t)}=1$时，映射为命令语义，封装为\texttt{GestureEvent}标准事件结构（字段：\texttt{type/ts/confidence/payload}，详见第\ref{sec:ch3_nn_interface}节），写入TSTQ--Fusion融合队列。
-\end{enumerate}
+每帧到达时，Rokid UXR手部追踪SDK通过回调输出当前帧的26关节$\times$3坐标骨骼点集$\mathcal{J}^{(t)}$，并附带各关节的追踪置信度标志位。系统首先进行有效性校验——若腕关节、食指尖、中指MCP等关键关节追踪无效或关节数不足26，则丢弃该帧并继承上一帧的分类输出。通过校验后，依次执行腕部归一化（以joint 0为原点做相对坐标变换）和全局缩放归一化（除以所有关节坐标标准差的10倍），确保推理时的输入分布与训练分布严格一致。预处理后的骨骼帧被追加至固定容量的环形缓冲区（容量$T=32$帧），当缓冲区积累满32帧后，Unity Barracuda引擎加载ONNX模型并调用\texttt{worker.Execute(inputTensor)}执行前向传播，得到7维概率向量$\mathbf{p}^{(t)}$，典型推理时延约1.3\,ms（含数据准备与传输开销）。
 
-\textbf{冷启动问题}：系统启动后的前$T-1=31$帧（约517\,ms@60FPS）缓冲区未满，NN不执行推理（强制返回NONE），手势交互暂时不可用。实测该延迟远小于用户戴上AR眼镜后的自然适应期（通常2--5\,s），不影响实际使用体验。缓冲区充满后，逐帧推理可立即响应手势变化，无需等待窗口滑满。
+取最大概率类别$g_{\mathrm{NN}}^{(t)}=\arg\max\mathbf{p}^{(t)}$及对应置信度$s^{(t)}_{\mathrm{NN}}=\max\mathbf{p}^{(t)}$作为当前帧的分类结果。若$s^{(t)}_{\mathrm{NN}}<\theta_g$（默认$\theta_g=0.85$），则将$g_{\mathrm{NN}}^{(t)}$强制置为NONE，因为低置信度输出在后续DBEW触发判定中将被自然过滤（NONE不触发边沿事件）。分类结果$(g_{\mathrm{NN}}^{(t)},s^{(t)}_{\mathrm{NN}})$替代原几何分型输出后，经边沿触发（式~\ref{eq:gesture_edge}）、冷却窗约束（式~\ref{eq:gesture_cooldown}）与稳定帧条件（式~\ref{eq:gesture_trigger_final}）三重门控判定。仅当$u^{(t)}=1$时，系统将命令语义封装为\texttt{GestureEvent}标准事件结构（字段定义见第\ref{sec:ch3_nn_interface}节），写入TSTQ--Fusion融合队列。
 
-\subsubsection{预处理一致性：训练--推理对齐}
+系统启动后的前$T-1=31$帧（约517\,ms@60FPS）缓冲区未满，NN在此期间不执行推理（强制返回NONE），手势交互暂时不可用。该冷启动延迟远小于用户戴上AR眼镜后的自然适应期（通常2--5\,s），不影响实际使用体验；缓冲区充满后，逐帧推理可立即响应手势变化。
 
-推理时的预处理管线必须与训练时严格一致，否则会导致分布偏移（distribution shift），表现为推理精度显著低于验证精度。具体对齐项包括：
+推理时的预处理管线必须与训练时严格对齐，否则分布偏移（distribution shift）将导致推理精度显著低于验证精度。具体而言，腕部归一化在训练与推理中均以腕关节为原点进行相对坐标变换，全局缩放归一化均以所有关节坐标标准差的10倍为缩放因子（推理时在缓冲区满后实时计算标准差），推理时不应用任何训练阶段的数据增强，且PyTorch训练与Unity Barracuda推理均使用float32数值精度。上述对齐措施确保了ONNX模型在Unity端的推理行为与PyTorch端的验证行为一致。
 
-\begin{itemize}[leftmargin=*]
-  \item \textbf{腕部归一化}：训练与推理均以腕关节（joint 0）为原点做相对坐标变换，消除手部在空间中的绝对位置变化。
-  \item \textbf{全局缩放归一化}：均以所有关节坐标标准差的10倍为缩放因子（推理时在缓冲区满后实时计算标准差）。设标准差为$\sigma_{\mathrm{joints}}$，缩放后坐标$\mathbf{x}'=\mathbf{x}/(10\cdot\sigma_{\mathrm{joints}})$。
-  \item \textbf{无数据增强}：推理时不应用训练阶段的数据增强（随机时间裁剪、坐标高斯噪声、随机镜像），保证输入分布稳定。
-  \item \textbf{坐标系一致}：训练数据在腕部相对坐标系下合成；推理时的腕部归一化确保坐标系统一。
-  \item \textbf{数值精度}：PyTorch训练使用float32；Unity Barracuda推理默认亦为float32，数值精度对齐。
-\end{itemize}
-
-\subsubsection{模型部署：ONNX导出与Unity Barracuda集成}
+\subsection{端侧部署与系统集成}
 \label{sec:ch3_nn_deployment}
 
-DBEW-NN的训练环境为PyTorch（Python），而目标部署平台为Unity游戏引擎（C\#），两者通过ONNX（Open Neural Network Exchange）中间表示桥接。完整的模型部署流水线如下：
+DBEW-NN的训练环境为PyTorch，目标部署平台为Unity游戏引擎（C\#），两者通过ONNX（Open Neural Network Exchange）中间表示桥接。训练完成后，调用\texttt{torch.onnx.export}将\texttt{GestureClassifier}导出为ONNX格式，采用opset版本14以保证Unity Barracuda 3.x兼容性，输入张量命名为\texttt{skeleton\_sequence}（形状[1,32,26,3]），输出张量命名为\texttt{gesture\_logits}（形状[1,7]）。为确保兼容性，使用legacy TorchScript导出器（\texttt{dynamo=False}）并开启常量折叠（\texttt{do\_constant\_folding=True}）以缩减模型体积。导出后通过\texttt{onnx.checker.check\_model}进行结构完整性校验，并以相同随机输入对比PyTorch原生前向传播与ONNX Runtime的推理输出，要求相对误差小于$10^{-5}$以确认导出过程无精度损失。
 
-\begin{enumerate}[leftmargin=*]
-  \item \textbf{ONNX导出}：训练完成后，调用\texttt{torch.onnx.export}将\texttt{GestureClassifier}导出为\texttt{gesture\_classifier.onnx}。关键参数配置为：opset版本14（保证Unity Barracuda 3.x兼容性），输入名\texttt{skeleton\_sequence}（形状[1,32,26,3]），输出名\texttt{gesture\_logits}（形状[1,7]），使用legacy TorchScript导出器（\texttt{dynamo=False}，因Barracuda尚不支持Dynamo导出的ONNX图），开启常量折叠（\texttt{do\_constant\_folding=True}）以减小模型体积。
-  \item \textbf{ONNX模型校验}：导出后使用\texttt{onnx.checker.check\_model}进行结构完整性校验，并以相同随机输入对比PyTorch原生前向传播与ONNX Runtime推理的输出差异（容许相对误差$<10^{-5}$），确保导出过程无精度损失。
-  \item \textbf{Unity工程集成}：将\texttt{.onnx}文件置于Unity项目的\texttt{Resources/}目录下。运行时通过Barracuda的\texttt{ModelLoader.Load}加载为\texttt{Model}对象，创建推理\texttt{Worker}。后端选择策略：优先\texttt{ComputePrecompiled}（GPU Compute Shader加速），设备不支持时自动回退至\texttt{CSharpBurst}（CPU + Burst编译器优化）。
-  \item \textbf{帧循环集成}：在Unity的\texttt{Update}或专用协程中，将环形缓冲区中提取的骨骼张量转换为Barracuda \texttt{Tensor}对象，调用\texttt{worker.Execute(inputTensor)}，从输出\texttt{Tensor}中读取7维logits向量。推理须在渲染主循环前完成，避免阻塞帧提交。
-  \item \textbf{性能约束验证}：骁龙XR2平台上Barracuda推理实测时延约1.4--1.8\,ms（含数据准备与CPU$\rightarrow$GPU传输），在60FPS帧预算（16.7\,ms）中占比约10\%，不影响渲染与SLAM追踪主循环。
-\end{enumerate}
+在Unity工程侧，将ONNX模型文件置于\texttt{Resources/}目录，运行时通过Barracuda的\texttt{ModelLoader.Load}加载并创建推理\texttt{Worker}。后端选择采用优先\texttt{ComputePrecompiled}（GPU Compute Shader加速）、设备不支持时自动回退至\texttt{CSharpBurst}（CPU与Burst编译器优化）的降级策略。推理在Unity的\texttt{Update}或专用协程中执行：将环形缓冲区提取的骨骼张量转换为Barracuda \texttt{Tensor}对象后调用\texttt{worker.Execute}，从输出张量中读取7维logits向量。推理须在渲染主循环之前完成以保证帧提交不被阻塞。骁龙XR2平台上实测推理时延约1.3\,ms，在60FPS帧预算（16.7\,ms）中占比不足10\%，不影响渲染与SLAM追踪主循环。
 
-\subsubsection{接口规范与事件封装}
-\label{sec:ch3_nn_interface}
+为保持与多模态融合层（TSTQ--Fusion，第\ref{sec:ch3_fusion}节）的接口一致性，NN分类器的输出经DBEW触发管线后统一封装为\texttt{GestureEvent}标准事件结构，与语音、射线事件共享相同的融合仲裁逻辑。该结构包含四个字段：\texttt{type}为命令类型枚举（与表\ref{tab:ges_map}的语义映射对应），\texttt{ts}为事件时间戳（用于TSTQ跨通道仲裁中的时间序比较与时间窗分组），\texttt{confidence}为NN输出的置信度$s^{(t)}_{\mathrm{NN}}\in[0,1]$（用于融合层置信度驱动动态优先级仲裁中的权重计算），\texttt{payload}携带命令附加参数（如年份步进方向、目标指标编码、目标场景ID）。事件提交至融合队列后，手势通道的职责即告完成，后续的状态更新与视图刷新均由融合层与可视化层统一处理，这一分层设计确保NN模块的升级不影响下游逻辑。
 
-为保持多模态融合层（TSTQ--Fusion，第\ref{sec:ch3_fusion}节）的接口一致性，NN分类器输出经过DBEW触发管线后统一封装为\texttt{GestureEvent}标准事件结构。该结构的所有字段定义与语音、射线事件共享相同的融合仲裁逻辑：
-
-\begin{itemize}[leftmargin=*]
-  \item \texttt{type}：命令类型枚举，取值包括\texttt{YEAR\_INC}、\texttt{YEAR\_DEC}、\texttt{METRIC\_DEL}、\texttt{METRIC\_ES}、\texttt{MAIN\_SCENE}、\texttt{PROVINCE\_SCENE}、\texttt{RESET}等，与表\ref{tab:ges_map}的语义映射一一对应。
-  \item \texttt{ts}：事件时间戳（系统统一时钟下的帧序号或毫秒级时刻），用于TSTQ跨通道仲裁中的时间序比较与时间窗分组。
-  \item \texttt{confidence}：置信度$s^{(t)}_{\mathrm{NN}}\in[0,1]$，用于融合层置信度驱动动态优先级仲裁（式~\ref{eq:fusion_score}）中的权重计算。
-  \item \texttt{payload}：命令附加参数，如年份步进方向（$\pm1$）、目标指标编码（DEL/ES）、目标场景ID。
-\end{itemize}
-
-事件提交至TSTQ--Fusion融合队列后，手势通道的职责即告完成。后续的状态更新（写入统一状态向量$\mathbf{s}_t$）、触发SDCR--Vis管线（第\ref{ch:ar_visualization}章）的视图刷新与语义输出，均由融合层与可视化层统一处理。这一分层设计确保NN模块的升级不影响下游逻辑，实现了真正的“即插即用”。
-
-\subsubsection{异常处理与降级策略}
-
-AR眼镜的实际运行环境复杂多变（移动走动、光照变化、多人场景），系统需应对以下异常场景以保证交互可靠性：
-
-\begin{itemize}[leftmargin=*]
-  \item \textbf{手部追踪丢失}：当Rokid UXR手部追踪SDK返回无效标志（如手部移出摄像头视场角FOV或严重遮挡），丢弃该帧，NN不执行推理，保持上一帧的$n_{\mathrm{stable}}$计数不变。若连续丢失超过60帧（约1\,s），重置稳定计数器以避免恢复后因状态不一致导致的误触发。
-  \item \textbf{模型加载失败}：若ONNX模型文件缺失、损坏或Barracuda版本不兼容（如首次启动时资源目录未就绪），系统自动回退至几何规则分类器（DBEW--Gesture，第\ref{sec:ch3_gesture_original}节），保证基础手势交互依旧可用。回退时在AR HUD的角落区域显示提示图标，提醒用户当前工作在降级模式。
-  \item \textbf{推理超时}：若单帧NN推理耗时超过5\,ms（Barracuda Worker异常挂起或GPU资源竞争），跳过本帧推理，继承上一帧分类结果，并写入警告日志。连续超时超过10帧触发自动回退至规则分类器，并记录回退原因。
-  \item \textbf{低置信度持续}：若连续30帧NN输出的置信度均低于$\theta_g=0.85$，可能指示当前手部姿态不在训练分布内（如用户佩戴角度偏差较大或手部距离变化超出归一化窗口）。系统暂时降低置信度阈值至0.7，同时在HUD显示轻提示引导用户调整手部位置至视野内。
-  \item \textbf{手势--语音并发冲突}：当手势事件与语音事件在同一时间窗（$\Delta T=500$\,ms）内同时命中同一状态变量时，交由TSTQ--Fusion的置信度驱动动态仲裁（式~\ref{eq:fusion_score}）处理，手势通道本身不做特殊处理。该设计与通道职责单一定义一致——手势仅负责分类与触发，冲突消解是融合层的职责。
-\end{itemize}
-
-上述降级策略确保DBEW-NN在显著提升识别精度的同时，不引入单点故障风险，符合AR交互系统对鲁棒性与可靠性的工程要求。
+AR眼镜的实际运行环境中存在手部追踪丢失、模型加载失败、推理超时等多种异常场景。系统通过分层降级策略保证交互可靠性：当Rokid UXR手部追踪返回无效标志时，丢弃当前帧并保持稳定计数器不变，若连续丢失超过60帧（约1\,s）则重置计数器以防恢复后状态不一致导致误触发；模型文件缺失或Barracuda版本不兼容时，自动回退至几何规则分类器（DBEW--Gesture，第\ref{sec:ch3_gesture_original}节）并在HUD角落显示降级提示图标；单帧推理耗时异常超过5\,ms时跳过本帧推理并继承上一帧结果，连续超时10帧以上触发自动回退并记录原因；连续30帧置信度低于$\theta_g=0.85$时暂时降低阈值至0.7并引导用户调整手部位置。手势与语音在同一时间窗内的并发冲突则交由TSTQ--Fusion的置信度驱动动态仲裁处理——手势通道仅负责分类与触发，冲突消解是融合层的职责——这一职责分离设计保证了各通道的独立性与系统的整体鲁棒性。
 
 \subsection{实验评估}
 
