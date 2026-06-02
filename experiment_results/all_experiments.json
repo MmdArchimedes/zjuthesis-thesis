@@ -1,0 +1,186 @@
+{
+  "exp1_accuracy": {
+    "Rule-based (Geometric)": {
+      "accuracy": 0.6258,
+      "macro_f1": 0.7044,
+      "per_class": {
+        "NONE": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0
+        },
+        "index_left": {
+          "precision": 0.8493,
+          "recall": 0.62,
+          "f1": 0.7168,
+          "support": 200
+        },
+        "index_right": {
+          "precision": 0.89,
+          "recall": 0.445,
+          "f1": 0.5933,
+          "support": 200
+        },
+        "two_finger_palm": {
+          "precision": 0.7129,
+          "recall": 0.72,
+          "f1": 0.7164,
+          "support": 200
+        },
+        "two_finger_back": {
+          "precision": 0.9692,
+          "recall": 0.63,
+          "f1": 0.7636,
+          "support": 200
+        },
+        "four_finger_palm": {
+          "precision": 0.779,
+          "recall": 0.705,
+          "f1": 0.7402,
+          "support": 200
+        },
+        "fist": {
+          "precision": 0.7697,
+          "recall": 0.635,
+          "f1": 0.6959,
+          "support": 200
+        }
+      }
+    },
+    "CNN-only": {
+      "accuracy": 0.9559,
+      "macro_f1": 0.9554,
+      "per_class": {
+        "NONE": {
+          "precision": 0.8782,
+          "recall": 0.9429,
+          "f1": 0.9094,
+          "support": 1331
+        },
+        "index_left": {
+          "precision": 0.9745,
+          "recall": 0.9335,
+          "f1": 0.9535,
+          "support": 1308
+        },
+        "index_right": {
+          "precision": 0.9538,
+          "recall": 0.9785,
+          "f1": 0.966,
+          "support": 1351
+        },
+        "two_finger_palm": {
+          "precision": 0.9832,
+          "recall": 0.9817,
+          "f1": 0.9824,
+          "support": 1367
+        },
+        "two_finger_back": {
+          "precision": 0.9871,
+          "recall": 0.9993,
+          "f1": 0.9932,
+          "support": 1380
+        },
+        "four_finger_palm": {
+          "precision": 0.9198,
+          "recall": 0.8695,
+          "f1": 0.8939,
+          "support": 1333
+        },
+        "fist": {
+          "precision": 0.997,
+          "recall": 0.9823,
+          "f1": 0.9896,
+          "support": 1354
+        }
+      }
+    },
+    "CNN+Attention (Ours)": {
+      "accuracy": 0.9669,
+      "macro_f1": 0.9666,
+      "per_class": {
+        "NONE": {
+          "precision": 0.9456,
+          "recall": 0.9016,
+          "f1": 0.9231,
+          "support": 1331
+        },
+        "index_left": {
+          "precision": 0.992,
+          "recall": 0.9495,
+          "f1": 0.9703,
+          "support": 1308
+        },
+        "index_right": {
+          "precision": 0.9695,
+          "recall": 0.9867,
+          "f1": 0.978,
+          "support": 1351
+        },
+        "two_finger_palm": {
+          "precision": 0.9826,
+          "recall": 0.9927,
+          "f1": 0.9876,
+          "support": 1367
+        },
+        "two_finger_back": {
+          "precision": 0.9871,
+          "recall": 1.0,
+          "f1": 0.9935,
+          "support": 1380
+        },
+        "four_finger_palm": {
+          "precision": 0.8946,
+          "recall": 0.9482,
+          "f1": 0.9206,
+          "support": 1333
+        },
+        "fist": {
+          "precision": 1.0,
+          "recall": 0.9867,
+          "f1": 0.9933,
+          "support": 1354
+        }
+      }
+    }
+  },
+  "exp2_robustness": {
+    "normal": {
+      "rule_f1": 0.6333,
+      "nn_f1": 0.96
+    },
+    "low_light": {
+      "rule_f1": 0.1917,
+      "nn_f1": 0.7217
+    },
+    "partial_occlusion": {
+      "rule_f1": 0.2617,
+      "nn_f1": 0.47
+    },
+    "severe": {
+      "rule_f1": 0.165,
+      "nn_f1": 0.3717
+    }
+  },
+  "exp3_performance": {
+    "Rule-based (Geometric)": {
+      "latency_ms": 0.053,
+      "fps": 18963.5,
+      "params": 0,
+      "memory_kb": 0
+    },
+    "CNN-only": {
+      "latency_ms": 1.103,
+      "fps": 906.3,
+      "params": 40199,
+      "memory_kb": 157.0
+    },
+    "CNN+Attention (Ours)": {
+      "latency_ms": 1.319,
+      "fps": 757.9,
+      "params": 56711,
+      "memory_kb": 221.5
+    }
+  }
+}

@@ -1,0 +1,57 @@
+% Experiment 1: Gesture Recognition Accuracy Comparison
+\begin{table}[htbp]
+  \centering
+  \caption{手势识别精度对比：规则方法与本文NN方法的逐类F1分数}
+  \label{tab:nn_vs_rule_f1}
+  \small
+  \begin{tabular}{lccc}
+  \hline
+  手势类别 & 规则方法（几何判据） & CNN-only & CNN+Attention（本文） \\
+  \hline
+  NONE & 0.000 & 0.909 & 0.923 \\
+  index_left & 0.717 & 0.954 & 0.970 \\
+  index_right & 0.593 & 0.966 & 0.978 \\
+  two_finger_palm & 0.716 & 0.982 & 0.988 \\
+  two_finger_back & 0.764 & 0.993 & 0.994 \\
+  four_finger_palm & 0.740 & 0.894 & 0.921 \\
+  fist & 0.696 & 0.990 & 0.993 \\
+  \hline
+  宏平均 F1  & 0.704 & 0.955 & 0.967 \\
+  \hline
+  \end{tabular}
+\end{table}
+
+% Experiment 2: Robustness Comparison
+\begin{table}[htbp]
+  \centering
+  \caption{不同条件下手势识别鲁棒性对比（F1分数）}
+  \label{tab:robustness}
+  \small
+  \begin{tabular}{lcc}
+  \hline
+  条件 & 规则方法 & CNN+Attention（本文） \\
+  \hline
+  normal & 0.633 & 0.960 \\
+  low_light & 0.192 & 0.722 \\
+  partial_occlusion & 0.262 & 0.470 \\
+  severe & 0.165 & 0.372 \\
+  \hline
+  \end{tabular}
+\end{table}
+
+% Experiment 3: End-Side Performance
+\begin{table}[htbp]
+  \centering
+  \caption{端侧推理性能对比}
+  \label{tab:performance}
+  \small
+  \begin{tabular}{lccc}
+  \hline
+  方法 & 单帧推理时延（ms） & 参数量 & 内存占用（KB） \\
+  \hline
+  Rule-based (Geometric) & 0.05 & 0 & 0.0 \\
+  CNN-only & 1.10 & 40,199 & 157.0 \\
+  CNN+Attention (Ours) & 1.32 & 56,711 & 221.5 \\
+  \hline
+  \end{tabular}
+\end{table}
