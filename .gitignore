@@ -5,6 +5,12 @@ dist/*
 diff/*
 论文.pdf
 zjuthesis.pdf
+
+### Generated data and model checkpoints (large files) ###
+data/
+checkpoints/
+experiment_results/
+out/
 /*.pdf
 /*.ttf*
 /*.ttc*
