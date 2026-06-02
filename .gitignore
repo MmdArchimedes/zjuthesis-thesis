@@ -3,6 +3,8 @@ out/*
 out-*/*
 dist/*
 diff/*
+论文.pdf
+zjuthesis.pdf
 /*.pdf
 /*.ttf*
 /*.ttc*
