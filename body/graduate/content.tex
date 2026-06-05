@@ -537,10 +537,7 @@ AR眼镜的实际运行环境中存在手部追踪丢失、模型加载失败、
 
 \begin{center}
   \includegraphics[width=0.92\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_latency_distribution.pdf}
-  \captionof{figure}{DBEW-NN端侧推理性能分析：单次推理时延分布（左，1000次采样）与60秒模拟连续运行的瞬时FPS稳定性（右，3600帧@60FPS等效）。红色虚线=均值，橙色虚线=P95分位，蓝色虚线=60FPS目标线。\label{fig:latency_distribution}}
-\end{center}
-    注：NN推理的增加时延（约1.3\,ms）在60\,FPS帧预算（16.7\,ms）中占比不到8\%，不影响渲染与追踪主循环。连续运行60秒等效测试中最小帧率529\,FPS，0帧低于30\,FPS。
-    \end{minipage}
+  \captionof{figure}{DBEW-NN端侧推理性能分析：单次推理时延分布（左，1000次采样）与60\,s模拟连续运行的瞬时FPS稳定性（右，3,600帧@60\,FPS等效）。红色虚线标注均值，橙色虚线标注P95分位，蓝色虚线标注60\,FPS目标线。NN推理增加时延（约1.3\,ms）在60\,FPS帧预算（16.7\,ms）中占比不足8\%，不影响渲染与SLAM追踪主循环。\label{fig:latency_distribution}}
 \end{center}
 
 三组实验共同表明：DBEW-NN方案以可忽略的端侧开销（+1.3\,ms、+221.5\,KB）换取了手势识别宏平均F1由0.700至0.967（+38.1\%）的显著提升，并在弱光和中等遮挡条件下保持了相对鲁棒性。混淆矩阵、t-SNE特征可视化和自注意力权重分析从多维度定性验证了轻量NN分类器替代几何分型前端的合理性与有效性。
@@ -566,7 +563,7 @@ AR眼镜的实际运行环境中存在手部追踪丢失、模型加载失败、
 
 \begin{center}
   \includegraphics[width=0.90\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_trigger_comparison.pdf}
-  \captionof{figure}{DBEW触发管线消融：不同门控组合下的事件精确率/召回率（左）和命令事件率（右）。``No gating"条件下每帧均提交事件（$\approx$60\,Hz），精确率极低；三重门控将事件率降至$<$5\,Hz同时保持高精确率。\label{fig:trigger_comparison}}
+  \captionof{figure}{DBEW触发管线消融：不同门控组合下的事件精确率与召回率（左）和命令事件率（右）。``No gating''条件下每帧均提交事件（$\approx$60\,Hz），精确率极低；三重门控（边沿$+$冷却窗$+$稳定帧）将事件率降至$<$5\,Hz，同时保持高精确率。图例置于绘图区外以避免遮挡数据。\label{fig:trigger_comparison}}
 \end{center}
 
 消融结果（表\ref{tab:trigger_ablation}、图\ref{fig:trigger_comparison}）验证了三个关键结论：（1）无门控条件下逐帧提交导致事件爆炸（$\approx$60\,Hz），大量NONE/过渡帧被错误提交，实际可用性为零；（2）单独使用边沿触发可将事件率降至约10\,Hz，但精确率仅约0.6——因为缺乏冷却窗抑制，手势抖动引起的类别短暂跳变仍会产生大量误事件；（3）``边沿+冷却窗+稳定帧"三重门控在精确率（$>$0.95）与召回率之间取得最优平衡，事件率控制在$<$5\,Hz（与用户预期的手势触发频率2--5次/秒一致），验证了DBEW触发管线设计的合理性。
