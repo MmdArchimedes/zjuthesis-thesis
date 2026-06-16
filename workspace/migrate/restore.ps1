@@ -224,7 +224,7 @@ $thesisDir = "$UserProfile\Documents\thesis"
 if (Test-Path "$thesisDir\.git") {
     Write-OK "论文仓库已存在，执行 git pull..."
     Push-Location $thesisDir
-    git pull origin main 2>$null
+    git pull origin master 2>$null
     Pop-Location
 } else {
     Write-Warn "正在克隆论文仓库..."

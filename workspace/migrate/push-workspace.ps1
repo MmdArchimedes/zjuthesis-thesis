@@ -107,7 +107,7 @@ if (-not $status) {
     git commit -m $commitMsg
 
     Write-Host "  Pushing to GitHub..." -ForegroundColor Gray
-    git push origin main 2>$null
+    git push origin master 2>$null
 
     if ($LASTEXITCODE -eq 0) {
         Write-Host "  Pushed successfully" -ForegroundColor Green
