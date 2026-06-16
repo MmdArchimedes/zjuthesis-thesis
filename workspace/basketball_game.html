@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏀 篮球投篮游戏</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d35 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .court {
+    background: linear-gradient(180deg, #c68642 0%, #d4954e 30%, #e0a85c 60%, #c68642 100%);
+    border-radius: 24px;
+    border: 6px solid #8b5e3c;
+    padding: 40px 50px;
+    box-shadow:
+      0 0 60px rgba(255, 165, 0, 0.3),
+      0 20px 60px rgba(0,0,0,0.5),
+      inset 0 2px 4px rgba(255,255,255,0.1);
+    position: relative;
+    min-width: 620px;
+  }
+
+  /* 球场标线 */
+  .court::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 20px; right: 20px; bottom: 20px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+  .court::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 20px; right: 20px;
+    border-top: 2px dashed rgba(255,255,255,0.2);
+    pointer-events: none;
+  }
+
+  h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    letter-spacing: 2px;
+  }
+
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    text-align: center;
+    color: #fff;
+  }
+  .stat .value {
+    font-size: 2.5em;
+    font-weight: 900;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    line-height: 1;
+  }
+  .stat .label {
+    font-size: 0.8em;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* 投篮条容器 */
+  .shot-meter {
+    position: relative;
+    background: linear-gradient(180deg, #1a1a2e, #16213e);
+    border-radius: 20px;
+    height: 60px;
+    border: 3px solid #333;
+    box-shadow: inset 0 4px 12px rgba(0,0,0,0.6);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  /* 完美区域 */
+  .sweet-spot {
+    position: absolute;
+    top: 0; bottom: 0;
+    background: linear-gradient(180deg, #ffd700, #ffaa00);
+    border-radius: 3px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 8px rgba(255,255,255,0.4);
+    z-index: 2;
+    transition: width 0.2s, left 0.2s;
+  }
+
+  /* 滑动指针 */
+  .indicator {
+    position: absolute;
+    top: -6px; bottom: -6px;
+    width: 8px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 16px rgba(255,255,255,0.9), 0 0 30px rgba(255,100,100,0.5);
+    z-index: 3;
+    transition: left 0.016s linear;
+  }
+  .indicator::after {
+    content: '🏀';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+
+  /* 刻度标记 */
+  .tick-marks {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0 8px;
+  }
+  .tick {
+    width: 2px;
+    background: rgba(255,255,255,0.15);
+    height: 100%;
+  }
+
+  .hint {
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9em;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+  }
+
+  .feedback-row {
+    text-align: center;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feedback {
+    font-size: 1.4em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+
+  .combo-text {
+    text-align: center;
+    color: #ff6b6b;
+    font-size: 1.1em;
+    font-weight: 700;
+    min-height: 28px;
+    margin-bottom: 8px;
+  }
+
+  /* 困难度指示器 */
+  .difficulty-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .diff-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8em;
+  }
+  .diff-pips {
+    display: flex;
+    gap: 4px;
+  }
+  .diff-pip {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #333;
+    transition: background 0.3s;
+  }
+  .diff-pip.active { background: #ff6b6b; box-shadow: 0 0 8px rgba(255,107,107,0.6); }
+
+  /* 粒子特效层 */
+  .particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .particle {
+    position: absolute;
+    font-size: 24px;
+    animation: flyUp 0.8s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes flyUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.5); }
+  }
+
+  /* 篮球入网动画 */
+  @keyframes swish {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+  .swish { animation: swish 0.3s ease-out; }
+
+  /* 震动 */
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
+  }
+  .shake { animation: shake 0.3s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- 粒子层 -->
+<div class="particles" id="particles"></div>
+
+<div class="court" id="court">
+  <h1>🏀 投篮挑战</h1>
+
+  <div class="scoreboard">
+    <div class="stat">
+      <div class="value" id="score">0</div>
+      <div class="label">得分</div>
+    </div>
+    <div class="stat">
+      <div class="value" id="streak">0</div>
+      <div class="label">连中</div>
+    </div>
+    <div class="stat">
+      <div class="value" id="best">0</div>
+      <div class="label">最佳连中</div>
+    </div>
+  </div>
+
+  <!-- 投篮条 -->
+  <div class="shot-meter" id="meter">
+    <div class="tick-marks">
+      <div class="tick"></div><div class="tick"></div><div class="tick"></div>
+      <div class="tick"></div><div class="tick"></div><div class="tick"></div>
+      <div class="tick"></div><div class="tick"></div><div class="tick"></div>
+      <div class="tick"></div><div class="tick"></div><div class="tick"></div>
+      <div class="tick"></div><div class="tick"></div><div class="tick"></div>
+      <div class="tick"></div><div class="tick"></div><div class="tick"></div>
+    </div>
+    <div class="sweet-spot" id="sweetSpot"></div>
+    <div class="indicator" id="indicator"></div>
+  </div>
+
+  <div class="hint">🎯 对准 <b style="color:#ffd700">金色区域</b> 按下 <b>空格键</b> 投篮！</div>
+
+  <div class="feedback-row">
+    <span class="feedback" id="feedback"></span>
+  </div>
+  <div class="combo-text" id="comboText"></div>
+
+  <div class="difficulty-bar">
+    <span class="diff-label">难度</span>
+    <div class="diff-pips" id="diffPips">
+      <div class="diff-pip active"></div>
+      <div class="diff-pip"></div>
+      <div class="diff-pip"></div>
+      <div class="diff-pip"></div>
+      <div class="diff-pip"></div>
+      <div class="diff-pip"></div>
+      <div class="diff-pip"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== 游戏状态 ==========
+const state = {
+  score: 0,
+  streak: 0,
+  bestStreak: 0,
+  level: 1,              // 1-8 难度等级
+  indicatorPos: 0,       // 0-100 (百分比位置)
+  direction: 1,          // 1=右, -1=左
+  speed: 0.6,            // 基础速度 (每帧移动百分比)
+  sweetSpotSize: 16,     // 金色区域宽度百分比
+  sweetSpotCenter: 50,   // 金色区域中心位置百分比
+  gameActive: true,
+};
+
+// ========== DOM元素 ==========
+const indicator = document.getElementById('indicator');
+const sweetSpot = document.getElementById('sweetSpot');
+const scoreEl = document.getElementById('score');
+const streakEl = document.getElementById('streak');
+const bestEl = document.getElementById('best');
+const feedbackEl = document.getElementById('feedback');
+const comboTextEl = document.getElementById('comboText');
+const meterEl = document.getElementById('meter');
+const courtEl = document.getElementById('court');
+const particlesEl = document.getElementById('particles');
+const diffPips = document.getElementById('diffPips');
+
+// ========== 音效（使用 Web Audio API 合成） ==========
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playBeep(freq, duration, type = 'sine', vol = 0.08) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  } catch(e) { /* 静默 */ }
+}
+
+function sfxPerfect() {
+  playBeep(880, 0.1, 'sine', 0.1);
+  setTimeout(() => playBeep(1100, 0.15, 'sine', 0.1), 80);
+  setTimeout(() => playBeep(1320, 0.2, 'sine', 0.08), 160);
+}
+
+function sfxGood() { playBeep(600, 0.12, 'triangle', 0.07); }
+function sfxMiss() { playBeep(120, 0.25, 'sawtooth', 0.05); }
+function sfxLevelUp() {
+  playBeep(523, 0.08, 'square', 0.06);
+  setTimeout(() => playBeep(659, 0.08, 'square', 0.06), 70);
+  setTimeout(() => playBeep(784, 0.08, 'square', 0.06), 140);
+  setTimeout(() => playBeep(1047, 0.15, 'square', 0.08), 210);
+}
+
+// ========== 粒子特效 ==========
+function spawnParticles(x, y, emoji, count = 8) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('span');
+    p.className = 'particle';
+    p.textContent = emoji;
+    p.style.left = (x + (Math.random() - 0.5) * 80) + 'px';
+    p.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+    p.style.animationDuration = (0.5 + Math.random() * 0.6) + 's';
+    p.style.fontSize = (16 + Math.random() * 20) + 'px';
+    particlesEl.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+}
+
+// ========== 生成新的金色区域位置 ==========
+function randomizeSweetSpot() {
+  // 随着等级提高，金色区域更小、位置更偏
+  const margin = state.sweetSpotSize / 2 + 4;
+  const min = margin;
+  const max = 100 - margin;
+  state.sweetSpotCenter = min + Math.random() * (max - min);
+  updateSweetSpotDOM();
+}
+
+function updateSweetSpotDOM() {
+  const half = state.sweetSpotSize / 2;
+  const left = state.sweetSpotCenter - half;
+  sweetSpot.style.left = left + '%';
+  sweetSpot.style.width = state.sweetSpotSize + '%';
+}
+
+// ========== 难度调整 ==========
+function updateDifficulty() {
+  // 等级 1-8，每3连中升一级
+  const newLevel = Math.min(8, 1 + Math.floor(state.streak / 3));
+
+  if (newLevel !== state.level) {
+    state.level = newLevel;
+    sfxLevelUp();
+  }
+
+  // 难度参数
+  state.sweetSpotSize = Math.max(4, 16 - (state.level - 1) * 1.6);  // 16% → 4%
+  state.speed = 0.5 + (state.level - 1) * 0.25;                      // 0.5 → 2.25 (%每帧)
+
+  // 更新DOM
+  updateSweetSpotDOM();
+  updateDiffPips();
+}
+
+function updateDiffPips() {
+  diffPips.querySelectorAll('.diff-pip').forEach((pip, i) => {
+    pip.classList.toggle('active', i < state.level);
+  });
+}
+
+// ========== 判定投篮 ==========
+function shoot() {
+  if (!state.gameActive) return;
+
+  const pos = state.indicatorPos;
+  const half = state.sweetSpotSize / 2;
+  const center = state.sweetSpotCenter;
+  const left = center - half;
+  const right = center + half;
+
+  const meterRect = meterEl.getBoundingClientRect();
+  const indicatorX = meterRect.left + (pos / 100) * meterRect.width;
+  const indicatorY = meterRect.top + meterRect.height / 2;
+
+  let points, emoji, sfx, feedbackClass;
+
+  // 完美：指针在金色区域内
+  if (pos >= left && pos <= right) {
+    const distFromCenter = Math.abs(pos - center) / half; // 0=正中, 1=边缘
+    if (distFromCenter < 0.25) {
+      // 空心入网！
+      points = 3;
+      emoji = '🔥';
+      sfx = sfxPerfect;
+      feedbackClass = '#ffd700';
+      spawnParticles(indicatorX, indicatorY, '🔥', 14);
+    } else if (distFromCenter < 0.6) {
+      // 完美
+      points = 2;
+      emoji = '🏀';
+      sfx = sfxGood;
+      feedbackClass = '#4caf50';
+      spawnParticles(indicatorX, indicatorY, '🏀', 8);
+    } else {
+      // 擦边
+      points = 1;
+      emoji = '👌';
+      sfx = sfxGood;
+      feedbackClass = '#8bc34a';
+      spawnParticles(indicatorX, indicatorY, '✨', 5);
+    }
+    state.streak++;
+    state.score += points;
+  } else {
+    // 投丢
+    const dist = Math.min(Math.abs(pos - left), Math.abs(pos - right));
+    points = 0;
+    emoji = '💨';
+    sfx = sfxMiss;
+    feedbackClass = '#ff4444';
+    state.streak = 0;
+  }
+
+  // 更新最佳连中
+  if (state.streak > state.bestStreak) {
+    state.bestStreak = state.streak;
+  }
+
+  // 刷新UI
+  scoreEl.textContent = state.score;
+  streakEl.textContent = state.streak;
+  bestEl.textContent = state.bestStreak;
+
+  // 反馈文字
+  if (points === 3) {
+    feedbackEl.innerHTML = `<span style="color:${feedbackClass}">空心入网！+3</span>`;
+    courtEl.classList.add('swish');
+    setTimeout(() => courtEl.classList.remove('swish'), 300);
+  } else if (points === 2) {
+    feedbackEl.innerHTML = `<span style="color:${feedbackClass}">漂亮！+2</span>`;
+  } else if (points === 1) {
+    feedbackEl.innerHTML = `<span style="color:${feedbackClass}">擦边 +1</span>`;
+  } else {
+    feedbackEl.innerHTML = `<span style="color:${feedbackClass}">打铁了...</span>`;
+    courtEl.classList.add('shake');
+    setTimeout(() => courtEl.classList.remove('shake'), 300);
+  }
+
+  // 连中文字
+  if (state.streak >= 3) {
+    comboTextEl.textContent = `🔥 ${state.streak} 连中！`;
+    comboTextEl.style.color = state.streak >= 10 ? '#ff0' : state.streak >= 6 ? '#ff9800' : '#ff6b6b';
+  } else {
+    comboTextEl.textContent = '';
+  }
+
+  sfx();
+
+  // 调整难度并重新随机位置
+  updateDifficulty();
+  randomizeSweetSpot();
+}
+
+// ========== 游戏循环 ==========
+let lastTime = 0;
+function gameLoop(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const dt = Math.min(timestamp - lastTime, 33); // 限制最大delta防止切tab后瞬移
+  lastTime = timestamp;
+
+  if (state.gameActive) {
+    // 移动指示器
+    const moveAmount = state.speed * (dt / 16.67); // 标准化到60fps
+    state.indicatorPos += moveAmount * state.direction;
+
+    // 边界反弹
+    if (state.indicatorPos >= 100) {
+      state.indicatorPos = 100;
+      state.direction = -1;
+    } else if (state.indicatorPos <= 0) {
+      state.indicatorPos = 0;
+      state.direction = 1;
+    }
+
+    indicator.style.left = state.indicatorPos + '%';
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+// ========== 键盘控制 ==========
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' || e.key === ' ') {
+    e.preventDefault();
+    // 需要先激活AudioContext（浏览器策略）
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    shoot();
+  }
+});
+
+// 移动端触摸支持
+meterEl.addEventListener('click', (e) => {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  shoot();
+});
+
+// ========== 初始化 ==========
+function init() {
+  randomizeSweetSpot();
+  updateSweetSpotDOM();
+  updateDiffPips();
+  requestAnimationFrame(gameLoop);
+}
+
+init();
+
+console.log('🏀 投篮挑战已就绪！');
+console.log('  - 按空格键投篮');
+console.log('  - 对准金色区域 = 得分');
+console.log('  - 连中升级，速度加快，区域缩小');
+console.log('  - 完美正中 = 空心入网 +3分');
+</script>
+</body>
+</html>

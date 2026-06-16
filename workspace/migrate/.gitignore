@@ -1,0 +1,7 @@
+# 备份产物 — 包含敏感信息 (SSH密钥、API密钥等)，绝对不能提交到 Git
+migrate_backup/
+migrate_backup_*.zip
+
+# 临时文件
+*.tmp
+*.log

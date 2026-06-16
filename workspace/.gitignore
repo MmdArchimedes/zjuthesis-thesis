@@ -1,0 +1,6 @@
+# workspace .gitignore
+*.pdf
+*.png
+*.jpg
+__pycache__/
+*.pyc
