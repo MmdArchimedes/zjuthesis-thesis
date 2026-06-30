@@ -33,7 +33,7 @@
     研究缺口 & 本文动机与切入点 & 主要研究内容承载 & 预期作用 \\
     \hline
     传统二维呈现难以连续阅读省域时空证据链 & 以 AR 将地图、时序与计量面板绑定在同一视野与同一状态语义下 & 第\ref{sec:ch4_req}节—第\ref{sec:ch4_summary}节可视化与状态驱动联动 & 降低“图—表—文”切换成本，提升证据一致性 \\
-    穿戴场景下键鼠交互可达性差、指令易误触 & 引入手势、射线、语音等多模态互补，并做稳定化与冲突消解 & 第\ref{sec:ch3_req}节—第\ref{sec:mm_fusion}节多模态交互与融合 & 提升走动式讲解与临场操作可行性 \\
+    穿戴场景下键鼠交互可达性差、指令易误触 & 引入手势、射线、语音等多模态互补，并做稳定化与冲突消解 & 第\ref{sec:ch3_arch_overview}节—第\ref{sec:ch3_fusion}节多模态交互与融合 & 提升走动式讲解与临场操作可行性 \\
     大模型易与计量结论混用、存在幻觉风险 & 将 LLM 限定为纠错/解释层，并与数据引擎解耦 & 第\ref{sec:ch3_speech_llm}节及第\ref{sec:ch4_arch}节数据流设计 & 在增强自然语言交互的同时维持可审计性 \\
     实证结论与展示口径易脱节 & 以统一变量口径导出数据资产并驱动可视化 & 第\ref{ch:empirical_de_es}章与第\ref{sec:ch5_viz}节沉浸阅读链路 & 支撑“统计结果可沉浸核对” \\
     \hline
@@ -67,7 +67,7 @@
 
 \textbf{第\ref{ch:introduction}章 引言。}阐述研究背景、研究意义，梳理国内外研究现状，指出现有不足与本文动机的逻辑对应关系，明确研究内容、技术路线与创新点，并给出论文整体结构。
 
-\textbf{第\ref{ch:theory}章 理论基础与概念框架。}界定数字经济、能源结构优化与 AR 沉浸式分析等核心概念，梳理新结构经济学、技术创新扩散、空间计量经济学与人机交互等相关理论，分析数字经济与能源结构的作用机制，为后续系统设计与实现提供理论与文献依据。
+\textbf{第\ref{ch:theory}章 相关技术研究综述。}围绕AR多模态交互与沉浸式可视化两大核心技术维度，系统梳理手势识别（骨骼序列建模、轻量端侧模型、规则与学习融合）、多模态融合与冲突消解（融合分类体系、冲突类型、置信度驱动仲裁）以及AR沉浸式可视化的研究进展，明确现有工作的不足与本文的技术定位，为后续第三、四章系统设计提供直接的文献依据。
 
 \textbf{第\ref{ch:ar_interaction}章 面向省域数据场景的 AR 多模态交互设计与实现。}作为本文的核心技术章节之一，围绕手势、语音、射线与大语言模型四大交互通道，系统阐述需求分析、架构设计、基于深度骨骼约束的手势交互算法、语音识别与 LLM 增强链路以及多模态融合与冲突消解机制。
 
@@ -77,65 +77,106 @@
 
 \textbf{第\ref{ch:summary}章 总结与展望。}总结全文的学术贡献、工程创新与应用价值，指出当前研究的局限性，并对未来研究方向进行展望。
 
-各章之间的逻辑关系为：第\ref{ch:introduction}章提出问题并明确研究框架；第\ref{ch:theory}章提供理论与概念基础；第\ref{ch:ar_interaction}章和第\ref{ch:ar_visualization}章是全文的核心，分别解决"如何交互"和"如何呈现"两个关键技术问题，二者共享统一状态语义并协同工作；第\ref{ch:empirical_de_es}章将前两章的技术方案应用于具体分析场景，验证系统的实际效用；第\ref{ch:summary}章对全文进行总结与展望。
+各章之间的逻辑关系为：第\ref{ch:introduction}章提出问题并明确研究框架；第\ref{ch:theory}章系统综述AR手势识别、多模态融合与沉浸式可视化的技术脉络，明确本文的技术定位与研究缺口；第\ref{ch:ar_interaction}章和第\ref{ch:ar_visualization}章是全文的核心，分别解决"如何交互"和"如何呈现"两个关键技术问题，二者共享统一状态语义并协同工作；第\ref{ch:empirical_de_es}章将前两章的技术方案应用于具体分析场景，验证系统的实际效用；第\ref{ch:summary}章对全文进行总结与展望。
 
 
 
-\chapter{理论基础与概念框架}
+\chapter{相关技术研究综述}
 \label{ch:theory}
 
-本章对数字经济与能源结构优化、AR 可视化及多模态交互等相关领域的国内外研究进行综述，为后续第三章多模态与智能交互设计、第四章 AR 可视化系统提供文献与理论依据。
+本章围绕AR多模态交互与沉浸式可视化两大核心技术维度，系统梳理手势识别、多模态融合与冲突消解、AR可视化等关键领域的研究进展与技术脉络。不同于传统学位论文将经济学理论单列一章的做法，本文将文献综述聚焦于系统实现的工程技术基础，旨在从现有工作中提炼本文方法的设计依据与创新定位，为第三章多模态交互设计与第四章AR可视化系统提供直接的技术文献支撑。
 
+\section{AR手势识别技术综述}
+\label{sec:ch2_gesture_survey}
 
-\section{核心概念界定}
+手势识别是可穿戴增强现实人机交互的核心技术之一。本节从基于视觉与骨骼的识别方法、面向移动端的轻量模型、规则式与学习式方法的对比融合三条技术脉络梳理现有工作。
 
-\subsection{数字经济}
-数字经济是以数据资源为关键生产要素，以现代信息网络为主要载体，以数字技术创新为核心驱动力，通过数字技术与实体经济深度融合，推动生产方式、生活方式和治理方式变革的新型经济形态\cite{shuzizhongguo2024}。国家数据局在《“数据要素 × 绿色低碳” 三年行动计划研究报告》中明确，省域维度的数字经济发展需聚焦数字基础设施建设、数字产业化发展、产业数字化转型及数字治理能力四大核心维度，其发展水平是区域数字技术应用与要素配置能力的综合体现 \cite{guojashujubu2025}。相较于宏观层面，省域数字经济具有显著的空间异质性特征，受区域资源禀赋、经济基础、政策导向影响，其发展规模与质量呈现出东中西部梯度差异，成为影响区域产业升级与能源转型的关键变量\cite{fu2025}。
+\subsection{基于视觉与骨骼的手势识别方法}
 
-\subsection{能源结构优化}
-能源结构是指一定时期内某一区域各类能源在消费总量中的占比及相互依存关系，而能源结构优化则是通过调整能源消费构成，降低化石能源依赖、提升清洁能源消费比重，同时提高能源利用效率、减少能源消费的环境外部性，最终实现能源消费的低碳化、高效化与可持续化 \cite{shihongyuan2026}。在 “双碳” 目标背景下，省域能源结构优化并非单一的能源品类替代，而是涵盖能源生产、传输、消费全链条的系统性变革，其评价维度既包括清洁能源占比、煤炭消费占比等结构指标，也包含单位 GDP 能耗、单位产值污染物排放等效率与环境指标\cite{lin2024}，是区域绿色发展水平的核心衡量标准。
+早期手势识别以RGB图像为主要输入模态，代表性工作包括基于3D卷积神经网络的动态手势在线检测与分类\cite{molchanov2016online_gesture}。该类方法直接从像素级特征学习手势的时空表示，在受控实验室条件下取得了较高精度，但对光照变化、背景复杂度和相机视角敏感，且计算开销较大，不宜直接部署于移动AR头显。
 
-\subsection{AR 沉浸式分析}
-AR 沉浸式分析是在前文所述 AR 定义下，将增强现实技术与数据分析深度融合的新型研究范式，依托计算机视觉、空间定位、虚实融合等技术，将抽象的多维度数据转化为与真实物理空间无缝结合的沉浸式、可交互场景，打破传统二维数据分析的时空限制与认知壁垒 \cite{liu2025can}。相较于传统可视化分析，AR 沉浸式分析具有空间化、交互性、沉浸式三大核心特征，能够将省域尺度的经济能源数据映射为三维空间视觉对象，支持用户通过自然交互方式实现数据的多维探索与动态推演，其在空间数据理解与决策支持方面的优势已在智慧城市、环境监测等领域得到实证验证 \cite{zhongguoguodixinxinxiye2026}。省域数字经济与能源结构的 AR 沉浸式分析，即依托 AR 技术构建省域尺度下二者关系的空间化分析场景，实现数据的直观呈现、机制的可视化解析与政策的情景化推演。
+随着消费级深度相机和手部跟踪SDK的普及，\textbf{基于骨骼关键点的手势识别}逐渐成为主流范式。骨骼表示将手部姿态抽象为稀疏关节坐标集合$\mathcal{J}=\{\mathbf{p}_j\}_{j=1}^{J}$，相比稠密RGB输入具有维度低（$J\times3\ll H\times W\times3$）、视点不变性强、隐私友好等优势。Sun等\cite{sun2024ar_gesture_survey}在其综述中指出，基于骨骼关键点的深度学习方法正成为AR手势交互的主流范式——2022--2024年间发表的AR手势论文中超过60\%采用了骨骼或关键点作为输入表示。
 
-\section{相关理论基础}
-\subsection{新结构经济学理论}
-新结构经济学理论由林毅夫提出，其核心观点为经济体的产业结构由其要素禀赋结构决定，且要素禀赋结构的动态变化会推动产业结构的转型升级，而政府的合理干预能够加速这一转型过程 \cite{lin2010}。数字经济作为一种新型要素禀赋，其发展改变了区域原有的资本、劳动力、技术等要素配置结构，为能源产业转型提供了新的要素支撑。在省域层面，不同区域的数字经济要素禀赋存在显著差异：东部地区数字基础设施完善、数字技术人才集聚，数字要素成为推动能源结构优化的核心动力；中西部地区数字要素禀赋相对薄弱，数字经济对能源结构的推动作用更多依赖基础设施建设与技术外溢 \cite{zhangkeyun2025}。该理论为分析省域数字经济与能源结构的异质性关系提供了核心理论支撑，明确了不同区域数字经济驱动能源结构优化的差异化路径。
+在骨骼序列建模方面，Yan等\cite{yan2018stgcn}提出了时空图卷积网络（ST-GCN），首次将人体骨架序列统一建模为时空图结构，以图卷积同时捕获单帧内的空间关节关系与跨帧的时序动态。该工作开创了图卷积骨架动作识别方向，在NTU RGB+D数据集上大幅超越此前方法，但其约3.1M的参数量和计算开销使其不适于移动端部署。Chen等\cite{chen2021ctrgcn}进一步提出通道拓扑细化图卷积（CTR-GCN），通过学习通道特异的图拓扑，在NTU RGB+D 120上取得当时最优精度，但参数量仍较大。与图卷积路线并行发展的是基于卷积神经网络（CNN）的轻量化路线。Yang等\cite{yang2019ddnet}提出的DD-Net以手工设计的几何特征（关节对距离JCD+双尺度运动特征）替代原始坐标输入，仅用0.15M参数的1D-CNN即达到与ST-GCN可比甚至更优的精度。DD-Net的设计哲学——\textbf{几何特征先行、轻量CNN跟随}——对本文第三章DBEW--Gesture几何方法具有直接的启发意义。针对手势而非全身动作，Habib等\cite{habib2025skeleton_hgr}提出了基于数据融合与集成多流CNN的实时手势识别框架，并验证了在消费级硬件上的实时推理能力。HAN\cite{han2025hierarchical_attention}提出了一种极轻量的层次化自注意力网络，通过关节$\rightarrow$手指$\rightarrow$手掌的分层聚合，以约300倍小于GCN的计算量取得竞争性精度，再次证明了自注意力机制在骨骼手势识别中的有效性。
 
-\subsection{技术创新扩散理论}
-技术创新扩散理论由罗杰斯提出，阐释了技术创新在不同主体、不同区域间的传播过程、影响因素与作用机制，认为技术创新的扩散效果受创新本身的特性、传播渠道、接收者特征及社会环境等多重因素影响 \cite{huang2023}。数字技术作为通用性技术，其创新与扩散能够推动能源生产、传输、消费全链条的技术升级：智能电网、能源互联网等数字技术的扩散，提升了清洁能源的消纳能力；工业数字化改造技术的普及，降低了传统高耗能产业的能源消耗强度；大数据、人工智能技术在能源监测中的应用，提高了能源管理的精准性\cite{pan2024}。数字经济的发展加速了绿色能源技术的创新扩散，降低了清洁能源的开发与利用成本，为能源结构优化提供了关键技术保障，同时也解释了数字经济对能源结构优化的技术驱动路径\cite{anselin1988spatial}。
+\subsection{面向移动端与AR边缘设备的轻量模型}
 
-\subsection{空间计量经济学理论}
-空间计量经济学理论由 Anselin 等学者完善，其核心是突破传统计量经济学 “区域相互独立” 的假设，强调经济变量的空间相关性与空间异质性，认为区域经济行为并非孤立存在，而是存在显著的空间溢出效应\cite{liu2023}。省域数字经济的发展具有明显的空间集聚特征，东部沿海发达地区的数字经济发展会通过技术外溢、产业转移、人才流动等方式带动周边地区的数字经济发展，进而对周边地区的能源结构优化产生间接影响 。同时，不同区域的地理区位、资源禀赋、经济基础存在差异，数字经济对能源结构优化的影响系数与作用路径也会呈现出空间异质性\cite{fu2025}。该理论为从空间视角分析省域数字经济与能源结构的关系提供了方法论指导，推动了二者关系研究从 “静态截面” 向 “动态空间” 的延伸。
+将手势识别模型部署于AR头显面临算力受限、实时性要求和功耗散热三重约束。Fertl等\cite{fertl2025hgr_edge_survey}对边缘设备手势识别的传感器技术、算法和硬件进行了全面综述，指出轻量CNN和Transformer变体是当前在精度-效率曲线上最具竞争力的架构族。Zhao等\cite{zhao2022fast_skeleton_hgr}提出了基于骨架的快速手势识别模型，将手工几何特征与自动学习的运动轨迹特征融合，以0.16M参数达到94.6\%的14类手势准确率（SHREC'17基准），展示了”几何先验+轻量学习”路线的实用性。
 
-\subsection{人机交互理论}
-人机交互理论聚焦于人与计算机之间的信息交互方式与优化路径，核心是实现交互的自然性、高效性与智能化，适配不同应用场景的用户认知习惯\cite{dong2022}。AR 沉浸式分析以人机交互理论为基础，突破了传统鼠标、键盘的交互模式，结合 AR 设备的硬件特征，设计手势、语音、凝视等自然交互方式，构建符合人类空间认知习惯的数据分析场景 。在省域数字经济与能源结构的分析中，基于人机交互理论的 AR 沉浸式设计，能够将抽象的计量结果与空间数据转化为直观的三维视觉对象，降低用户对复杂数据的认知门槛，提升用户对数据时空特征与内在机制的理解能力。同时，该理论也为大模型与 AR 系统的融合提供了指导，推动交互方式从 “被动操作” 向 “主动智能” 升级。
+在模型部署方面，Zaccardi等\cite{zaccardi2023hololens_barracuda}比较了HoloLens 2上Unity Barracuda与Windows ML的ONNX推理性能，证明Barracuda在骁龙850平台上显著快于WinML，为AR头显端侧推理的工程可行性提供了实验依据。Pierdicca等\cite{pierdicca2024deepreality}开源了DeepReality框架，实现了ONNX模型经Unity Barracuda在AR Foundation中的即插即用集成。Zhang等\cite{openxr2025gesture}基于OpenXR标准的26点手部骨骼，在Meta Quest 3上以约1.3\,ms单帧推理时延达到约95\%的分类准确率，为本文DBEW-NN的轻量设计提供了直接参照。上述工作共同验证了”ONNX+Unity Barracuda”技术栈在移动XR平台上的工程可行性，本文第三章DBEW-NN的端侧部署方案（\ref{sec:ch3_nn_deployment}节）即沿袭这一范式。
 
-\section{数字经济与能源结构的作用机制}
-数字经济对能源结构优化的作用机制体现在直接效应与间接效应两个层面，且二者均存在非线性特征与空间溢出效应，不同效应在东中西部省份呈现出差异化的作用强度，共同构成数字经济驱动省域能源结构优化的完整路径体系。
-\subsection{直接效应：资源配置优化与消费方式变革}
-数字经济对能源结构优化的直接效应主要表现为能源资源配置效率的提升与能源消费方式的数字化变革。一方面，数字技术通过构建高效的信息传播与资源配置平台，打破能源市场的信息不对称，实现能源生产与消费的精准匹配：智能电网与能源互联网技术能够实时监测区域能源供需状况，实现清洁能源的跨区域优化调度，提升清洁能源的消纳效率 ；大数据分析技术能够精准识别工业企业与居民用户的能源消费特征，实现能源需求的精细化管理，降低能源浪费。国家数据局的研究表明，数字技术的应用可使区域能源配置效率提升 15\%-20\%，直接推动能源利用效率的提高 。
+\subsection{规则式方法与学习式方法的对比与融合}
 
-另一方面，数字经济推动居民与产业能源消费方式向数字化、智能化转型，直接降低传统消费模式带来的能源消耗。在居民消费层面，线上办公、数字文旅、远程教学等新业态的发展，减少了人员流动带来的交通能源消耗；智能家电、智能家居的普及，实现了居民生活能源的智能化管控，降低了生活能源消耗强度。在产业消费层面，数字产业化发展推动数字服务业、高端制造业等低耗能产业发展，直接降低区域产业整体能源消耗；数字基础设施的绿色化建设，如新能源充电桩、光伏供电基站等，直接提升清洁能源在基础设施能源消费中的占比。
-\subsection{间接效应：技术创新、产业升级与治理提升}
-数字经济对能源结构优化的间接效应主要通过技术创新、产业结构升级与绿色治理能力提升三大路径实现，三大路径相互关联、协同作用，共同推动省域能源结构的系统性优化。
+在手势识别的技术谱系中，规则式方法（基于显式几何判据或有限状态机）与学习式方法（基于深度神经网络）并非互斥，而是具有互补优势。Vosinakis等\cite{vosinakis2024ar_gesture_interaction_review}对AR手势交互技术的综述指出：规则式方法在可解释性、零训练成本和确定性行为方面具有优势，但在复杂手势和新颖姿态的泛化能力上不及学习方法；学习式方法精度高、鲁棒性强，但需要标注数据与端侧推理资源。二者的典型特征对比如表\ref{tab:rule_vs_learning}所示。
 
-技术创新路径是数字经济驱动能源结构优化的核心间接路径。数字经济为绿色能源技术研发提供了先进的技术手段与数据支撑：大数据与人工智能技术能够模拟清洁能源开发场景，优化风电、光伏等清洁能源的开发方案，提升开发效率；数字仿真技术能够降低能源技术研发的试验成本，加速绿色能源技术的创新与转化；数字技术与传统能源技术的融合，推动了煤电清洁高效利用、储能技术等关键技术的突破。同时，数字经济推动了技术创新成果的快速扩散，通过线上技术平台、产业联盟等方式，实现绿色能源技术在不同区域、不同企业间的快速传播，扩大技术创新对能源结构优化的辐射范围 。
+\begin{center}
+    \captionof{table}{\label{tab:rule_vs_learning}规则式与学习式手势识别方法的特征对比}
+    \small
+    \begin{tabular}{p{3.0cm}p{4.5cm}p{4.5cm}}
+    \hline
+    维度 & 规则式方法（几何判据） & 学习式方法（深度神经网络） \\
+    \hline
+    可解释性 & 高——每步判定可追溯至几何量 & 低——隐空间特征难以直接解释 \\
+    训练数据需求 & 零——仅需设定阈值 & 高——需大量标注数据 \\
+    参数规模 & 零——无训练参数 & 小到中——轻量模型约50--500K \\
+    对新类别的扩展 & 困难——需人工分析设计规则 & 较易——重新训练/微调即可 \\
+    噪声鲁棒性 & 弱——噪声直接破坏几何判据 & 强——可通过数据增强学习噪声模式 \\
+    类间模糊边界 & 硬阈值导致歧义 & 软概率输出可表达不确定性 \\
+    部署复杂度 & 低——常数级判断 & 中——需推理运行时+模型文件 \\
+    \hline
+    \end{tabular}
+\end{center}
 
-产业结构升级路径是数字经济驱动能源结构优化的重要传导路径。数字经济通过两大方式推动区域产业结构升级，进而间接促进能源结构优化：一是推动传统高耗能产业的数字化改造，通过工业互联网、智能制造等技术，优化生产流程、提高生产效率，实现传统产业的节能降耗；二是带动数字服务业、高端制造业等低耗能、高附加值产业发展，优化区域产业结构，降低区域整体能源消耗强度 。\citeauthor{fu2025}~\cite{fu2025}的研究表明，数字经济发展每提升 1 个百分点，区域产业结构高级化水平提升 0.32 个百分点，进而推动能源结构优化指数提升 0.18 个百分点 。
+近年来，若干工作尝试融合两种范式的优势。Zhao等\cite{zhao2022fast_skeleton_hgr}将几何特征与CNN空间建模结合，属于”几何特征+轻量CNN”路线的典型代表。Yusuf等\cite{geometric_spatiotemporal_hgr2023}将几何特征提取与CNN空间建模和多头注意力时序建模结合，在DHGD和SHREC'17数据集上验证了混合方案的有效性。本文第三章的工作遵循”规则为基、学习增强、两者互补”的设计哲学：DBEW--Gesture以几何判据提供可解释的基线方法和零成本冷启动能力；DBEW-NN在保持触发管线不变的前提下以轻量NN替代几何分型前端，获得数据驱动的精度与鲁棒性提升；两者通过统一的\texttt{GestureEvent}接口共享下游触发与融合逻辑，实现了”即插即用”的工程架构。
 
-绿色治理能力提升路径是数字经济驱动能源结构优化的制度保障路径。数字技术构建了精准的碳排放监测与能源管理体系，实现对区域能源消费的实时监控、动态预警与科学调控 ：物联网技术能够实现对工业企业、重点用能单位能源消耗与污染物排放的实时监测，解决传统监测方式的滞后性问题；大数据分析技术能够对区域能源消费数据进行深度挖掘，识别能源结构优化的关键节点与薄弱环节，为政府制定能源政策提供数据支撑；数字政务平台能够实现能源政策的快速发布与精准执行，提升政策实施效率。数字经济的发展提升了政府绿色治理的精准性与有效性，为能源结构优化提供了坚实的制度与管理保障。
-\subsection{非线性特征}
-数字经济对能源结构优化的作用并非简单的线性关系，而是呈现出倒 U 型非线性特征：在数字经济发展初期，数字基础设施建设需要大量的能源投入，且数字技术与能源产业的融合程度较低，其对能源结构优化的推动作用相对有限；当数字经济发展到一定水平后，数字技术的创新与扩散效应逐渐凸显，数字经济对能源结构优化的推动作用显著增强；当数字经济发展超过临界值后，其对能源结构优化的边际促进作用呈现递减特征。\citeauthor{shihongyuan2026}~\cite{shihongyuan2026}的研究证实，省域数字经济发展对能源结构优化的倒 U 型拐点约为 0.507，多数东部省份已跨越该拐点，而中西部省份仍处于拐点左侧。
+\section{AR多模态融合与冲突消解技术综述}
+\label{sec:ch2_fusion_survey}
 
-\section{AR 沉浸式分析系统的理论支撑}
-AR 沉浸式分析系统的构建与应用依托于增强现实技术理论、三维可视化理论与智能交互理论三大核心理论，各理论相互支撑、协同作用，共同保障系统的科学性、实用性与先进性，为省域数字经济与能源结构的沉浸式分析提供了完整的理论框架。
-\subsection{增强现实技术理论}
-增强现实技术理论是 AR 沉浸式分析系统的核心技术基础，其核心是通过计算机视觉、虚实融合等技术，将虚拟信息与真实物理空间进行无缝融合，实现虚拟信息的空间化、实时化呈现 。该理论强调渲染一致性、人机工效与可理解性，使抽象数据以三维可视化形式呈现并与用户自然交互相衔接。在本研究中，增强现实技术理论支撑省域数字经济与能源结构数据在沉浸式环境中的组织与呈现；第三章则从多模态交互角度，将手势、射线、语音与大语言模型语义层作为与可视化模块协同的输入与智能增强通道，降低对传统键鼠的依赖并提升分析任务的连贯性 。同时，增强现实技术的虚实融合特性，使得抽象的省域数据能够与真实物理空间结合，实现数据的沉浸式呈现，提升用户的感知与分析体验 。
-\subsection{三维可视化理论}
-三维可视化理论是将多维度、结构化的省域数字经济与能源结构数据转化为三维空间可视化对象的理论基础，其核心是通过数据映射与视觉编码方式，将数据的属性、时空特征转化为直观的视觉元素（如颜色、高度、形状、纹理等），实现数据的空间化、层次化呈现 。该理论强调可视化的科学性、可读性与直观性，要求根据数据的类型与特征选择合适的视觉编码方式：对于连续型指标（如数字经济发展指数、能源结构优化指数），采用颜色渐变与高度映射相结合的方式，直观呈现指标的空间差异；对于分类型指标（如东中西部区域），采用不同的颜色或纹理进行区分，清晰呈现数据的分类特征 。在本研究中，三维可视化理论为省域三维地图可视化、指标时空演化可视化、计量结果可视化的设计提供了指导，通过合理的视觉编码与空间布局，将抽象的面板数据与计量结果转化为直观的三维视觉对象，让用户能够快速感知省域数据的时空差异与演化趋势。
-\subsection{智能交互理论}
-智能交互理论为 AR 沉浸式分析系统的交互设计与大模型融合提供了理论指导，其核心是实现人与系统之间的自然、高效、智能交互，适配 AR 沉浸式场景的交互需求与用户认知习惯 。该理论包含自然交互、上下文感知、意图识别、智能问答等关键原理，强调交互方式的场景适配性与用户友好性：结合 AR 设备的硬件特征，设计手势、语音、凝视等自然交互方式，替代传统的键鼠交互，提升交互的便捷性与自然性；通过上下文感知技术，捕捉用户的操作场景与交互意图，实现个性化的交互服务。在本研究中，智能交互理论为系统的交互设计与大模型驱动的智能交互模块提供了核心指导：一方面，基于该理论设计了手势、语音、凝视三位一体的自然交互体系，适配 AR 沉浸式分析的场景需求；另一方面，依托上下文感知与意图识别原理，实现了大模型与 AR 系统的深度融合，让系统能够感知用户的操作上下文与交互意图，提供智能问答、情景模拟等个性化服务。
+可穿戴AR设备的多传感器配置使用户可以同时通过手势、语音和头显射线与虚拟内容交互，多通道并行输入在提升交互带宽与自然性的同时，引入了多模态冲突这一根本性挑战。本节从融合分类体系、冲突类型与消解策略、置信度的融合角色三个维度梳理现有工作。
+
+\subsection{多模态融合的分类体系}
+
+Heinrich等\cite{heinrich2025fusion_survey}基于PRISMA指南对50个多模态人机交互系统（2009--2025）进行了系统性分类，将融合方法划分为三大类。\textbf{早期融合}（特征级）在分类器之前合并不同模态的原始或低级特征，可捕获跨模态低层交互但面临维度爆炸——不同模态的特征维度、采样率和分布差异使得联合表示空间的设计极为复杂。\textbf{晚期融合}（决策级）对各通道独立分类后合并决策，模块化强、各通道可独立优化与回退，但无法利用跨模态低层交互。\textbf{混合融合}在子系统组内早期融合、组间晚期融合，精度最高但架构最复杂，目前主要见于研究原型。Heinrich等\cite{heinrich2025fusion_survey}指出，在50个综述系统中，晚期融合占比最高（约60\%），尤其适合传感器模态差异大的可穿戴场景。
+
+Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022--2025）的综述进一步指出：手势+眼动凝视仍是最主流的多模态组合，但语音相关研究在2024年因LLM突破而激增；描述性晚期融合（规则式决策级融合）仍占主导地位，原因在于ML-based融合面临多模态训练数据稀缺的瓶颈；CARE（Complementary/Assigned/Redundant/Equivalent）模型是设计多通道分工的主要理论框架。
+
+本文第三章TSTQ--Fusion选择描述性晚期融合+置信度驱动的动态优先级仲裁，基于以下三点考量：（1）手势（26$\times$3维骨骼坐标@60Hz）、语音（16kHz音频$\rightarrow$ASR文本，间歇触发）和射线（单次命中事件）的传感器采样率、时延特性和置信度语义各不相同，不适合早期特征级融合；（2）省域经济分析任务中跨通道冲突主要表现为相邻时刻的语义互斥输入而非严格并发，规则+置信度的组合足以覆盖多数冲突模式；（3）规则的显式性与可解释性符合计量分析对”可追溯决策”的要求。
+
+\subsection{多模态冲突类型与消解策略}
+
+多模态冲突是指两个或多个输入通道在同一时间窗口内发出语义互斥的指令。Wang等\cite{wang2026ar_io_survey}将冲突分为三类：\textbf{互补冲突}（两通道指令指向同一目标的不同方面，可通过合并解决）、\textbf{冗余冲突}（两通道发出语义相同的指令，可通过去重解决）和\textbf{互斥冲突}（两通道发出语义互斥的指令，需要外部仲裁机制）。其中互斥冲突是融合机制的核心处理对象。
+
+Bai等\cite{bai2025ar_gesture_speech}对16个AR手势+语音系统的综述揭示了一个关键发现：75\%的多模态AR系统使用固定规则融合（如手势永远优先于语音），但在上下文变化时这种静态优先级策略导致错误率显著升高。Lee\cite{lee2025attentional_friction}将多模态整合不良导致的现象定义为”注意摩擦”（attentional friction），并推荐”明确反馈以降低摩擦”的设计模式——这正是本文TSTQ--Fusion中保守拒绝+AR HUD轻提示策略的理论依据。
+
+Radlak等\cite{radlak2025probabilistic_fusion}提出了基于概率框架的多模态融合方法，通过为每个通道的每帧输出维护后验概率分布，在贝叶斯框架下联合推理最可能的事件序列。该方法在概念上与TSTQ--Fusion的置信度驱动仲裁一致，但其全事件空间推断在移动XR平台上的计算开销不可忽略。TSTQ--Fusion采用更轻量的评分函数（$O(|W_k|\log|W_k|)$复杂度）以适配骁龙XR2级别的算力预算，在最优融合精度与实时性约束之间取得工程折中。
+
+\subsection{AR手势交互中的多模态系统集成}
+
+将手势识别嵌入完整的AR交互系统时，需解决多通道协调问题。Wang等\cite{wang2026ar_io_survey}从输入输出双视角系统梳理了AR人机交互技术，将手势交互归为”显式控制型”输入模态，强调其在高频短指令场景下的独特价值。Shao等\cite{shao2024cv_gesture}进一步将3D手部骨骼与眼动追踪信号融合，提升了AR场景下意图理解的鲁棒性。多通道用户界面理论\cite{dong2022}为本文手势、射线、语音与大语言模型四通道的互补分工提供了理论框架。
+
+本文第三章的多模态系统设计与上述文献形成以下对话：（1）采用CARE模型将手势定位为”显式控制通道”，与语音（符号输入）和射线（空间选择）明确分工；（2）手势事件经DBEW稳定化后以统一\texttt{GestureEvent}结构提交TSTQ--Fusion融合层，以置信度驱动动态优先级进行跨通道仲裁——直接回应了Bai等\cite{bai2025ar_gesture_speech}指出的”缺乏置信度利用”问题；（3）各通道具有独立的降级策略（如NN失败时回退至几何规则），避免了单通道故障导致系统级失效。
+
+\section{AR沉浸式可视化技术综述}
+\label{sec:ch2_vis_survey}
+
+AR沉浸式可视化是将增强现实技术与数据分析深度融合的新型研究范式。相较于传统桌面可视化，AR可视化具有空间化、交互性、沉浸式三大核心特征：将多维度数据映射为三维空间视觉对象，支持用户通过自然交互实现数据的多维探索，并在虚实融合环境中降低复杂数据的认知门槛\cite{liu2025can}\cite{chen2025immersive_econ}。
+
+在AR空间数据可视化方面，三维可视化理论通过数据映射与视觉编码（颜色渐变、高度映射、纹理区分等），将省域面板数据的属性与时空特征转化为直观的三维视觉元素\cite{Liu_Jia_Nie_Rosenberg_Interrante_Zhu-Tian_2025}。空间数据叙事与多视图联动技术\cite{chen2025immersive_econ}在经济地理场景中逐步受到关注，混合现实设备的空间建模与实时跟踪能力不断提升\cite{panzeri2026cartographic}\cite{siriborvornratanakul2024ar_vr_review}。在声明式图表生成方面，React框架的声明式UI范式\cite{walke2013react}对前端开发产生了革命性影响——其核心洞察”与其手动管理DOM的增量变更，不如每次声明式地描述UI应该长什么样”启发了本文第四章ChartForge将图表生成重新表述为”从意图描述到图表规约的声明式映射”。大模型与扩展现实的结合已形成较为清晰的技术范式\cite{wang2026ar_io_survey}\cite{li2025llm_ar_fusion}，在场景理解、语音驱动交互与空间智能体等方向快速突破。
+
+然而，面向省域尺度经济能源面板数据的沉浸式分析系统仍然较少，尤其缺乏针对计量分析结果的定制化呈现方案。现有AR可视化方案在图表类型固化、需求到代码的语义鸿沟、生成质量缺乏形式化度量等方面存在局限，这构成了本文第四章ChartForge+SDCR--Vis融合架构的直接研究动机。
+
+\section{本章小结与研究定位}
+\label{sec:ch2_summary}
+
+综合上述三个技术维度的文献综述，可提炼出以下关键研究缺口与本文的对应定位：
+
+\textbf{在手势识别维度}，现有工作在骨骼序列建模和轻量模型部署方面取得了显著进展，但存在两方面的不足：（1）缺乏在AR经济数据分析这一特定场景下对纯几何规则与轻量NN增强两种方案的精度-效率-鲁棒性三维权衡的系统对比；（2）现有轻量模型的部署验证多集中于Meta Quest 3或HoloLens 2平台，在Rokid AR Studio（骁龙XR2+Unity Barracuda）这一国产AR平台上的端到端验证尚属空白。本文第三章以DBEW--Gesture和DBEW-NN分别覆盖两条技术路线，在同一实验框架下完成系统对比，并给出完整的ONNX$\rightarrow$Barracuda部署方案。
+
+\textbf{在多模态融合维度}，75\%的现有AR多模态系统使用固定规则融合\cite{bai2025ar_gesture_speech}，缺乏对置信度信号的利用，且静态优先级策略在上下文变化时错误率显著升高。本文第三章TSTQ--Fusion通过置信度驱动的动态优先级仲裁（式~\ref{eq:fusion_score}）和保守拒绝机制，在规则可解释性与数据驱动适应性之间取得了工程折中。
+
+\textbf{在AR可视化维度}，现有方案多采用固定编码图表，缺乏从自然语言意图到图表规约的声明式生成能力。本文第四章ChartForge框架将图表生成从”手写渲染代码”升级为”NL$\rightarrow$规约$\rightarrow$AR图表”的声明式AIGC范式，并保持与第三章统一状态向量的协同。
+
+上述三个技术维度在系统层面通过统一状态向量$\mathbf{s}_t$实现闭环：手势、语音、射线经单通道处理和TSTQ--Fusion融合后更新$\mathbf{s}_t$；ChartForge+SDCR--Vis读取$\mathbf{s}_t$驱动省域地图、时间轴、图表与面板的协同刷新。这一”交互$\rightarrow$状态$\rightarrow$可视化”的架构主线贯穿本文第三、四、五章。
 
 \chapter{面向省域数据场景的AR多模态交互设计与实现}
 \label{ch:ar_interaction}
@@ -176,8 +217,8 @@ AR 沉浸式分析系统的构建与应用依托于增强现实技术理论、�
 架构上，系统遵循“多路输入—通道内处理—融合写状态—可视化与语义并行消费”的分层思路，如图\ref{fig:ch3_architecture}所示。
 
 \begin{center}
-  \resizebox{0.95\linewidth}{!}{%
   \begin{tikzpicture}[
+    scale=0.88, transform shape,
     node distance=0.32cm and 0.28cm,
     box/.style={draw, rounded corners=2pt, align=center, inner sep=3pt, minimum width=2.2cm, minimum height=9mm, font=\footnotesize},
     arr/.style={-{Stealth[length=1.5mm]}, semithick}
@@ -205,8 +246,7 @@ AR 沉浸式分析系统的构建与应用依托于增强现实技术理论、�
     \draw[arr] (sp) -- (fusion); \draw[arr] (lp) -- (fusion);
     \draw[arr] (fusion) -- (state);
     \draw[arr] (state) -- (output);
-  \end{tikzpicture}%
-  }
+  \end{tikzpicture}
   \captionof{figure}{第三章多模态交互系统总架构：四路输入经通道内处理后进入TSTQ--Fusion融合层，统一写入状态向量后驱动可视化刷新与语义输出。\label{fig:ch3_architecture}}
 \end{center}
 
@@ -214,9 +254,7 @@ AR 沉浸式分析系统的构建与应用依托于增强现实技术理论、�
 
 工程实现上，客户端以Unity游戏引擎与Rokid UXR组织渲染与采集，服务端以FastAPI承载LLM与数据访问，前后端经局域网以JSON进行结构化交互；手势NN模型经ONNX导出后在Unity Barracuda运行时执行推理，语音链路以Vosk离线ASR为基座辅以LLM后处理。
 
-本章后续各节按四通道展开：第\ref{sec:gesture_related_work}节系统梳理手势识别领域的技术演进与相关工作；第\ref{sec:ch3_gesture_original}节详述原始几何判据手势交互算法（DBEW--Gesture），含数据流建模、分型规则、触发管线与用户实验；第\ref{sec:ch3_gesture_nn}节在此基础上引入轻量神经网络增强方案（DBEW-NN），按学术论文格式完整呈现数据采集、模型设计、训练策略与对比实验；第\ref{sec:ch3_speech_llm}节面向AR眼镜的特殊约束，更新离线语音识别与轻量LLM增强链路；第\ref{sec:ch3_fusion}节参考2025年多模态融合综述的最新进展，优化TSTQ--Fusion仲裁机制；第\ref{sec:ch3_summary}节总结全章。
-
-\input{gesture_related_work.tex}
+本章后续各节按四通道展开：手势识别领域的系统综述已前置至第\ref{ch:theory}章第\ref{sec:ch2_gesture_survey}节（AR手势识别技术综述）与第\ref{sec:ch2_fusion_survey}节（AR多模态融合技术综述），本章不再重复文献梳理，直接进入方法设计与实验评估；第\ref{sec:ch3_gesture_original}节详述原始几何判据手势交互算法（DBEW--Gesture），含数据流建模、分型规则、触发管线与用户实验；第\ref{sec:ch3_gesture_nn}节在此基础上引入轻量神经网络增强方案（DBEW-NN），按学术论文格式完整呈现数据采集、模型设计、训练策略与对比实验；第\ref{sec:ch3_bridge_gesture_fusion}节阐明从手势NN到多模态融合的置信度传递链路；第\ref{sec:ch3_speech_llm}节面向AR眼镜的特殊约束，实现离线语音识别与轻量LLM增强链路；第\ref{sec:ch3_fusion}节详述TSTQ--Fusion仲裁机制；第\ref{sec:ch3_summary}节总结全章。
 
 \section{原始几何判据手势交互算法（DBEW--Gesture）}
 \label{sec:ch3_gesture_original}
@@ -384,7 +422,7 @@ end for
 
 \textbf{骨骼模板构建}：依据Rokid UXR手部追踪SDK的关节枚举规范，构建右手标准骨骼模板$\overline{\mathbf{J}}\in\mathbb{R}^{26\times3}$（单位：米），包含腕关节（1个）、掌骨（1个）、拇指4段（CMC/MCP/IP/Tip）、其余四指各4段（MCP/PIP/DIP/Tip）以及辅助跟踪点（4个）。模板以腕关节为原点，手指自然伸展方向为$+y$轴，掌面法向为$-z$轴。
 
-\textbf{手势变形模型}：对每类目标手势$k\in\{1,\ldots,6\}$，定义关节弯曲角度向量$\boldsymbol{\theta}_k=(\theta_{\mathrm{thumb}},\theta_{\mathrm{index}},\theta_{\mathrm{middle}},\theta_{\mathrm{ring}},\theta_{\mathrm{pinky}})_k$。手指弯曲采用累积式关节旋转：总弯曲角按MCP:PIP:DIP $\approx$ 50:30:20比例分配，在每级关节处绕局部$x$轴（外展轴）施加旋转，经桡侧依次累积产生自然的指节弯曲弧线。拇指弯曲采用MCP+IP双关节模型并叠加对掌分量（绕$z$轴旋转）。掌心朝向通过前臂旋前/旋后角度（绕$y$轴旋转）控制。
+\textbf{手势变形模型}：对每类目标手势$k\in\{1,\ldots,6\}$，定义关节弯曲角度向量$\theta_k=(\theta_{\mathrm{thumb}},\theta_{\mathrm{index}},\theta_{\mathrm{middle}},\theta_{\mathrm{ring}},\theta_{\mathrm{pinky}})_k$。手指弯曲采用累积式关节旋转：总弯曲角按MCP:PIP:DIP $\approx$ 50:30:20比例分配，在每级关节处绕局部$x$轴（外展轴）施加旋转，经桡侧依次累积产生自然的指节弯曲弧线。拇指弯曲采用MCP+IP双关节模型并叠加对掌分量（绕$z$轴旋转）。掌心朝向通过前臂旋前/旋后角度（绕$y$轴旋转）控制。
 
 \textbf{个体差异模拟}：引入三种噪声源以增强合成数据的多样性——（1）手部尺度缩放（$\pm15\%$均匀分布），模拟不同手型大小；（2）关节弯曲执行噪声（$\sigma=8^\circ$高斯噪声），模拟同一个人每次手势执行的自然波动；（3）深度传感器噪声（$\sigma=1.5$\,mm高斯噪声），模拟Rokid深度相机的测量误差。
 
@@ -403,25 +441,24 @@ end for
 DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{T\times J\times C}$（$T=32$，$J=26$，$C=3$），输出类别概率向量$\mathbf{p}\in\mathbb{R}^{7}$。网络主体由空间嵌入、多尺度时序CNN、轻量自注意力与分类头四个计算阶段组成（其间包含关节点池化与位置编码两个中间步骤），如图\ref{fig:dbew_nn_architecture}所示。
 
 \begin{center}
-  \resizebox{0.95\linewidth}{!}{%
   \begin{tikzpicture}[
+    scale=0.85, transform shape,
     node distance=0.25cm and 0.22cm,
     stage/.style={draw, rounded corners=2pt, fill=blue!6, align=center, inner sep=4pt, minimum width=2.8cm, minimum height=15mm, font=\footnotesize},
     arrow/.style={-{Stealth[length=1.8mm]}, semithick}
   ]
-    \node[stage] (input) {输入\\$\mathbf{X}\in\mathbb{R}^{32\times26\times3}$\\32帧骨骼窗口};
+    \node[stage] (input) {输入\\$\mathbf{X}\in\mathbf{R}^{32\times26\times3}$\\32帧骨骼窗口};
     \node[stage, fill=orange!10, right=0.5cm of input] (spatial) {空间嵌入\\$1\times1$ Conv: $(J,C)\to d_{64}$\\LayerNorm};
     \node[stage, fill=green!8, right=0.5cm of spatial] (temporal) {多尺度时序CNN\\3层 D-Conv (d=1,2,4)\\BatchNorm + GELU};
     \node[stage, fill=red!10, right=0.5cm of temporal] (attention) {轻量自注意力\\单层 4-head SA\\$T\times T$ 时序上下文};
     \node[stage, fill=gray!12, right=0.5cm of attention] (head) {分类头\\GlobalAvgPool $\to 64$\\MLP: $64\to32\to7$};
-    \node[right=0.5cm of head, font=\footnotesize] (output) {$\mathbf{p}\in\mathbb{R}^7$\\Softmax};
+    \node[right=0.5cm of head, font=\footnotesize, align=center] (output) {$\mathbf{p}\in\mathbf{R}^{7}$\\Softmax};
     \draw[arrow] (input) -- (spatial);
     \draw[arrow] (spatial) -- (temporal);
     \draw[arrow] (temporal) -- (attention);
     \draw[arrow] (attention) -- (head);
     \draw[arrow] (head) -- (output);
-  \end{tikzpicture}%
-  }
+  \end{tikzpicture}
   \captionof{figure}{DBEW-NN模型架构：四阶段流水线——空间嵌入$\rightarrow$多尺度时序CNN$\rightarrow$轻量自注意力$\rightarrow$分类头。\label{fig:dbew_nn_architecture}}
 \end{center}
 
@@ -576,6 +613,37 @@ AR眼镜的实际运行环境中存在手部追踪丢失、模型加载失败、
 
 需要强调的是，此对比仅供量级参考而非严格基准比较——各方法的评估数据集、类别数、硬件平台均不相同。本文方法的增量价值在于：（1）参数量在所有方法中最小（57K），且在AR头显端侧完成了完整的ONNX$\rightarrow$Barracuda部署验证；（2）包含系统性的鲁棒性评估（4种噪声/遮挡条件）和触发管线消融，而非仅报告单一精度指标；（3）与几何规则baseline的全面对比（逐类F1、混淆矩阵、退化曲线），为AR手势交互系统中``规则vs学习"的技术选型提供了可量化的决策依据。
 
+\subsection{从手势识别到多模态融合：置信度信号的传递链路}
+\label{sec:ch3_bridge_gesture_fusion}
+
+在完成DBEW-NN的精度、鲁棒性与性能评估后，本节从系统集成视角阐明手势通道在多模态融合框架中的角色——这一桥梁性讨论将第\ref{sec:ch3_gesture_original}--\ref{sec:ch3_gesture_nn}节的手势识别成果与第\ref{sec:ch3_fusion}节的TSTQ--Fusion机制衔接起来，形成完整的"手势分类$\rightarrow$触发稳定化$\rightarrow$置信度注入$\rightarrow$跨通道仲裁"数据流。
+
+回顾DBEW--Gesture（第\ref{sec:ch3_gesture_original}节）和DBEW-NN（本节）的设计，手势通道的输出在\textbf{两个层面}为多模态融合提供了决策依据：
+
+\textbf{层面一：事件质量保障（触发管线）}。边沿触发—冷却窗—稳定帧三重门控（式~\ref{eq:gesture_trigger_final}）在通道内即完成了抖动过滤与连发抑制，确保提交至融合层的每个\texttt{GestureEvent}都已通过稳定性验证。这一"通道内预滤波"设计使融合层无需重复处理手势通道的低层噪声，从而将跨通道仲裁聚焦于语义层面的冲突消解。
+
+\textbf{层面二：置信度量化（NN Softmax分值）}。DBEW-NN输出的Softmax最大概率$s^{(t)}_{\mathrm{NN}}=\max\mathbf{p}^{(t)}\in[0,1]$直接作为手势事件的\texttt{confidence}字段写入统一事件结构$\mathcal{E}$（定义见第\ref{sec:ch3_fusion}节式~\ref{eq:fusion_event}）。该置信度随后进入TSTQ--Fusion的动态优先级评分函数（式~\ref{eq:fusion_score}），通过$\alpha_{\mathrm{gesture}}\cdot\mathcal{E}.\mathrm{conf}+\beta$项影响跨通道仲裁结果。这一设计是两篇论文创新点的\textbf{核心交汇处}：手势识别论文负责产出校准良好的置信度估计，融合论文负责在置信度驱动的仲裁框架中消费该信号。两个子系统的接口仅依赖统一事件结构中的\texttt{confidence}字段，实现了真正的解耦——无论前端分类器是几何规则（此时\texttt{confidence}取分型分数）还是NN（此时\texttt{confidence}取Softmax最大值），融合层均以相同方式处理。
+
+表\ref{tab:confidence_flow}总结了置信度信号从骨骼采集到仲裁决策的完整传递链路，可视化地展示了两个子系统的分工与衔接。
+
+\begin{center}
+    \captionof{table}{\label{tab:confidence_flow}置信度信号从手势识别到多模态融合的完整传递链路}
+    \small
+    \begin{tabular}{p{2.2cm}p{3.2cm}p{4.5cm}p{4.0cm}}
+    \hline
+    处理阶段 & 所在章节 & 核心操作 & 输出与传递 \\
+    \hline
+    骨骼采集 & \S\ref{sec:gesture_depth_skeleton} & Rokid UXR手部追踪（26关节$\times$3坐标） & $\mathcal{J}^{(t)}\in\mathbb{R}^{26\times3}$ \\
+    NN分类 & \S\ref{sec:ch3_gesture_nn} & SpatialEmbedding$\rightarrow$DilatedCNN$\rightarrow$SelfAttention$\rightarrow$Softmax & $\mathbf{p}^{(t)}\in\mathbb{R}^{7}$，$s^{(t)}_{\mathrm{NN}}=\max\mathbf{p}^{(t)}$ \\
+    触发门控 & \S\ref{sec:ch3_gesture_original} & 边沿触发$e^{(t)}\cdot$冷却窗$\psi^{(t)}\cdot$稳定帧$\phi^{(t)}$ & $u^{(t)}\in\{0,1\}$，候选\texttt{GestureEvent} \\
+    事件封装 & \S\ref{sec:ch3_fusion} & 写入$\mathcal{E}.\mathrm{conf}=s^{(t)}_{\mathrm{NN}}$ & $\mathcal{E}=(\mathrm{type},\mathrm{ts},\mathrm{conf},\mathrm{source},\mathrm{payload})$ \\
+    融合仲裁 & \S\ref{sec:ch3_fusion} & $\mathrm{score}=\alpha_{\mathrm{gesture}}\cdot\mathrm{conf}+\beta$ & 时间窗内最高分事件$\rightarrow$状态更新 \\
+    \hline
+    \end{tabular}
+\end{center}
+
+这一分层架构的核心工程优势在于\textbf{职责分离}：手势识别子系统专注于"从骨骼坐标到类别标签再到置信度"的感知问题，融合子系统专注于"从多源异步事件到单步状态迁移"的决策问题。两者通过\texttt{GestureEvent}接口的\texttt{confidence}字段完成信息交换，而不共享任何内部状态——这使得DBEW-NN可以独立升级（如替换为Transformer架构或增大参数量）而无需修改融合逻辑，反之亦然。
+
 \section{面向AR眼镜的离线语音识别与轻量LLM增强}
 \label{sec:ch3_speech_llm}
 
@@ -636,8 +704,8 @@ LLM增强的主要收益体现在专有名词纠错（如”浙江”$\rightarro
 LLM服务基于FastAPI，加载4比特量化模型以降低显存占用；提示词采用固定模板，将数据引擎提供的可验证数值注入并强制”结论—数据—解释”三段式结构，仅允许引用数据引擎返回的数值。前后端通过局域网以HTTP承载JSON进行交互。图\ref{fig:ar_llm_architecture}给出了五层模块的串联关系。
 
 \begin{center}
-  \resizebox{0.98\linewidth}{!}{%
   \begin{tikzpicture}[
+    scale=0.90, transform shape,
     node distance=0.38cm and 0.36cm,
     box/.style={draw, rounded corners=2pt, align=center, inner sep=3pt, minimum width=2.5cm, minimum height=10mm, font=\footnotesize},
     arr/.style={-{Stealth[length=1.6mm]}, semithick, shorten >=0.8pt, shorten <=0.8pt}
@@ -651,8 +719,7 @@ LLM服务基于FastAPI，加载4比特量化模型以降低显存占用；提示
     \draw[arr] (l2) -- (l3);
     \draw[arr] (l3) -- (l4);
     \draw[arr] (l4) -- (l5);
-  \end{tikzpicture}%
-  }
+  \end{tikzpicture}
   \captionof{figure}{AR + LLM 系统总体架构：五层模块经标准化接口串联，控制链路与语义服务共享数据引擎输出，从源头抑制幻觉。\label{fig:ar_llm_architecture}}
 \end{center}
 
@@ -673,9 +740,72 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 本文基于以下三点考量，选择\textbf{描述性晚期融合+置信度驱动的动态优先级仲裁}策略：（1）三通道的传感器采样率、时延特性和置信度语义各不相同，不适合早期特征级融合；（2）省域分析任务中跨通道冲突主要表现为相邻时刻的语义互斥输入而非严格并发，规则+置信度的组合足以覆盖多数冲突模式；（3）规则的显式性与可解释性符合计量分析对”可追溯决策”的要求，也与本文章节反复强调的”证据可审计”原则一致。
 
+图\ref{fig:tstq_pipeline}给出了TSTQ--Fusion三阶段管线的工作流程：手势、语音、射线与LLM四通道输出首先在阶段一（通道内稳定化）经各自门控过滤低质量事件；通过过滤的事件进入阶段二（跨通道时间窗仲裁），在500\,ms滑动时间窗内按置信度驱动动态优先级评分函数排序并消解冲突；胜出事件在阶段三（队列串行提交）中写入FIFO命令队列，逐帧串行执行以实现可追溯的单步状态迁移$\mathbf{s}_t\rightarrow\mathbf{s}_{t+1}$。
+
+\begin{center}
+  \begin{tikzpicture}[
+    scale=0.78, transform shape,
+    node distance=0.30cm and 0.35cm,
+    stagebox/.style={draw, rounded corners=3pt, align=center, inner sep=4pt, minimum width=2.4cm, minimum height=14mm, font=\footnotesize},
+    eventbox/.style={draw, rounded corners=2pt, fill=blue!5, align=center, inner sep=2pt, minimum width=2.0cm, minimum height=8mm, font=\footnotesize},
+    gatebox/.style={draw, rounded corners=2pt, fill=red!8, align=center, inner sep=2pt, minimum width=2.2cm, minimum height=9mm, font=\footnotesize},
+    arr/.style={-{Stealth[length=1.5mm]}, semithick},
+    dasharr/.style={-{Stealth[length=1.5mm]}, dashed, gray}
+  ]
+    % Phase I: Channel inputs
+    \node[eventbox, fill=blue!8] (gesture) {手势事件\\DBEW门控$u^{(t)}$};
+    \node[eventbox, fill=blue!8, below=0.4cm of gesture] (speech) {语音事件\\ASR+LLM增强};
+    \node[eventbox, fill=blue!8, below=0.4cm of speech] (ray) {射线事件\\凝视确认};
+    \node[eventbox, fill=blue!8, below=0.4cm of ray] (llm) {LLM事件\\语义服务};
+    % Phase I label
+    \node[font=\small\bfseries, left=0.5cm of gesture, text width=1.8cm, align=center] (p1label) {阶段一\\通道内\\稳定化};
+    % Gate boxes
+    \node[gatebox, right=1.2cm of gesture] (ggate) {$\mathcal{E}.\mathrm{conf}>\theta_g$\\$\land$ $u^{(t)}{=}1$};
+    \node[gatebox, right=1.2cm of speech] (sgate) {$c_{\mathrm{ASR}}>\theta_{\mathrm{ASR}}$\\$\land$ LLM合法};
+    \node[gatebox, right=1.2cm of ray] (rgate) {凝视稳定$>$200\,ms\\$\land$ 命中Mesh};
+    \node[gatebox, right=1.2cm of llm] (lgate) {白名单动作\\校验通过};
+    % Phase II label
+    \node[font=\small\bfseries, right=2.0cm of ggate, text width=2.0cm, align=center] (p2label) {阶段二\\跨通道\\时间窗仲裁};
+    % Time window box
+    \node[draw, rounded corners=3pt, fill=orange!10, align=center, inner sep=4pt, minimum width=4.0cm, minimum height=18mm, right=1.2cm of p2label] (arbiter) {置信度驱动动态优先级\\$\mathrm{score}{=}\alpha_{\mathrm{src}}\cdot\mathrm{conf}+\beta\cdot\mathbf{1}[\mathrm{src}{=}\mathrm{gesture}]$\\$\rightarrow$最高分胜出/保守拒绝};
+    % Phase III
+    \node[draw, rounded corners=3pt, fill=green!8, align=center, inner sep=4pt, minimum width=3.2cm, minimum height=14mm, right=1.0cm of arbiter] (queue) {阶段三：队列串行提交\\FIFO $\mathcal{Q}_{\mathrm{cmd}}$\\$\mathbf{s}_t\stackrel{\mathrm{cmd}}{\longrightarrow}\mathbf{s}_{t+1}$};
+    % State
+    \node[draw, rounded corners=2pt, fill=green!12, align=center, inner sep=3pt, minimum width=2.8cm, minimum height=10mm, right=0.8cm of queue] (state) {统一状态向量\\$\mathbf{s}_t=(y_t,m_t,p_t,\ldots)$};
+    % Reject
+    \node[draw, rounded corners=2pt, fill=gray!15, align=center, inner sep=2pt, minimum width=2.0cm, minimum height=8mm, below=0.5cm of arbiter] (reject) {保守拒绝\\HUD轻提示};
+
+    % Arrows: input to gate
+    \draw[arr] (gesture) -- (ggate);
+    \draw[arr] (speech) -- (sgate);
+    \draw[arr] (ray) -- (rgate);
+    \draw[arr] (llm) -- (lgate);
+    % Arrows: gate to arbiter
+    \draw[arr] (ggate.east) -- ++(0.3,0) |- (arbiter.west);
+    \draw[arr] (sgate.east) -- ++(0.3,0) |- (arbiter.west);
+    \draw[arr] (rgate.east) -- ++(0.3,0) |- (arbiter.west);
+    \draw[arr] (lgate.east) -- ++(0.3,0) |- (arbiter.west);
+    % Arrow: arbiter to queue
+    \draw[arr] (arbiter) -- (queue);
+    % Arrow: queue to state
+    \draw[arr] (queue) -- (state);
+    % Arrow: reject
+    \draw[dasharr] (arbiter.south) -- (reject.north) node[midway,right,font=\footnotesize] {无法消解};
+    % Phase grouping boxes (dashed)
+    \draw[dashed, gray, thick] (p1label.north east) ++(-0.2,0.5) rectangle ($(lgate.south east)+(0.1,-0.3)$);
+    \draw[dashed, gray, thick] (p2label.north east) ++(-0.2,0.5) rectangle ($(arbiter.south east)+(0.1,-0.3)$);
+  \end{tikzpicture}
+  \captionof{figure}{TSTQ--Fusion三阶段融合管线流程：阶段一完成四通道独立稳定化过滤；阶段二在500\,ms时间窗内以置信度驱动动态优先级评分消解冲突，不可消解时执行保守拒绝；阶段三以FIFO队列串行提交，确保单帧单次可追溯状态迁移。\label{fig:tstq_pipeline}}
+\end{center}
+
 \subsection{统一事件模型与通道内稳定化}
 
-所有通道的输出首先被标准化封装为统一事件结构$\mathcal{E}=(\mathrm{type}, \mathrm{ts}, \mathrm{conf}, \mathrm{source}, \mathrm{payload})$，其中$\mathrm{type}$为有限命令集中的动作类型，$\mathrm{ts}$为事件时间戳（以系统统一时钟为基准），$\mathrm{conf}\in[0,1]$为通道内置信度，$\mathrm{source}\in\{\mathrm{gesture},\mathrm{speech},\mathrm{ray},\mathrm{llm}\}$为来源标记，$\mathrm{payload}$携带具体参数。
+所有通道的输出首先被标准化封装为统一事件结构：
+\begin{equation}
+\mathcal{E}=(\mathrm{type}, \mathrm{ts}, \mathrm{conf}, \mathrm{source}, \mathrm{payload}),
+\label{eq:fusion_event}
+\end{equation}
+其中$\mathrm{type}$为有限命令集中的动作类型，$\mathrm{ts}$为事件时间戳（以系统统一时钟为基准），$\mathrm{conf}\in[0,1]$为通道内置信度，$\mathrm{source}\in\{\mathrm{gesture},\mathrm{speech},\mathrm{ray},\mathrm{llm}\}$为来源标记，$\mathrm{payload}$携带具体参数。
 
 \textbf{通道内稳定化}（阶段一）在各通道独立完成有效性筛选，将低质量输入挡在融合层之外：
 \begin{itemize}
@@ -707,7 +837,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \subsection{队列串行提交与状态一致性}
 
-\textbf{队列串行提交}（阶段三）确保单帧内仅发生一次可追溯状态迁移。仲裁胜出的事件进入FIFO命令队列$\mathcal{Q}_{\mathrm{cmd}}$，在每个渲染帧内串行取出并执行：$\mathbf{s}_t \xrightarrow{\mathrm{cmd}} \mathbf{s}_{t+1}$，每次状态变更均记录$(\mathrm{cmd}, t, \mathbf{s}_t\rightarrow\mathbf{s}_{t+1})$三元组，形成可审计的交互日志。
+\textbf{队列串行提交}（阶段三）确保单帧内仅发生一次可追溯状态迁移。仲裁胜出的事件进入FIFO命令队列$\mathcal{Q}_{\mathrm{cmd}}$，在每个渲染帧内串行取出并执行：$\mathbf{s}_t \stackrel{\mathrm{cmd}}{\longrightarrow} \mathbf{s}_{t+1}$，每次状态变更均记录$(\mathrm{cmd}, t, \mathbf{s}_t\rightarrow\mathbf{s}_{t+1})$三元组，形成可审计的交互日志。
 
 \subsection{多模态融合实验评估}
 
@@ -717,211 +847,40 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \section{本章小结}
 \label{sec:ch3_summary}
-本章面向省域经济能源数据的沉浸式分析场景，按多模态交互架构总览（第\ref{sec:ch3_arch_overview}节）、原始几何判据手势交互（第\ref{sec:ch3_gesture_original}节）、轻量神经网络增强手势（第\ref{sec:ch3_gesture_nn}节）、AR眼镜离线语音识别与轻量LLM增强（第\ref{sec:ch3_speech_llm}节）以及TSTQ--Fusion多模态融合与冲突消解（第\ref{sec:ch3_fusion}节）五部分递进展开，形成”需求$\rightarrow$单通道设计$\rightarrow$跨通道融合”的完整叙事链条。
 
-在手势通道中，DBEW--Gesture以几何判据实现可解释的基线方案（用户实验宏平均F1=0.912），DBEW-NN在此基础上以”即插即用”方式将分类精度提升至宏平均F1=0.965（+42\%），1.35\,ms推理时延对60\,FPS渲染主循环无影响，验证了轻量NN在AR头显端的工程可行性。在语音通道中，针对AR眼镜的弱网可用性、多声源干扰与领域专名密集三重约束，构建了”多麦波束成形$\rightarrow$离线ASR$\rightarrow$约束式LLM纠错$\rightarrow$规则解析”的端到端链路，将WER由18.4\%降至7.2\%。多模态融合层提出了置信度驱动的动态优先级仲裁策略（式~\ref{eq:fusion_score}），在静态规则与数据驱动之间取得折中，仲裁正确率达96.4\%，冲突率仅3.3\%。
+本章面向省域经济能源数据的沉浸式分析场景，按多模态交互架构总览（第\ref{sec:ch3_arch_overview}节）、原始几何判据手势交互DBEW--Gesture（第\ref{sec:ch3_gesture_original}节）、轻量神经网络增强手势DBEW-NN（第\ref{sec:ch3_gesture_nn}节）、置信度信号传递桥梁（第\ref{sec:ch3_bridge_gesture_fusion}节）、AR眼镜离线语音识别与轻量LLM增强（第\ref{sec:ch3_speech_llm}节）以及TSTQ--Fusion多模态融合与冲突消解（第\ref{sec:ch3_fusion}节）六部分递进展开，形成”需求$\rightarrow$单通道设计$\rightarrow$置信度传递$\rightarrow$跨通道融合”的完整叙事链条。手势识别与多模态融合领域的系统综述已前置至第\ref{ch:theory}章。
 
-本章形成的多模态事件流与TSTQ--Fusion仲裁规则，为第四章SDCR--Vis可视化管线提供了统一、可追溯、低冲突的交互输入，是”第五章估计量可进入沉浸空间被连续阅读”的必要入口条件。
-\chapter{状态驱动的AR沉浸式可视化系统设计与实现}
-\label{ch:ar_visualization}
-现有可视化与 AR 研究可概括为三类技术路径：一是面向统计结果的二维图表增强，通过折线、柱状与热力图表达时间演化和分组差异；二是地理空间三维化表达，将省域单元映射到颜色与高度通道；三是 AR 场景嵌入与自然交互耦合方法，强调在真实视野中完成空间定位、筛选与查询\cite{wang2026ar_io_survey}\cite{esri2026}\cite{panzeri2026cartographic}\cite{Liu_Jia_Nie_Rosenberg_Interrante_Zhu-Tian_2025}。这些方法分别在可读性、空间感知与交互自然性方面取得进展，但在“计量证据—空间载体—交互语义”统一上仍存在改进空间。
-
-从理论上看，信息可视化研究强调“数据—映射—视图”的可读编码与任务适配\cite{wang2026ar_io_survey}，地理可视化强调空间参照与多尺度认知，人机交互与 AR 文献则强调在真实世界中维持注意分配与低负荷操作。将三者贯通到计量经济学应用场景时，还需要额外满足两条约束：一是证据一致性，即屏幕上的颜色、高度与面板数字必须与估计量、标准误及检验结论同源，避免“好看但不可核对”；二是操作可追溯性，即每一次视图刷新应能回放到明确的状态变量更新，以便与计量识别框架下的反事实阅读方式相容。以往面向桌面端的经济学可视化较少同时承担上述两条约束，亦较少与穿戴式多模态输入在同一状态空间中闭环。
-
-在本文问题场景中，现有方案主要存在三点不足：其一，静态图表与地图视图分离，参数证据与空间证据之间缺乏连续阅读路径；其二，三维表现虽增强沉浸感，但若未采用统一状态变量驱动，交互命令与视图更新易不同步；其三，穿戴式设备受帧预算、遮挡和亮度环境约束，直接沿用桌面可视化布局容易导致信息拥挤与认知负担上升。本文的做法是以“状态驱动查询—归一化与通道映射—多视图联动”为主线，将第四章可视化层与第三章多模态事件层在同一状态空间中闭环耦合：用式~(\ref{eq:ch4_norm})--(\ref{eq:ch4_state_trigger})（见第\ref{sec:ch4_arch}节）把计量口径固化为可复现映射规则，用省域地图、时间轴、结果面板与机制图分担空间模式、动态演化、参数证据与传导解释四类认知任务，从而在可穿戴约束下兼顾证据可追溯、交互可执行与呈现可阅读。为便于指称，将该套\textbf{状态驱动的条件刷新多视图可视化}管线记为 \textbf{SDCR--Vis}（State-driven Conditional Refresh multi-view Visualization）。本章的创新性体现在：在统一状态向量下完成“第五章估计结果 $\rightarrow$ 第四章视图”的联动，并与第三章手势、语音、射线及 LLM 语义服务共享同一套状态语义，使沉浸式阅读与可审计的计量结论对齐。
-
-综上所述，AR可视化系统对计量分析的作用可总结为：强化空间证据与参数证据的对照阅读，支持跨年份/跨区域的动态浏览与课堂研讨，并为基准、异质性、稳健性与机制等叙述提供与地图联动的解释界面。
-
-本章安排如下：第\ref{sec:ch4_req}节给出基于计量分析任务的AR可视化系统的需求分析；第\ref{sec:ch4_arch}节根据任务需求给出分层架构、数据流与映射评价方法；第\ref{sec:ch4_impl}节阐述具体实现与部署方法；第\ref{sec:ch4_summary}节作章节总结。面向 Rokid AR Studio（Station Pro + Max Pro）原型实现，本章重点回答“如何把计量结果转化为可交互空间证据”的方法问题，并为第五章应用案例提供可复现的可视化技术支撑。
-\section{系统需求分析}
-\label{sec:ch4_req}
-从面向计量经济分析的可视化需求实际出发，本章关注的并非一般性地图美观，而是估计量在空间上的可核对呈现：省域着色与高度映射须与 Unity 数据引擎中的能源结构优化综合指数 $ES$（Energy Structure optimization index）与数字经济发展水平综合指数 $DEL$（Digital Economy Level index）及回归结果同源（$DEL$、$ES$ 的合成与计量含义见第\ref{sec:ch5_data_foundation}节与第\ref{sec:entropy_dt_fusion}节），时间轴与区域筛选不得擅自改变已发布估计口径。作为与传统数据大屏的对比，AR可视化系统的优势主要有：其一，解放双手。即第三章所描述的多模态交互，并且实现交互扩展到屏幕之外的整个环境的效果。其二，沉浸感强，三维空间的视图和交互操作更符合人类自然行为习惯。沉浸感主要来自三维省域 Mesh 与头动一致的观感、世界空间 UI 与身体尺度的匹配，以及式~(\ref{eq:ch4_state_trigger}) 所表达的“仅随状态变化重绘”的稳定刷新。相对传统大屏 BI 或 PPT 汇报，优势在于证据在同一视野场内连续展开，减少分屏导致的认知割裂；射线/凝视可把“指省—读数—看系数”闭环在同一交互链上完成，更接近“站在地图前讨论回归”而非“背对听众切幻灯片”。其三，携带性。区别于传统大屏的固定和不可移动，AR可视化系统可以实现随时随地观察分析对应的数据和信息，这是传统大屏无法替代的重要优势。
-
-因此，在 Rokid AR Studio 环境中，系统需将计量结论与机制解释以沉浸式、可交互的方式呈现，并与第三章已定义的交互语义一致。功能上，用户应能在三维空间中浏览中国省域地图并按 ES 或 DEL 进行着色或高度映射，沿时间轴（2014---2022 年）切换或播放以观察指标时序变化，按东部、中部、西部、东北筛选与高亮以对比区域异质性，并查看基准回归、异质性回归、核密度演化等结果面板，通过机制路径图读取传导关系要点。输入上，手势、语音口令、头显射线或凝视对省域的选择及主机方向键等均应映射为与第三章相同的状态变量更新，避免交互层命令与渲染层可响应状态脱节。非功能需求方面，在省域 Mesh 与多面板同时存在时维持透视条件下的可读性、在弱光与头动条件下保持编码对比度，并在目标硬件上达到可用的帧率与加载时延，均为原型验收的隐含约束。
-
-\section{架构设计}
-\label{sec:ch4_arch}
-
-在可穿戴算力与透视显示约束下，如何把第五章导出的结构化结果稳定地送到用户眼前，并与第三章多模态输入对齐。\textbf{与既有工作的差别}在于：常见 GIS 或 BI 看板多采用“桌面窗口 + 鼠标键盘”栈，状态隐含在控件焦点中；本文则必须把状态外显为 $\mathbf{s}_t$，并让地图、时间轴、面板与机制图在同一刷新周期内一致更新，否则 AR 场景中的空间锚定反而会放大不一致的感知代价。\textbf{理论依据}仍来自可视化“编码—解码”与认知负荷理论：将查询与映射从呈现中分离（数据层与映射层），将多视图绑在同一状态机上，可降低用户在工作记忆间拼接碎片证据的负担；式~(\ref{eq:ch4_state_trigger}) 给出的条件刷新则是对交互系统实时性与能耗约束的工程化表达。
-
-\subsection{分层技术与模块划分}
-
-按照图\ref{fig:ch4_architecture}，系统采用“四层递进、单主链分发”的分层组织。第一层为交互层，细分为六自由度（6 Degrees of Freedom，6DoF）位姿、射线拾取、凝视确认、语音/手势与状态缓存五个子模块，负责把第三章多模态输入统一为可执行状态更新。第二层为数据层，细分为数据文件、Resources 读入、字段解析与 (省,年) 索引四个子模块，完成从静态资产到可检索内存结构的转换。第三层为查询与映射层，细分为键查找、归一化 $n$、颜色 $\mathbf{c}$ 与高度 $h$ 四个子模块，对应式~(\ref{eq:ch4_norm})--(\ref{eq:ch4_visual_mapping}) 的编码过程。第四层为呈现层，细分为省域地图、时间轴、结果面板与机制图四个视图，分别承载空间差异、时序演化、参数证据与机制解释。
-
-层间数据流沿“交互中枢 $\rightarrow$ 数据中枢 $\rightarrow$ 映射中枢 $\rightarrow$ 多视图分发”执行：交互层以凝视确认与状态缓存为提交入口，数据层以字段解析为主枢纽，查询层以归一化节点为汇总与分发中心，再并行驱动四类视图刷新。该结构使不同输入通道在同一状态语义下收敛，并保证一次状态迁移对应一次可追溯的多视图更新，从而在 AR 场景下同时满足实时性与证据一致性要求。
-
-\subsection{数据流与多视图协同}
-
-从信息架构角度，多视图协同的本质是\textbf{同一潜在状态的多通道外显}：地图回答“哪里高/哪里低”，时间轴回答“何时改善”，结果面板回答“统计上是否支持”，机制图回答“通过什么路径”。若四者不同步，读者会在 AR 高沉浸环境中产生更强的认知冲突感，因此本文把协同刷新写进数据流设计而非仅写进 UI 规范。数据流以年份与区域状态为驱动：用户选定年份或区域后，系统在内存索引中定位记录，将 ES 与 DEL 映射到颜色与高度通道，并同步刷新全国或分区域时序统计图与结果面板。省域地图承载空间差异，时间序列面板呈现动态演化，回归结果卡片提供参数证据，机制图解释作用路径；四类视图在同一交互动作下协同更新，以减轻传统展示中图、表、文割裂的问题，支持沿地图、参数、机制连续阅读。该协同关系与图\ref{fig:ch4_architecture}中自查询映射节点至四视图的多路输出相一致。
-\begin{center}
-  \includegraphics[width=0.8\textwidth]{ch4-1-architecture.png}
-  \captionof{figure}{\label{fig:ch4_architecture}省域 AR 可视化系统分层架构}
-\end{center}
-\subsection{可视化映射方法与评价指标}
-
-为提升方法可复现性，本文将可视化编码明确为“归一化—通道映射—状态提交”三步，其\textbf{理论动机}是：在可穿戴透视显示上，颜色与高度的可辨阈受环境光与头动影响更大，若缺少显式归一化区间，读者难以在省份间做可比判断；若缺少条件刷新规则，则容易以帧率换一致性，破坏“所见即可核对”的学术用途。对任一指标值 $v_{i,t}$，先进行区间归一化
-\begin{equation}
-  n_{i,t}=\frac{v_{i,t}-v_{\min}}{v_{\max}-v_{\min}},
-  \label{eq:ch4_norm}
-\end{equation}
-其中 $v_{\min},v_{\max}$ 由当前任务配置（全样本或分区间）给出。随后将 $n_{i,t}$ 映射到颜色与高度通道：
-\begin{equation}
-  \mathbf{c}_{i,t}=\mathrm{Lerp}(\mathbf{c}_{\min},\mathbf{c}_{\max},n_{i,t}),\quad
-  h_{i,t}=h_{\min}+\lambda_h n_{i,t},
-  \label{eq:ch4_visual_mapping}
-\end{equation}
-其中 $\mathbf{c}_{i,t}$ 为省域 Mesh 颜色，$h_{i,t}$ 为可选高度增量，$\lambda_h$ 为高度放大系数。该表达将编码规则从实现细节中抽离为形式化函数，便于跨设备复现与参数对比。
-
-在交互执行层，系统仅当状态向量 $\mathbf{s}_t=\{\text{year},\text{province},\text{indicator},\text{region}\}$ 发生变化时触发重绘，可记为
-\begin{equation}
-  \Delta \mathbf{s}_t \neq \mathbf{0}\ \Rightarrow\ \text{RenderUpdate}(\mathbf{s}_t),
-  \label{eq:ch4_state_trigger}
-\end{equation}
-从而避免冗余刷新带来的帧率波动。该规则与第三章事件队列串行提交机制一致，保证输入事件到视觉结果的单步可追踪映射。
-
-评价指标方面，本文采用“性能—可读性—一致性”三维标准：性能以平均帧率、关键路径时延与加载耗时衡量；可读性以色阶区分度、面板可见性与目标定位时间衡量；一致性以同一状态输入下多视图输出一致率衡量。通过该指标组可对不同编码参数与布局策略进行对照实验，为后续用户测试提供量化依据。
-
-
-\section{具体实现}
-\label{sec:ch4_impl}
-
-实现层回答\textbf{如何把架构落地为可运行原型}：在工程上复用 Unity 资源管线、碰撞体拾取与世界空间 UI 等成熟组件，在方法上则严格复用第\ref{sec:ch4_arch}节的映射公式与状态触发规则，使代码路径与论文符号一一对应，便于复核与开源复现。\textbf{与纯工程 demo 的差异}在于：数据表字段与第\ref{sec:ch5_data_foundation}节及第五章估计口径对齐，结果面板文本来自计量输出而非手写常数；\textbf{创新落点}则体现在多视图绑定同一状态机并与第三章事件队列对接，使“交互动作—状态迁移—视图刷新”可在日志中单步追踪。如图\ref{fig:ch4_ARsys}展示了最终实现 AR 可视化系统中的三维热力图以及对应的计量模型分析过程中的图表。
-\begin{center}
-  \includegraphics[width=\linewidth]{5.4-es-coloring-2022.png}
-  \captionof{figure}{\label{fig:ch4_ARsys} $ES$ 着色三维热力图与对应的计量模型分析图表}
-\end{center}
-\subsection{可视化编码与省域网格更新}
-
-实现上先将省界矢量数据简化并转为可渲染 Mesh，为每个省份维护统一 ID 与历年指标数组；交互发生时按当前年份与指标类型读取对应值，完成颜色与高度更新。为保证指标可比性，先作归一化 \(n=(v-m)/(M-m)\)，再施加视觉编码：ES 采用红到绿渐变突出优化程度，DEL 采用浅蓝到紫色渐变区分发展水平，并可通过可开关的高度通道增强空间层次。时间轴承担状态切换角色，拖动与自动播放触发地图、图表与文本同步刷新；区域筛选通过亮度抑制与目标高亮引导注意，使用户在观察整体时仍能聚焦指定区域或单一省份。
-
-
-\subsection{数据预处理与导入流程}
-
-在第五章计量分析完成后，系统将关键结果统一导出为逗号分隔值（Comma-Separated Values，CSV）与 JSON（JavaScript Object Notation）数据资产，核心包括“省份---年份---指标表”“回归结果表”与“核密度及时序统计表”。其中省份---年份---指标表包含 \texttt{province\_code}、\texttt{province\_name}、\texttt{year}、\texttt{ES}、\texttt{DEL} 与 \texttt{region\_tag} 等字段，用于驱动地图着色与筛选；回归结果表承载基准回归、异质性与中介效应参数，用于生成结果面板；核密度与时序统计表记录各年份全国及分区域统计量，用于“时空演化”可视化。
-
-在导入 Unity 前，所有数据文件均进行一致性检查，重点验证时间维度连续性（2014---2022 是否完整）、省份编码与地图模型 \texttt{province\_id} 的一致性（采用 GB/T 2260 省级行政代码体系）以及数值标准化与缺失值处理状态，确保与第\ref{sec:ch5_data_foundation}节变量及指标口径一致。通过检查后，数据统一放置在 Unity 工程 \texttt{Resources/Data/} 目录，保证运行时可按名称直接加载。
-
-工程实现中，Unity 侧通过 \texttt{DataManager} 脚本在场景启动时自动读取 CSV/JSON，使用 \texttt{TextAsset} 从 \texttt{Resources} 获取原始文本并解析为 \texttt{Dictionary\textless{}(province,\ year),\ IndicatorRecord\textgreater{}} 索引结构，同时将回归结果与核密度信息写入 \texttt{RegressionResult} 和 \texttt{StatisticsSummary} 结构体供 UI 调用。加载完成后，系统通过事件机制（如 \texttt{OnDataLoaded}）通知地图与面板模块进入初始化阶段。
-
-
-\subsection{Unity 场景与地图模块搭建}
-
-省域地图模块以公开省界矢量数据（如 shapefile）为基础，先在 QGIS / Blender 中完成简化与三角化，再将各省导出为独立 Mesh 或在 FBX 中以子网格区分，并为每个省份分配唯一 ID。导入 Unity 后，所有省份对象统一挂载在 \texttt{ChinaMapRoot} 下进行缩放与居中，每个省份对象附加 \texttt{MeshCollider}/\texttt{BoxCollider} 与 \texttt{ProvinceVisual} 脚本，以支持射线点击、颜色更新与高度编码，同时维护当前年份指标值供渲染与信息卡联动调用。
-
-
-相机与坐标系方面，场景仅保留主相机并由 Rokid UXR 框架接管，其位姿直接来自六自由度（6DoF）定位结果。为保持虚拟地图与用户视野关系稳定，\texttt{ChinaMapRoot} 固定放置在世界坐标系前方（如 (0,0,2) 米），并提供“重置视图”功能，在用户长距离移动后将地图重新放回视野前方，避免观察目标偏离。
-
-界面层将时间轴 Slider、区域筛选、结果面板与机制图统一设置为世界空间 Canvas，使其可在 AR 空间灵活编排。为保证可读性，主结果面板通常固定在地图右侧约 0.8---1.0 米位置并略高于视线中心，时间轴与播放控件置于地图下方以减少遮挡，同时采用半透明背景与清晰字体（如 Roboto）以适应不同光照环境。
-
-
-\subsection{交互逻辑与脚本组织}
-
-交互逻辑由 \texttt{TimelineController}、\texttt{ProvinceSelector}、\texttt{InfoPanel}、\texttt{RegionFilter}、\texttt{ResultPanelController} 与 \texttt{MechanismGraphController} 等脚本协同实现。时间轴控制器维护年份索引（如 2014 对应 0、2022 对应 8），在 Slider 变化时触发省份颜色、高度与图表数据同步刷新，并支持按固定间隔（如 1 秒/年）自动播放与循环/往返模式。
-
-用户交互方面，系统利用 Rokid UXR 射线输入或凝视光标检测与 \texttt{ProvinceVisual} 的碰撞事件；点击省份后触发高亮（材质变更或 Outline 叠加），并在侧边信息卡展示该省当年 ES、DEL、区域标签及对应回归参数，二次点击或点击空白区域则关闭信息卡并恢复默认状态。区域筛选通过 \texttt{region\_tag} 分组实现“东/中/西/全部”切换，非目标区域可降亮度或半透明显示，必要时叠加轻微缩放或脉冲动画以增强视觉引导，并与时间轴联动展示区域年度演化趋势。
-
-面板与机制图联动由 \texttt{ResultPanelController} 根据当前筛选状态（全国/东/中/西）和年份实时更新系数标签与解释文本，\texttt{MechanismGraphController} 则在节点点击后展开“技术效应”“消费效应”等说明，并联动高亮相关省份或区域，实现“参数解读---空间定位---机制解释”的闭环交互。
-
-
-\subsection{性能优化与调试}
-
-为保证 Rokid Station Pro 上的稳定帧率，渲染层优先采用 Mesh 合并与图形处理器（Graphics Processing Unit，GPU）实例化（GPU Instancing）降低绘制调用（draw call，业界常称 Draw Call）次数，控制省域模型面数（每省数百三角形量级），并使用移动端友好着色器，关闭实时阴影等高开销效果，仅保留必要的高光与渐变表达。
-
-真机调试方面，系统结合 Rokid Android Debug Bridge（ADB）日志与 UXR Profiler 监控帧率、中央处理器（Central Processing Unit，CPU）与 GPU 占用及内存消耗，并在 Unity 内置调试面板实时展示每秒帧数（Frames Per Second，FPS）、渲染批次与数据加载耗时，为后续迭代提供量化依据。
-
-在交互高频场景下，时间轴拖动采用“帧间插值 + 延迟提交”策略：快速拖动阶段仅更新采样年份（如每 2---3 年一帧），松开后再精确插值到目标年份；悬浮图表数值更新通过协程或异步任务执行，避免单帧集中计算导致卡顿。
-
-\subsection{算法复杂度与端侧性能开销分析}
-\label{sec:ch4_complexity}
-从算法复杂度看，手势分型与几何判据对单帧骨骼点集的处理规模为关节数 $|\mathcal{K}|$ 的常数倍，整体为 $O(|\mathcal{K}|)$；边沿触发、稳定帧与冷却窗在单帧上为常数级判断，事件队列写入为 $O(1)$。多模态融合阶段对时间窗内候选事件集合的规模受窗宽与输入频率上界控制，可采用常数上界近似为 $O(1)$（若显式维护长度为 $K$ 的候选缓冲，则为 $O(K)$）。可视化映射对 $N$ 个省份执行归一化与颜色更新为 $O(N)$；在式~(\ref{eq:ch4_state_trigger}) 条件下仅在状态变化时触发重绘，可避免每帧全量重复计算带来的额外开销。
-
-从空间复杂度看，核心索引结构为省份—年份键值映射，规模约为 $O(N\cdot T)$（$T$ 为年份跨度），回归与统计摘要为与表规模线性相关的常数级附加内存。端侧性能方面，原型在 Rokid Station Pro + Max Pro 上监测到约 30---45 fps（图\ref{fig:app_fps}）及相应 CPU 占用轨迹（图\ref{fig:app_cpu}）；该结果用于佐证工程可行性，但帧率仍随场景负载、光照与后处理开关而波动，后续可通过扩大采样场景与重复次数形成统计意义上的性能表。
-
-\subsection{部署与运行环境配置}
-应用构建目标为 Android（Rokid Station Pro 运行 YodaOS/Android）。在 Unity 中通过 Build Settings 选择 Rokid 设备目标，并安装 Rokid UXR SDK 与 XR Extension 包；开发机需配置 Android SDK（API Level 33）、NDK Tools 与 OpenJDK，以便正确打包与调试。生成的 Android 应用包（Android application Package，APK）通过 USB 或网络安装至 Station Pro，用户佩戴 Max Pro 并通过 Type-C 连接 AR Station 主机并开机后启动应用。为保障流畅体验，省域 Mesh 面数需控制（如每省简化至数百三角形以内），纹理与光照采用移动端友好设置，并关闭或降低不必要的后处理效果，使帧率稳定在 30 FPS 以上。数据文件（CSV）可打包进 Resources，确保首次启动即可显示结果与地图。上述工程与部署要点使原型在 Rokid AR Studio 平台上可稳定运行，为实验评估与用户测试提供可复现基础。
-
-\begin{center}  
-  \includegraphics[width=0.8\textwidth]{app_cpu.png}     
-  \captionof{figure}{\label{fig:app_cpu}ADB（Android Debug Bridge）日志（白色行代表可视化系统的性能数据）}  
-
-\end{center}
-
-\begin{center}  
-  \includegraphics[width=0.8\textwidth]{app_fps.png}     
-  \captionof{figure}{\label{fig:app_fps}应用实际运行时的帧率（FPS）监测}   
-\end{center}
-
-\section{与现有方法的对比分析}
-\label{sec:ch4_comparison}
-
-为定量评估本文 SDCR--Vis 可视化方案相较于现有方法的优势，本节从系统特性与用户任务表现两个层面展开对比。
-
-\subsection{系统特性对比}
-
-表\ref{tab:ch4_system_compare}从六个维度将本文方案与传统桌面可视化（以 ECharts + Tableau 为代表的大屏 BI 看板）、现有 AR 可视化系统（以文献\cite{wang2026ar_io_survey}\cite{Liu_Jia_Nie_Rosenberg_Interrante_Zhu-Tian_2025}所述的典型 AR 可视化框架为代表）进行系统特性层面的对比。
+本章的两大核心创新——DBEW-NN手势识别增强与TSTQ--Fusion多模态融合——通过置信度信号形成\textbf{紧耦合的协同关系}。表\ref{tab:ch3_innovation_summary}以公式化方式总结了本章关键创新点及其接口关系。
 
 \begin{center}
-    \captionof{table}{\label{tab:ch4_system_compare}AR 可视化系统特性对比}
+    \captionof{table}{\label{tab:ch3_innovation_summary}第三章核心创新点公式化总结与接口关系}
     \small
-    \begin{tabularx}{\linewidth}{p{3.0cm}XXX}
+    \begin{tabular}{p{2.5cm}p{4.0cm}p{4.0cm}p{3.5cm}}
     \hline
-    对比维度 & 传统桌面可视化 & 现有 AR 可视化 & 本文 SDCR--Vis \\
+    创新维度 & 核心公式/机制 & 关键参数与指标 & 对外接口 \\
     \hline
-    证据一致性 & 地图、图表、表格分窗口独立渲染，口径需人工核对 & 三维视图与数据可绑定，但未显式约束"估计量同源" & 统一状态向量 $\mathbf{s}_t$ 驱动，归一化映射公式与计量口径显式对齐 \\
-    多视图协同 & 分屏/切换标签页，需工作记忆拼接 & 多为单视图或弱耦合多视图 & 地图、时间轴、面板、机制图在同一刷新周期内联动 \\
-    状态可追溯性 & 状态隐含在控件焦点中，难以回放 & 状态绑定通常由引擎隐式管理 & 状态变量外显，事件队列与迁移可记录、可复核 \\
-    交互自然性 & 鼠标+键盘，需固定桌面 & 手势/语音/射线中一到两种通道 & 手势+语音+射线+LLM 四通道互补，融合仲裁 \\
-    可穿戴便携性 & 固定设备，不可移动 & 可穿戴，但多为实验室单任务验证 & Rokid 设备原型，支持走动式研讨场景 \\
-    跨平台可复现性 & 通用，但依赖特定商业软件栈 & 多绑定特定硬件与 SDK & 提供伪代码、公式与工程配置说明，降低复现门槛 \\
+    手势触发管线 & $u^{(t)}=e^{(t)}\cdot\psi^{(t)}\cdot\phi^{(t)}$（式~\ref{eq:gesture_trigger_final}） & $\tau{=}500$\,ms, $k_{\min}{=}8$, $\theta_g{=}0.85$ & 提交\texttt{GestureEvent}至融合队列 \\
+    NN分类增强 & $\mathbf{p}^{(t)}{=}\mathrm{Softmax}(\mathrm{MLP}(\mathrm{SA}(\mathrm{DCNN}(\mathbf{X}^{(t)}))))$ & 57K参数, 1.32\,ms推理, F1{=}0.967 & 替换几何分型前端，置信度$s^{(t)}_{\mathrm{NN}}$ \\
+    置信度传递 & $\mathcal{E}.\mathrm{conf}=s^{(t)}_{\mathrm{NN}}$（式~\ref{eq:fusion_event}） & 经三重门控过滤后注入 & 手势NN$\rightarrow$融合评分函数 \\
+    融合评分 & $\mathrm{score}=\alpha_{\mathrm{source}}\cdot\mathrm{conf}+\beta\cdot\mathbb{I}[\mathrm{source}{=}\mathrm{gesture}]$（式~\ref{eq:fusion_score}） & $\alpha_{\mathrm{g}}{=}1.0,\alpha_{\mathrm{s}}{=}0.9,\alpha_{\mathrm{r}}{=}0.8,\beta{=}0.15$ & 时间窗内最高分事件$\rightarrow\mathbf{s}_t$ \\
+    冲突消解 & 保守拒绝$+$AR HUD轻提示 & 冲突率3.3\%, 仲裁正确率96.4\% & 可审计交互日志 \\
     \hline
-    \end{tabularx}
+    \end{tabular}
 \end{center}
 
-\subsection{用户任务表现对比}
+在手势通道中，DBEW--Gesture以几何判据实现可解释的基线方案（事件级宏平均F1=0.700），DBEW-NN在保持触发管线完全不变的前提下，以”即插即用”方式将分类精度提升至宏平均F1=0.967（+38.1\%），1.32\,ms推理时延在60\,FPS帧预算中占比不足8\%，验证了轻量NN在AR头显端的工程可行性。第\ref{sec:ch3_bridge_gesture_fusion}节明确了NN置信度经触发管线过滤后注入TSTQ--Fusion评分函数的完整链路，确保两个子系统在接口层面解耦、在决策层面协同。
 
-为获得定量的用户任务表现数据，在实验室内组织了小规模任务走查（$n=8$，均为具有数据分析背景的研究生或工程师）。参与者分别在三种条件下完成相同的四项任务：（A）传统桌面可视化（双屏 ECharts 看板 + Stata 结果表格）；（B）现有 AR 可视化方案（基于文献\cite{Liu_Jia_Nie_Rosenberg_Interrante_Zhu-Tian_2025}设计的简化 AR 原型，仅支持射线选择与年份滑动）；（C）本文 SDCR--Vis 方案（完整状态驱动多视图 + 多模态交互）。任务定义如下：
-\begin{itemize}
-    \item \textbf{T1（空间定位）}：找出2022年$ES$指数最低的三个省份。
-    \item \textbf{T2（时序对比）}：比较2014年与2022年全国$DEL$水平的变化趋势。
-    \item \textbf{T3（证据核对）}：确认基准回归中$DEL$系数在加入平方项前后的变化。
-    \item \textbf{T4（区域下钻）}：查看中部地区各省份的$ES$与$DEL$对照关系。
-\end{itemize}
+在语音通道中，针对AR眼镜的弱网可用性、多声源干扰与领域专名密集三重约束，构建了”多麦波束成形$\rightarrow$离线ASR$\rightarrow$约束式LLM纠错$\rightarrow$规则解析”的端到端链路，将WER由18.4\%降至7.2\%。多模态融合层提出了置信度驱动的动态优先级仲裁策略（式~\ref{eq:fusion_score}），在静态规则与数据驱动之间取得折中：手势通道贡献显式控制信号与置信度估计，语音通道贡献语义符号信息，LLM通道贡献纠错与解释——三者在统一事件模型（式~\ref{eq:fusion_event}）和时间窗分组机制下完成仲裁，仲裁正确率达96.4\%，冲突率仅3.3\%。
 
-表\ref{tab:ch4_user_task}报告了三种条件下的平均任务完成时间（秒）与错误次数（每次错误定义为给出错误答案或遗漏关键信息）。
+本章形成的多模态事件流与TSTQ--Fusion仲裁规则，为第四章ChartForge + SDCR--Vis可视化管线提供了统一、可追溯、低冲突的交互输入，是”第五章估计量可进入沉浸空间被连续阅读”的必要入口条件。
 
-\begin{center}
-    \captionof{table}{\label{tab:ch4_user_task}用户任务表现对比（均值 $\pm$ 标准差，$n=8$）}
-    \small
-    \begin{tabularx}{\linewidth}{lXXXX}
-    \hline
-    任务 & 指标 & （A）桌面可视化 & （B）现有 AR 方案 & （C）本文 SDCR--Vis \\
-    \hline
-    \multirow{2}{*}{T1 空间定位} & 时间（s） & $18.2\pm 4.1$ & $14.5\pm 3.8$ & $10.3\pm 2.6$ \\
-    ~ & 错误次数 & $0.4\pm 0.5$ & $0.3\pm 0.5$ & $0.1\pm 0.3$ \\
-    \hline
-    \multirow{2}{*}{T2 时序对比} & 时间（s） & $35.6\pm 7.2$ & $28.1\pm 6.5$ & $19.4\pm 4.8$ \\
-    ~ & 错误次数 & $0.8\pm 0.7$ & $0.5\pm 0.5$ & $0.3\pm 0.5$ \\
-    \hline
-    \multirow{2}{*}{T3 证据核对} & 时间（s） & $42.3\pm 9.5$ & $38.7\pm 8.2$ & $25.1\pm 5.4$ \\
-    ~ & 错误次数 & $1.1\pm 0.8$ & $0.9\pm 0.6$ & $0.4\pm 0.5$ \\
-    \hline
-    \multirow{2}{*}{T4 区域下钻} & 时间（s） & $28.5\pm 6.8$ & $22.3\pm 5.1$ & $15.8\pm 3.7$ \\
-    ~ & 错误次数 & $0.6\pm 0.7$ & $0.5\pm 0.5$ & $0.3\pm 0.5$ \\
-    \hline
-    \end{tabularx}
-    \noindent\begin{minipage}{\linewidth}\footnotesize
-    注：PA-C 表示本文方案与桌面可视化的配对$t$检验显著性（所有任务均$p<0.05$）；PB-C 表示本文方案与现有 AR 方案的配对$t$检验显著性（T1、T3、T4 均$p<0.05$，T2 $p<0.10$）。
-    \end{minipage}
-\end{center}
-
-从表\ref{tab:ch4_user_task}可见，本文 SDCR--Vis 方案在四项任务上均优于传统桌面可视化（条件 A），平均任务完成时间缩短 35\%--45\%，错误次数降低 50\%--65\%。相较于现有 AR 方案（条件 B），本文方案在 T1（空间定位）、T3（证据核对）与 T4（区域下钻）上表现出统计显著的效率提升，主要得益于统一状态向量驱动的多视图协同刷新与多模态融合的零切换操作。T2（时序对比）的优势略弱（$p<0.10$），可归结为在三种条件下时序拖拽操作本身已较为直观，SDCR--Vis 的主要增益来自条件刷新的低重绘时延而非操作逻辑差异。
-
-需要指出，本实验为小规模实验室走查，样本量有限且任务设定偏向本文应用场景，结论不具备大规模人因实验的统计效力。但其结果在一定程度上佐证了本文方案在降低"空间定位—证据核对—区域下钻"操作链中的摩擦与错误风险方面的工程有效性，第\ref{sec:ch5_viz}节的系统级应用验证进一步支撑了该结论。
-
-\section{章节小结}
-\label{sec:ch4_summary}
-
-本章在可视化与 AR 可视化相关研究\cite{wang2026ar_io_survey}\cite{esri2026}\cite{panzeri2026cartographic}\cite{Liu_Jia_Nie_Rosenberg_Interrante_Zhu-Tian_2025}脉络下，按“已有工作—缺口—本文是什么/为什么—怎么做”组织叙述：现有工作已分别解决二维图表可读性、三维地图表达与 AR 自然交互等环节，但缺少面向计量证据链的“可核对联动”；本章据此提出以统一状态向量贯穿多视图与多模态输入的 AR 可视化方案，使第五章估计与检验结果能在同一沉浸会话中被对照阅读。架构与方法层面，第\ref{sec:ch4_arch}节给出分层模块、数据流、归一化—映射—条件刷新及三维评价指标，并以图\ref{fig:ch4_architecture}支撑结构化表达。实现层面，第\ref{sec:ch4_impl}节将上述规则落到 Unity 与 Rokid 工程配置，使原型具备可复现性，并在第\ref{sec:ch4_complexity}节给出复杂度与端侧性能开销的讨论。该可视化子系统与第三章多模态交互机制形成闭环，为第\ref{sec:ch5_viz}节实证结果的 AR 可视化呈现提供可解释、可追溯的空间化证据载体。
+% Theorem-like environments for Chapter 4
+\newtheorem{definition}{定义}
+\newtheorem{theorem}{定理}
+\makeatletter
+\newenvironment{proof}[1][\proofname]{\par\noindent\textbf{#1：}}{\hfill$\square$\par}
+\makeatother
+\input{body/graduate/chapter4_chartforge.tex}
 
 
 \chapter{系统应用：省域数字经济与能源结构分析}
@@ -1191,7 +1150,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \textbf{（2）全国视图：先看空间，再问证据。}默认将全国省域 Mesh 置于世界空间，用户以头动环视获得东—西梯度的心像。将着色通道切到 $ES$ 并定位至 2022 年，可见西部省份多呈偏暖色、东部沿海多呈偏冷/偏绿色调，与图\ref{fig:4-es-coloring-2022}一致；切换到 $DEL$ 则呈现京沪浙粤苏等相对高值集聚。沿时间轴从 2014 拖至 2022，多数省份在 $ES$ 通道上呈现由“偏红”向“偏绿”的渐进，与第\ref{sec:ch5_empirical_summary}节对样本期总体改善的叙述一致。该步骤对应第四章“归一化—映射—多视图联动”，把第\ref{sec:ch5_empirical_summary}节中倒 U 型讨论所需的“水平与位置感”先交给空间编码。
 
-\textbf{（3）多模态操作：把论文第 3 章的抽象变成可执行动作。}用户不必回到键鼠：可用射线完成省域点选与高亮；用手势完成年份步进、指标切换等离散命令（通道内已由边沿触发与时间窗抑制稳定化，见第\ref{sec:ch3_gesture}节）；亦可用语音输入“年份+省份+指标”短句，经离线 ASR 与受约束 LLM 增强后映射为与手势同构的状态更新（第\ref{sec:ch3_speech_llm}节）。若语音与手势在短时间窗内指向同一状态变量，融合层按第\ref{sec:mm_fusion}节规则仲裁，避免双写。需要机理追问或措辞解释时，可唤起 LLM 语义服务，但其输出仍须与数据引擎返回值对齐，不替代表中的估计量。
+\textbf{（3）多模态操作：把论文第 3 章的抽象变成可执行动作。}用户不必回到键鼠：可用射线完成省域点选与高亮；用手势完成年份步进、指标切换等离散命令（通道内已由边沿触发与时间窗抑制稳定化，见第\ref{sec:ch3_gesture}节）；亦可用语音输入“年份+省份+指标”短句，经离线 ASR 与受约束 LLM 增强后映射为与手势同构的状态更新（第\ref{sec:ch3_speech_llm}节）。若语音与手势在短时间窗内指向同一状态变量，融合层按第\ref{sec:ch3_fusion}节规则仲裁，避免双写。需要机理追问或措辞解释时，可唤起 LLM 语义服务，但其输出仍须与数据引擎返回值对齐，不替代表中的估计量。
 
 \textbf{（4）结果面板：把第\ref{sec:ch5_empirical_summary}节“读表”变成同屏流程。}在与地图并列的结果面板中，可按“基准—中介—稳健性—异质性”顺序阅读：基准列（2）给出全样本 $DEL$ 系数 $0.575^{***}$，与面板中摘要一致；加入平方项后得到拐点约 $0.507$，用于对照各省在倒 U 型曲线上的相对位置；中介与稳健性模块对应表\ref{table:Mediating effect}、表\ref{table:Robustness test}的结论提示；东/中/西/东北分组系数（如中部 $1.994^{***}$、东部 $0.336^{***}$、西部 $1.100^{***}$、东北不显著）与表\ref{table:Regional heterogeneity test}一致，便于在讨论“哪里数字化红利更强、哪里边际趋缓”时随手点名。机制图将第二章所述路径以节点—连边形式固定下来，点击节点可展开解释文本，但仍与同一 $\mathbf{s}_t$ 绑定，避免叙述漂移。
 
@@ -1209,7 +1168,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     \hline
     维度 & 要点 \\
     \hline
-    多模态输入 & 手势、射线、语音经离散化与第\ref{sec:mm_fusion}节仲裁入队后更新统一状态；\\
+    多模态输入 & 手势、射线、语音经离散化与第\ref{sec:ch3_fusion}节仲裁入队后更新统一状态；\\
     空间异质性 & 省域 $ES$/$DEL$ 热力图（全国见图\ref{fig:4-es-coloring-2022}，省级示例见图\ref{fig:zhejiang}）；\\
     时间呈现  & 时间轴按年条件刷新全图着色；分区域时序曲线呈现 $ES$、$DEL$ 演化。 \\
     实证分析结果 & 结果面板浓缩第\ref{sec:ch5_empirical_summary}节实证分析的各项结果；\\
@@ -1246,7 +1205,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \section{贡献与创新点}
 \label{sec:summary_contribution}
 
-全文以``省域数字经济—能源结构优化''为主线，在理论、实证与沉浸式工程三个层面形成闭环：一方面回答影响方向、非线性形态、机制路径与区域差异等经济学问题；另一方面将可复核的计量证据转化为可在 AR 空间中阅读、操作与讨论的分析载体，并在头显场景完成可部署的原型验证。前文已系统梳理核心概念与机制框架，并完成第三章多模态交互（第\ref{sec:ch3_req}节—第\ref{sec:ch3_summary}节，含手势骨骼约束、边沿触发与时间窗抑制、语音与 LLM 链路及第\ref{sec:mm_fusion}节跨通道仲裁与队列提交）、第四章沉浸式可视化（第\ref{sec:ch4_req}节—第\ref{sec:ch4_summary}节，含统一状态驱动的地图/时序/面板/机制协同与 Unity—Rokid 实现），以及第五章面板计量与熵权—决策树指数构建（第\ref{ch:empirical_de_es}章、第\ref{sec:entropy_dt_fusion}节）、第\ref{sec:ch5_viz}节实证结果的 AR 可视化呈现及第\ref{sec:ch5_summary}节本章小结；以下从\textbf{学术结论}、\textbf{工程与方法创新}与\textbf{数据治理取向}三方面归纳贡献。
+全文以``省域数字经济—能源结构优化''为主线，在理论、实证与沉浸式工程三个层面形成闭环：一方面回答影响方向、非线性形态、机制路径与区域差异等经济学问题；另一方面将可复核的计量证据转化为可在 AR 空间中阅读、操作与讨论的分析载体，并在头显场景完成可部署的原型验证。前文已系统梳理核心概念与机制框架，并完成第三章多模态交互（第\ref{sec:ch3_req}节—第\ref{sec:ch3_summary}节，含手势骨骼约束、边沿触发与时间窗抑制、语音与 LLM 链路及第\ref{sec:ch3_fusion}节跨通道仲裁与队列提交）、第四章沉浸式可视化（第\ref{sec:ch4_req}节—第\ref{sec:ch4_summary}节，含统一状态驱动的地图/时序/面板/机制协同与 Unity—Rokid 实现），以及第五章面板计量与熵权—决策树指数构建（第\ref{ch:empirical_de_es}章、第\ref{sec:entropy_dt_fusion}节）、第\ref{sec:ch5_viz}节实证结果的 AR 可视化呈现及第\ref{sec:ch5_summary}节本章小结；以下从\textbf{学术结论}、\textbf{工程与方法创新}与\textbf{数据治理取向}三方面归纳贡献。
 
 在学术结论上，基于 2014---2022 年 30 省份样本，在控制变量与省份固定效应设定下，$DEL$ 对 $ES$ 显著为正，平方项设定下呈现倒 U 型非线性，拐点与分省讨论支持``总量仍具提升空间、高水平地区边际趋缓''的差异化含义；东、中、西分组系数显著为正且呈``中部 $>$ 西部 $>$ 东部''梯度，东北不显著，提示数字化红利与产业结构、要素禀赋相关；技术创新通过中介路径部分传导；滞后、缩尾、剔除异常年份与工具变量等检验支持结论稳健。上述结果与第\ref{sec:ch5_data_foundation}节假说体系相衔接，为省域``数字化—绿色转型''提供量化证据。
 
