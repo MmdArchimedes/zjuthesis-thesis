@@ -58,7 +58,12 @@
         openright
     }{ctexrep}
 }
-{}
+{
+    \PassOptionsToClass{
+        oneside,
+        openany
+    }{ctexrep}
+}
 
 \LoadClass[
     zihao=-4,
