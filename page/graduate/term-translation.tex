@@ -1,12 +1,7 @@
-\cleardoublepage
 \chapternonum{缩略词表}
 \begin{center}
-    % uncomment line 5 if you want to set the fontsize of the table.
-    % \zihao{-4}
-    % comment line 8 and uncomment line 9 if you need to set the table as mid-aligment.
-    % or addjust the paras as your personal need.
-    \begin{longtable}{m{2cm}m{8cm}m{5cm}}
-    % \begin{longtable}{m{2cm}<{\centering}m{8cm}<{\centering}m{5cm}<{\centering}} 
+    \zihao{-4}
+    \begin{longtable}{m{2.5cm}m{6.5cm}m{5.5cm}}
         \toprule
         \textbf{英文缩写}&\textbf{英文全称}&\textbf{中文全称}\\
         \midrule
@@ -14,29 +9,81 @@
         \toprule
         \textbf{英文缩写}&\textbf{英文全称}&\textbf{中文全称}\\
         \midrule
-        \endhead 
+        \endhead
         \bottomrule
         \endfoot
         \bottomrule
         \endlastfoot
-        AR&Augmented Reality&增强现实\\
-        XR&Extended Reality&扩展现实\\
-        LLM&Large Language Model&大语言模型\\
-        SLAM&Simultaneous Localization and Mapping&同步定位与建图\\
-        VIO&Visual-Inertial Odometry&视觉惯性里程计\\
-        IMU&Inertial Measurement Unit&惯性测量单元\\
-        DoF&Degrees of Freedom&自由度\\
-        RGB&Red, Green, Blue&红绿蓝三通道\\
-        CSV&Comma-Separated Values&逗号分隔值文件\\
-        JSON&JavaScript Object Notation&轻量级数据交换格式\\
-        API&Application Programming Interface&应用程序编程接口\\
-        UI&User Interface&用户界面\\
-        FE&Fixed Effects&固定效应\\
-        2SLS&Two-Stage Least Squares&两阶段最小二乘法\\
-        ATE&Absolute Trajectory Error&绝对轨迹误差\\
-        RPE&Relative Pose Error&相对位姿误差\\
-        RMSE&Root Mean Square Error&均方根误差\\
-        CPU&Central Processing Unit&中央处理器\\
-        GPU&Graphics Processing Unit&图形处理器\\
-	\end{longtable}
+        \multicolumn{3}{c}{\textbf{本文提出的方法与系统}} \\
+        \midrule
+        DBEW--Gesture & Depth-Bone Edge-triggered Windowing Gesture & 深度骨骼约束下的边沿触发—时间窗离散化手势管线 \\
+        DBEW-NN & DBEW Neural Network enhanced & DBEW神经网络增强手势分类器 \\
+        TSTQ--Fusion & Temporal Stabilization — Time-window Queuing Fusion & 通道内稳定化—跨通道时间窗仲裁—队列串行提交 \\
+        SDCR--Vis & State-Driven Conditional Refresh Visualization & 状态驱动的条件刷新多视图可视化管线 \\
+        ChartForge & Chart Forge Framework & 声明式AIGC图表生成框架 \\
+        CIF & Chart Intent Formalization & 图表意图形式化表示 \\
+        PCG & Probabilistic Chart Grammar & 概率图表语法 \\
+        SVAS & Semantic-Visual Alignment Score & 语义—视觉对齐分数 \\
+        MS-GRP & Multi-Stage Generative Refinement Pipeline & 多阶段生成精炼管线 \\
+        CCA & Composable Chart Algebra & 可组合图表代数 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{人工智能与机器学习}} \\
+        \midrule
+        LLM & Large Language Model & 大语言模型 \\
+        ASR & Automatic Speech Recognition & 自动语音识别 \\
+        NN & Neural Network & 神经网络 \\
+        CNN & Convolutional Neural Network & 卷积神经网络 \\
+        GCN & Graph Convolutional Network & 图卷积网络 \\
+        ST-GCN & Spatial-Temporal GCN & 时空图卷积网络 \\
+        MLP & Multi-Layer Perceptron & 多层感知机 \\
+        GELU & Gaussian Error Linear Unit & 高斯误差线性单元 \\
+        ONNX & Open Neural Network Exchange & 开放神经网络交换格式 \\
+        AIGC & AI Generated Content & 人工智能生成内容 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{增强现实与计算机视觉}} \\
+        \midrule
+        AR & Augmented Reality & 增强现实 \\
+        XR & Extended Reality & 扩展现实 \\
+        SLAM & Simultaneous Localization and Mapping & 同时定位与建图 \\
+        VIO & Visual-Inertial Odometry & 视觉惯性里程计 \\
+        IMU & Inertial Measurement Unit & 惯性测量单元 \\
+        DoF & Degrees of Freedom & 自由度 \\
+        HUD & Head-Up Display & 抬头显示器 \\
+        FPS & Frames Per Second & 每秒帧数 \\
+        SDK & Software Development Kit & 软件开发工具包 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{手部骨骼解剖学}} \\
+        \midrule
+        MCP & Metacarpophalangeal & 掌指关节 \\
+        PIP & Proximal Interphalangeal & 近端指间关节 \\
+        DIP & Distal Interphalangeal & 远端指间关节 \\
+        CMC & Carpometacarpal & 腕掌关节 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{计量经济学与统计}} \\
+        \midrule
+        DEL & Digital Economy Level & 数字经济发展水平综合指数 \\
+        ES & Energy Structure optimization index & 能源结构优化综合指数 \\
+        TEIN & Technology Innovation & 技术创新（专利申请量对数）\\
+        PGDP & Per capita GDP & 人均GDP \\
+        FE & Fixed Effects & 固定效应 \\
+        IV & Instrumental Variable & 工具变量 \\
+        2SLS & Two-Stage Least Squares & 两阶段最小二乘法 \\
+        CART & Classification and Regression Tree & 分类与回归树 \\
+        RMSE & Root Mean Square Error & 均方根误差 \\
+        MAE & Mean Absolute Error & 平均绝对误差 \\
+        MSE & Mean Squared Error & 均方误差 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{通用技术缩写}} \\
+        \midrule
+        API & Application Programming Interface & 应用程序编程接口 \\
+        CPU & Central Processing Unit & 中央处理器 \\
+        GPU & Graphics Processing Unit & 图形处理器 \\
+        FIFO & First In First Out & 先进先出 \\
+        WER & Word Error Rate & 词错误率 \\
+        FLOPs & Floating Point Operations & 浮点运算次数 \\
+        JSON & JavaScript Object Notation & JavaScript对象表示法 \\
+        CSV & Comma-Separated Values & 逗号分隔值 \\
+        UI & User Interface & 用户界面 \\
+        RGB & Red, Green, Blue & 红绿蓝三通道色彩空间 \\
+        \end{longtable}
 \end{center}

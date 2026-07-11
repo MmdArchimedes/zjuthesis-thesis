@@ -4,17 +4,41 @@
 
     \appendixsecmajornumbering
 
-    \section{一个附录}
+    \section{主要符号表}
 
-    \begin{figure}[htb]
-        \centering
-        \includegraphics{example-image}
-        \caption{附录中的图片}
-        \label{fig:test-appendix}
-    \end{figure}
+    \begin{center}
+        \captionof{table}{本文使用的主要数学符号}
+        \label{tab:notation}
+        \small
+        \setlength{\tabcolsep}{12pt}
+        \begin{tabular}{ll}
+        \hline
+        符号 & 含义 \\
+        \hline
+        $\mathcal{J}_h^{(t)}$ & 第$t$帧、手别$h$的骨骼关节集合 \\
+        $\mathbf{p}_{j,h}^{(t)}$ & 第$t$帧、手别$h$、关节$j$的三维坐标 \\
+        $g^{(t)}$ & 第$t$帧的手势类别 \\
+        $\mathbf{s}_t$ & 统一状态向量 \\
+        $u^{(t)}$ & 第$t$帧的有效触发标志 \\
+        $\tau$ & 冷却窗时长（手势触发抑制参数）\\
+        $k_{\min}$ & 最小稳定帧数 \\
+        $\theta_g$ & 手势置信度阈值 \\
+        $\mathbf{X}$ & 滑动窗口骨骼序列张量 \\
+        $\mathbf{p}^{(t)}$ & NN输出的类别概率向量 \\
+        $s^{(t)}_{\mathrm{NN}}$ & Softmax最大概率（置信度）\\
+        $\mathcal{E}$ & 统一事件结构 \\
+        $\mathcal{Q}_{\mathrm{cmd}}$ & FIFO命令队列 \\
+        $y_t$ & 当前年份索引 \\
+        $m_t$ & 当前着色指标类型 \\
+        $p_t$ & 当前选中省份编码 \\
+        $DEL_{it}$ & 省份$i$第$t$年数字经济水平指数 \\
+        $ES_{it}$ & 省份$i$第$t$年能源结构优化指数 \\
+        $v_{i,t}$ & 指标在省份$i$、年份$t$的取值 \\
+        $n_{i,t}$ & 归一化后的指标值 \\
+        $\mathbf{c}_{i,t}$ & 省份$i$的着色向量 \\
+        \hline
+        \end{tabular}
+    \end{center}
 
-    \section{另一个附录}
-
-    % End of appendix
     \removeappendixsecmajornumbering
 }
