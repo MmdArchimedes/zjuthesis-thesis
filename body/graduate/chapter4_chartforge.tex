@@ -39,9 +39,8 @@ React框架\cite{walke2013react}对前端开发的革命性贡献在于其核心
 
 ChartForge + SDCR--Vis融合架构采用四层组织，如图\ref{fig:ch4_architecture}所示。自底向上，意图层接收来自第三章多模态通道的自然语言查询，经CIF解析器输出结构化图表意图三元组$\langle\mathcal{D},\mathcal{V},\mathcal{I}\rangle$，与TSTQ--Fusion共享时间基准。生成精炼层以CIF为输入，经PCG束搜索生成候选图表规约，再经MS-GRP四阶段管线（粗生成$\rightarrow$语义验证$\rightarrow$视觉精炼$\rightarrow$交互注入）输出优化后的ChartSpec。渲染适配层将平台无关的ChartSpec映射为目标平台的图表渲染指令——AR端转换为Unity ChartRenderer可消费的JSON格式，Web端或离线评估则转换为Vega-Lite/ECharts格式以支持基线对比。交互运行时层管理用户与AR图表的交互事件，通过ChartStateSync与SDCR--Vis的统一状态向量$\mathbf{s}_t$同步，确保ChartForge图表与省域地图、时间轴、结果面板在同一刷新周期内一致更新。
 
-\filbreak
 \begin{center}
-  \includegraphics[width=0.85\textwidth]{ch4-1-architecture.png}
+  \includegraphics[width=0.72\textwidth]{ch4-1-architecture.png}
   \captionof{figure}{\label{fig:ch4_architecture}ChartForge + SDCR--Vis 融合系统架构：四层递进，NL输入经CIF解析与MS-GRP精炼后输出AR图表规约，与省域地图、时间轴、面板在统一状态向量驱动下协同呈现。}
 \end{center}
 

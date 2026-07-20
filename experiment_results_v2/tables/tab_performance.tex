@@ -6,16 +6,17 @@
   \caption{端侧推理性能对比}
   \label{tab:gesture_performance}
   \small
+  \setlength{\tabcolsep}{16pt}
   \begin{tabular}{lcccc}
   \hline
-  方法 & 时延 (ms) & 参数量 & 内存 (KB) & FLOPs \\
+  方法 & 时延 (ms) & 参数量 & 内存 (KB) & 吞吐量 (FPS) \\
   \hline
-  Rule-based & 0.04 & 0 & 0.0 & - \\
-  CNN-only & 1.13 & 40,199 & 157.0 & 3.30M \\
-  CNN+Attention & 1.32 & 56,711 & 221.5 & 3.30M \\
+  几何规则 & 0.04 & 0 & 0.0 & — \\
+  CNN-only & 1.00 & 40,199 & 157.0 & 996 \\
+  CNN+Attention (DBEW-NN) & 1.11 & 56,843 & 222.0 & 899 \\
   \hline
   \end{tabular}
   \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：时延在骁龙XR2平台Unity Barracuda (ComputePrecompiled)实测，取500次推理的平均值。几何规则方法的时延为C\#实现中常数级判断函数的单次调用开销（$<$0.05\,ms，近似为0）。FLOPs为单次推理的理论计算量。内存占用按float32精度估算（参数量$\times$4字节）。
+  注：骁龙XR2平台Unity Barracuda (ComputePrecompiled)实测，500次推理均值。内存按float32估算。
   \end{minipage}
 \end{table}

@@ -1,20 +1,32 @@
 % ===================================================================
-% Table: Ablation study summary
+% Table: Ablation study summary (3 dimensions, real training data)
 % ===================================================================
 \begin{table}[htbp]
   \centering
   \caption{消融实验汇总}
   \label{tab:ablation_summary}
   \small
+  \setlength{\tabcolsep}{12pt}
   \begin{tabular}{lcc}
   \hline
-  消融维度 & 变体 & 宏平均 F1 \\
+  消融维度与变体 & 宏平均 F1 & 相对完整模型 \\
   \hline
-  自注意力模块 & 无 (CNN-only) & 0.9554 \\
-  & 有 (CNN+Attention, \textbf{本文}) & 0.9666 \\
+  \textbf{自注意力模块} & & \\
+  \quad 无 (CNN-only) & 0.884 & $-$0.5\% \\
+  \quad 有 (CNN+Attention, \textbf{本文}) & \textbf{0.889} & — \\
+  \hline
+  \textbf{窗口大小 $T$} & & \\
+  \quad $T=16$ & 0.840 & $-$5.5\% \\
+  \quad $T=32$ (\textbf{本文}) & \textbf{0.889} & — \\
+  \quad $T=48$ & 0.876 & $-$1.5\% \\
+  \hline
+  \textbf{训练数据规模} & & \\
+  \quad 10\%（$\approx$1名参与者） & 0.790 & $-$11.1\% \\
+  \quad 50\%（$\approx$5名参与者） & 0.865 & $-$2.7\% \\
+  \quad 100\%（\textbf{本文}） & \textbf{0.889} & — \\
   \hline
   \end{tabular}
   \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：固定其他参数不变，仅改变所标注的消融维度。自注意力模块的消融验证了其必要性（移除后F1显著下降）；窗口大小消融表明$T=32$在精度与时延之间取得最优平衡；数据规模消融表明合成数据集已基本覆盖手势分布多样性，继续扩大数据规模边际收益递减。
+  注：固定其他参数不变，仅改变所标注的消融维度。自注意力贡献相对有限（+0.5\%），根因在于手背类瓶颈（三指手背F1仅0.692）非注意力机制可解决。
   \end{minipage}
 \end{table}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown 预览器</title>
+<script src="marked.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --border: #e0e0e0;
+    --code-bg: #f5f5f5;
+    --heading: #2c3e50;
+    --link: #2563eb;
+    --table-stripe: #f8f9fa;
+    --table-border: #dee2e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --text: #d4d4d4;
+      --border: #404040;
+      --code-bg: #2d2d2d;
+      --heading: #e0e0e0;
+      --link: #6db3f8;
+      --table-stripe: #252525;
+      --table-border: #404040;
+    }
+  }
+  body {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    font-family: "Segoe UI", "Microsoft YaHei", "SimHei", sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+  }
+  h1 { font-size: 1.8em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; color: var(--heading); }
+  h2 { font-size: 1.45em; border-bottom: 1px solid var(--border); padding-bottom: 0.2em; color: var(--heading); margin-top: 2em; }
+  h3 { font-size: 1.2em; color: var(--heading); margin-top: 1.5em; }
+  h4 { font-size: 1.05em; color: var(--heading); }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-family: "Cascadia Code", "Fira Code", "Consolas", "SimHei", monospace;
+    font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg);
+    padding: 1em 1.2em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  pre code { padding: 0; background: none; }
+  blockquote {
+    border-left: 3px solid #5b9bd5;
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    background: var(--code-bg);
+    border-radius: 0 4px 4px 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 0.95em;
+  }
+  th, td {
+    border: 1px solid var(--table-border);
+    padding: 0.5em 0.8em;
+    text-align: left;
+  }
+  th { background: var(--code-bg); font-weight: 600; }
+  tr:nth-child(even) { background: var(--table-stripe); }
+  img { max-width: 100%; border-radius: 4px; }
+  strong { color: #c0392b; }
+  /* Drag & drop overlay */
+  #drop-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(37, 99, 235, 0.12);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    color: #2563eb;
+    pointer-events: none;
+    border: 4px dashed #2563eb;
+    box-sizing: border-box;
+  }
+  #drop-overlay.show { display: flex; }
+  /* Toolbar */
+  #toolbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0.5em 1.5em;
+    display: flex; gap: 1em; align-items: center;
+    font-size: 0.9em; z-index: 100;
+  }
+  #toolbar button {
+    padding: 0.4em 1em;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--code-bg);
+    cursor: pointer;
+    color: var(--text);
+    font-size: 0.9em;
+  }
+  #toolbar button:hover { background: var(--border); }
+  #file-input { display: none; }
+  #file-name { color: var(--text); opacity: 0.7; font-size: 0.85em; }
+  body { padding-top: 3.5rem; }
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <button onclick="document.getElementById('file-input').click()">📂 打开文件</button>
+  <button onclick="openDefaultPaper('gesture')">📄 手势识别论文</button>
+  <button onclick="openDefaultPaper('fusion')">📄 TSTQ-Fusion 论文</button>
+  <span id="file-name">拖放 .md 文件到页面任意位置即可预览</span>
+  <input type="file" id="file-input" accept=".md,.markdown,.txt" onchange="loadFile(this.files[0])">
+</div>
+
+<div id="drop-overlay">📥 松手即可预览</div>
+<div id="content"><p style="color:#999;text-align:center;margin-top:3em;">拖放一个 <strong>.md</strong> 文件到这里，或点击上方按钮打开</p></div>
+
+<script>
+  const dropOverlay = document.getElementById('drop-overlay');
+  const content = document.getElementById('content');
+  const fileName = document.getElementById('file-name');
+  const PAPERS = {
+    gesture: '/c/Users/12078/Documents/thesis/workspace/paper_gesture_recognition.md',
+    fusion: '/c/Users/12078/Documents/thesis/workspace/paper_tstq_fusion.md',
+  };
+
+  // Try to auto-load gesture paper on open
+  async function openDefaultPaper(key) {
+    const path = PAPERS[key];
+    fileName.textContent = '加载中...';
+    try {
+      const resp = await fetch('file://' + path);
+      const text = await resp.text();
+      render(text);
+      fileName.textContent = path.split('/').pop();
+    } catch(e) {
+      // File:// might be blocked — try via the fetch workaround
+      try {
+        const input = document.createElement('input');
+        input.type = 'file';
+        // Can't set value programmatically — fall back to manual
+        fileName.textContent = '请点击📂手动打开: ' + path;
+      } catch(e2) {
+        fileName.textContent = '浏览器不支持 file:// 协议，请拖放文件';
+      }
+    }
+  }
+
+  function render(md) {
+    marked.setOptions({ breaks: false, gfm: true });
+    content.innerHTML = marked.parse(md);
+    // Fix missing minus signs
+    content.innerHTML = content.innerHTML.replace(/−/g, '−');
+  }
+
+  function loadFile(file) {
+    if (!file) return;
+    fileName.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = e => render(e.target.result);
+    reader.readAsText(file);
+  }
+
+  // ── Drag & Drop ───────────────────────────────────────────
+  document.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropOverlay.classList.add('show');
+  });
+  document.addEventListener('dragleave', e => {
+    e.preventDefault();
+    if (e.target === document || e.target === document.documentElement)
+      dropOverlay.classList.remove('show');
+  });
+  dropOverlay.addEventListener('dragover', e => e.preventDefault());
+  dropOverlay.addEventListener('drop', e => {
+    e.preventDefault();
+    dropOverlay.classList.remove('show');
+    const file = e.dataTransfer.files[0];
+    if (file && (file.name.endsWith('.md') || file.name.endsWith('.markdown') || file.name.endsWith('.txt')))
+      loadFile(file);
+    else
+      alert('请拖放 .md / .markdown / .txt 文件');
+  });
+
+  // Keyboard shortcut: Ctrl+O
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'o') {
+      e.preventDefault();
+      document.getElementById('file-input').click();
+    }
+  });
+</script>
+</body>
+</html>

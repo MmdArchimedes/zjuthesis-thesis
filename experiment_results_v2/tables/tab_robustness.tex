@@ -6,17 +6,18 @@
   \caption{不同环境条件下手势识别鲁棒性对比（F1分数）}
   \label{tab:gesture_robustness}
   \small
+  \setlength{\tabcolsep}{14pt}
   \begin{tabular}{lccc}
   \hline
-  条件 & 几何规则 & CNN+Attention (DBEW-NN) & $\Delta$ \\
+  条件 & 几何规则 & DBEW-NN & $\Delta$ \\
   \hline
-  正常光照 & 0.645 & 0.955 & +0.310 \\
-  弱光（3x噪声） & 0.175 & 0.745 & +0.570 \\
-  部分遮挡（30\%） & 0.263 & 0.460 & +0.197 \\
-  弱光+遮挡 & 0.175 & 0.378 & +0.203 \\
+  正常光照 & 0.645 & 0.955 & $+$0.310 \\
+  弱光（$\sigma_\mathrm{noise}{=}5$\,mm） & 0.175 & 0.745 & $+$0.570 \\
+  部分遮挡（30\%关节） & 0.263 & 0.460 & $+$0.197 \\
+  弱光$+$遮挡 & 0.175 & 0.378 & $+$0.203 \\
   \hline
   \end{tabular}
   \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：正常光照：$\sigma_\mathrm{noise}=1.5$\,mm；弱光：$\sigma_\mathrm{noise}=5$\,mm（3.3倍传感器噪声）；部分遮挡：30\%关节随机置零；弱光+遮挡：两种条件叠加。几何规则方法在噪声增大时精度急剧退化（几何判据被噪声破坏），NN方法因训练时引入数据增强而保持了相对鲁棒性。
+  注：正常光照$\sigma_\mathrm{noise}{=}1.5$\,mm；弱光增至5\,mm。NN因训练时引入数据增强保持相对鲁棒性，几何规则在弱光下F1降至0.175。
   \end{minipage}
 \end{table}

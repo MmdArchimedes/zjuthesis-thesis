@@ -34,7 +34,7 @@
 
 ```bash
 # 需要 TeX Live (XeLaTeX + BibTeX)
-latexmk -xelatex -interaction=nonstopmode zjuthesis.tex
+latexmk -xelatex -outdir=out -g zjuthesis.tex
 # 或手动编译
 xelatex zjuthesis && bibtex zjuthesis && xelatex zjuthesis && xelatex zjuthesis
 ```

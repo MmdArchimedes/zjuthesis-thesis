@@ -190,108 +190,77 @@ class GestureDeformer:
         rot = R.from_euler('y', np.deg2rad(pronation_deg))
         return rot.apply(joints)
 
+    def _palm_back_variants(self, joints: np.ndarray, thumb_deg: float,
+                             ext_deg: float, curl_deg: float, num_ext: int,
+                             noise_deg: float) -> tuple:
+        """Generate (palm, back) variant pair for a given finger extension count.
+
+        Args:
+            num_ext: number of fingers to extend (2-5)
+        Returns: (palm_joints, back_joints) tuple
+        """
+        finger_angles = []
+        for i in range(5):
+            if i == 0:  # thumb
+                finger_angles.append(thumb_deg + noise_deg)
+            elif i < num_ext:  # extended fingers
+                finger_angles.append(ext_deg + noise_deg)
+            else:  # curled fingers
+                finger_angles.append(curl_deg + noise_deg)
+
+        args = (joints.copy(), *finger_angles)
+        base = self._set_finger_angles(*args)
+        palm = self._rotate_palm(base.copy(), self.rng.uniform(-10, 10))
+        back = self._rotate_palm(base.copy(), 170 + self.rng.normal(0, 12))
+        return palm, back
+
     def apply(self, canonical: HandSkeleton, gesture_id: int,
               person_variation: float = 0.0) -> np.ndarray:
         """
         Apply gesture deformation to canonical skeleton.
-
-        Args:
-            canonical: Rest pose hand skeleton
-            gesture_id: 0=NONE, 1=index_left, 2=index_right, 3=two_palm,
-                        4=two_back, 5=four_palm, 6=fist
-            person_variation: [-1, 1] individual variation factor
-
-        Returns:
-            Deformed joint array [26, 3]
+        gesture_id: 0=NONE, 1=fist, 2=index_left, 3=index_right,
+        4/5=two_palm/back, 6/7=three_palm/back, 8/9=four_palm/back, 10/11=five_palm/back
         """
         joints = canonical.joints.copy()
-
-        # Add person-specific scaling variation
-        scale = 1.0 + person_variation * 0.15  # ±15% hand size variation
+        scale = 1.0 + person_variation * 0.15
         joints = joints * scale
-
-        # Add small random bone length variation
         bone_noise = self.rng.normal(0, 0.001, joints.shape).astype(np.float32)
         joints = joints + bone_noise
+        noise_deg = abs(self.rng.normal(0, 8))
 
-        noise_deg = abs(self.rng.normal(0, 8))  # execution noise in degrees
-
-        if gesture_id == 0:  # NONE — hand relaxed, slight natural curl
-            joints = self._set_finger_angles(joints, 20, 25, 30, 25, 20)
-            joints = self._rotate_palm(joints, self.rng.uniform(-15, 15))
-
-        elif gesture_id == 1:  # index_left — index extended pointing left
-            joints = self._set_finger_angles(
-                joints,
-                thumb_deg=55 + noise_deg,   # thumb tucked
-                index_deg=5 + noise_deg,    # index extended
-                middle_deg=85 + noise_deg,  # others tightly curled
-                ring_deg=85 + noise_deg,
-                pinky_deg=85 + noise_deg
-            )
-            # Rotate hand so index points left (hand pronated ~90°)
-            joints = self._rotate_palm(joints, -80 + self.rng.normal(0, 10))
-
-        elif gesture_id == 2:  # index_right — index extended pointing right
-            joints = self._set_finger_angles(
-                joints,
-                thumb_deg=55 + noise_deg,
-                index_deg=5 + noise_deg,
-                middle_deg=85 + noise_deg,
-                ring_deg=85 + noise_deg,
-                pinky_deg=85 + noise_deg
-            )
-            joints = self._rotate_palm(joints, 80 + self.rng.normal(0, 10))
-
-        elif gesture_id == 3:  # two_finger_palm — index+middle extended, palm facing user
-            joints = self._set_finger_angles(
-                joints,
-                thumb_deg=55 + noise_deg,
-                index_deg=5 + noise_deg,
-                middle_deg=5 + noise_deg,
-                ring_deg=85 + noise_deg,
-                pinky_deg=85 + noise_deg
-            )
-            joints = self._rotate_palm(joints, self.rng.uniform(-15, 15))
-
-        elif gesture_id == 4:  # two_finger_back — index+middle extended, back of hand facing user
-            joints = self._set_finger_angles(
-                joints,
-                thumb_deg=55 + noise_deg,
-                index_deg=5 + noise_deg,
-                middle_deg=5 + noise_deg,
-                ring_deg=85 + noise_deg,
-                pinky_deg=85 + noise_deg
-            )
-            joints = self._rotate_palm(joints, 170 + self.rng.normal(0, 15))
-
-        elif gesture_id == 5:  # four_finger_palm — all four fingers extended, palm facing
-            joints = self._set_finger_angles(
-                joints,
-                thumb_deg=20 + noise_deg,
-                index_deg=5 + noise_deg,
-                middle_deg=5 + noise_deg,
-                ring_deg=5 + noise_deg,
-                pinky_deg=5 + noise_deg
-            )
-            joints = self._rotate_palm(joints, self.rng.uniform(-10, 10))
-
-        elif gesture_id == 6:  # fist — all fingers curled tightly
-            joints = self._set_finger_angles(
-                joints,
-                thumb_deg=70 + noise_deg,
-                index_deg=90 + noise_deg,
-                middle_deg=92 + noise_deg,
-                ring_deg=90 + noise_deg,
-                pinky_deg=88 + noise_deg
-            )
+        if gesture_id == 0:  # fist
+            joints = self._set_finger_angles(joints, 70+noise_deg, 90+noise_deg,
+                                             92+noise_deg, 90+noise_deg, 88+noise_deg)
             joints = self._rotate_palm(joints, self.rng.uniform(-20, 20))
 
-        # Add per-joint sensor noise (simulating depth camera error ~1-2mm std)
-        sensor_noise = self.rng.normal(0, 0.0015, joints.shape).astype(np.float32)
-        joints = joints + sensor_noise
+        elif gesture_id == 1:  # index_left
+            joints = self._set_finger_angles(joints, 55+noise_deg, 5+noise_deg,
+                                             85+noise_deg, 85+noise_deg, 85+noise_deg)
+            joints = self._rotate_palm(joints, -80 + self.rng.normal(0, 10))
 
-        return joints
+        elif gesture_id == 2:  # index_right
+            joints = self._set_finger_angles(joints, 55+noise_deg, 5+noise_deg,
+                                             85+noise_deg, 85+noise_deg, 85+noise_deg)
+            joints = self._rotate_palm(joints, 80 + self.rng.normal(0, 10))
+
+        elif gesture_id in (3, 4):  # two_finger palm/back
+            palm, back = self._palm_back_variants(joints, 55, 5, 85, 2, noise_deg)
+            return back if gesture_id == 4 else palm
+
+        elif gesture_id in (5, 6):  # three_finger palm/back
+            palm, back = self._palm_back_variants(joints, 40, 5, 85, 3, noise_deg)
+            return back if gesture_id == 6 else palm
+
+        elif gesture_id in (7, 8):  # four_finger palm/back
+            palm, back = self._palm_back_variants(joints, 20, 5, 85, 4, noise_deg)
+            return back if gesture_id == 8 else palm
+
+        elif gesture_id in (9, 10):  # five_finger palm/back
+            palm, back = self._palm_back_variants(joints, 15, 5, 85, 5, noise_deg)
+            return back if gesture_id == 10 else palm
+
+        sensor_noise = self.rng.normal(0, 0.0015, joints.shape).astype(np.float32)
+        return joints + sensor_noise
 
 
 class SequenceGenerator:
@@ -361,14 +330,8 @@ class SequenceGenerator:
             jitter = self.rng.normal(0, 0.0008, skeleton_seq.shape).astype(np.float32)
             skeleton_seq = skeleton_seq + jitter
 
-        # Create per-frame labels
+        # All frames labeled as gesture_id (no separate NONE class)
         label_seq = np.full(total_frames, gesture_id, dtype=np.int64)
-        if include_transition and gesture_id != 0:
-            # First 100ms still labeled as transition (NONE)
-            transition_cutoff = int(0.1 * self.fps)
-            label_seq[:transition_cutoff] = 0
-            # Last 100ms labeled as transition
-            label_seq[-transition_cutoff:] = 0
 
         return skeleton_seq.astype(np.float32), label_seq
 
@@ -401,7 +364,7 @@ class SequenceGenerator:
                             gesture_id=gesture_id,
                             person_id=person_id,
                             duration_sec=max(0.8, duration),
-                            include_transition=(gesture_id != 0)
+                            include_transition=True
                         )
 
                         all_sequences.append(seq)

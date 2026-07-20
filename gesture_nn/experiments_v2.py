@@ -293,20 +293,20 @@ def plot_attention_weights(model: GestureClassifier, loader, device: str,
                 c = targets[i].item()
                 if c != 0 and c not in samples:
                     samples[c] = skeletons[i:i+1].to(device)
-                if len(samples) >= 6:
+                if len(samples) >= 12:
                     break
-            if len(samples) >= 6:
+            if len(samples) >= 12:
                 break
 
     if not samples:
         print("  [WARN] No samples found for attention visualization")
         return
 
-    fig, axes = plt.subplots(2, 3, figsize=(14, 8))
+    fig, axes = plt.subplots(3, 4, figsize=(18, 11))
     axes = axes.flatten()
 
     for idx, (gesture_id, skeleton) in enumerate(sorted(samples.items())):
-        if idx >= 6:
+        if idx >= 12:
             break
 
         wrist = skeleton[:, :, 0:1, :]
@@ -333,10 +333,13 @@ def plot_attention_weights(model: GestureClassifier, loader, device: str,
         ax.set_xticks([0, 8, 16, 24, 31])
         ax.set_yticks([0, 8, 16, 24, 31])
 
-    plt.colorbar(im, ax=axes, fraction=0.02, pad=0.02, label='Attention Weight')
+    # Use dedicated colorbar axis to avoid overlap with subplots
+    fig.subplots_adjust(right=0.88, hspace=0.45, wspace=0.35)
+    cbar_ax = fig.add_axes([0.90, 0.12, 0.015, 0.72])
+    plt.colorbar(im, cax=cbar_ax, label='Attention Weight')
+
     fig.suptitle('Self-Attention Weights (Averaged over 4 Heads)',
-                 fontsize=11, fontweight='bold', y=1.01)
-    plt.tight_layout()
+                 fontsize=11, fontweight='bold', y=0.98)
     fig.savefig(output_path / 'fig_attention_weights.pdf', dpi=150, bbox_inches='tight')
     fig.savefig(output_path / 'fig_attention_weights.png', dpi=150, bbox_inches='tight')
     plt.close(fig)
@@ -532,14 +535,16 @@ def plot_gesture_skeleton_samples(output_path: Path):
     fig, axes = plt.subplots(2, 3, figsize=(14, 9))
     axes = axes.flatten()
 
-    gesture_names = [
-        'NONE (Transition)', 'Index Left (Year-1)', 'Index Right (Year+1)',
-        'Two-Finger Palm (DEL)', 'Two-Finger Back (ES)', 'Four-Finger Palm (Main)'
-    ]
+    gesture_names = ['NONE', 'Fist', 'Index Left', 'Index Right',
+                     'Two-Finger Palm', 'Two-Finger Back',
+                     'Three-Finger Palm', 'Three-Finger Back',
+                     'Four-Finger Palm', 'Four-Finger Back',
+                     'Five-Finger Palm', 'Five-Finger Back']
 
-    for gid in range(6):
-        ax = axes[gid]
-        joints = deformer.apply(canon, gid if gid == 0 else (gid if gid < 5 else 5), person_variation=0)
+    fig, axes = plt.subplots(3, 4, figsize=(18, 12))
+    for gid in range(12):
+        ax = axes[gid // 4][gid % 4] if isinstance(axes[0], np.ndarray) else axes[gid]
+        joints = deformer.apply(canon, gid, person_variation=0)
 
         colors = {'thumb': '#E91E63', 'index': '#2196F3', 'middle': '#4CAF50',
                   'ring': '#FF9800', 'pinky': '#9C27B0'}

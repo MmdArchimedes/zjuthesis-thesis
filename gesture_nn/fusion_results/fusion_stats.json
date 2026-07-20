@@ -1,0 +1,699 @@
+{
+  "n_participants": 6,
+  "session_duration_min": 15,
+  "delta_t_ms": 500,
+  "total_raw_events": 596,
+  "stabilized_events": 589,
+  "rejected_by_stabilization": 7,
+  "conflicts_detected": 23,
+  "conflicts_resolved": 23,
+  "conflict_rate_pct": 3.86,
+  "arbitration_accuracy_pct": 100.0,
+  "total_commands_submitted": 566,
+  "per_participant": [
+    {
+      "total_raw_events": 106,
+      "stabilized_events": 106,
+      "rejected_by_stabilization": 0,
+      "conflicts_detected": 2,
+      "conflicts_resolved": 2,
+      "conflict_rate_pct": 1.89,
+      "arbitration_accuracy_pct": 100.0,
+      "total_commands_submitted": 104,
+      "command_queue": [
+        {
+          "cmd": "scene_main",
+          "src": "gesture",
+          "conf": 0.956
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.991
+        },
+        {
+          "cmd": "reset",
+          "src": "gesture",
+          "conf": 0.993
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.911
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.911
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.889
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.943
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.947
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 0.861
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.933
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.888
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.953
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.873
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.906
+        },
+        {
+          "cmd": "query_explain",
+          "src": "speech",
+          "conf": 0.962
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 1.0
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.918
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.963
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.881
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.866
+        }
+      ],
+      "participant_id": 1,
+      "n_raw_events": 106
+    },
+    {
+      "total_raw_events": 84,
+      "stabilized_events": 82,
+      "rejected_by_stabilization": 2,
+      "conflicts_detected": 6,
+      "conflicts_resolved": 6,
+      "conflict_rate_pct": 7.14,
+      "arbitration_accuracy_pct": 100.0,
+      "total_commands_submitted": 76,
+      "command_queue": [
+        {
+          "cmd": "switch_indicator",
+          "src": "speech",
+          "conf": 0.939
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.972
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.905
+        },
+        {
+          "cmd": "scene_main",
+          "src": "gesture",
+          "conf": 1.0
+        },
+        {
+          "cmd": "scene_main",
+          "src": "gesture",
+          "conf": 0.911
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.938
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.986
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.916
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.905
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.965
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.926
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.842
+        },
+        {
+          "cmd": "set_year",
+          "src": "speech",
+          "conf": 0.967
+        },
+        {
+          "cmd": "scene_prov",
+          "src": "gesture",
+          "conf": 0.858
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.937
+        },
+        {
+          "cmd": "switch_indicator",
+          "src": "speech",
+          "conf": 0.938
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.922
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.881
+        },
+        {
+          "cmd": "filter_region",
+          "src": "speech",
+          "conf": 1.0
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 1.0
+        }
+      ],
+      "participant_id": 2,
+      "n_raw_events": 84
+    },
+    {
+      "total_raw_events": 125,
+      "stabilized_events": 123,
+      "rejected_by_stabilization": 2,
+      "conflicts_detected": 6,
+      "conflicts_resolved": 6,
+      "conflict_rate_pct": 4.8,
+      "arbitration_accuracy_pct": 100.0,
+      "total_commands_submitted": 117,
+      "command_queue": [
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.93
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.989
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.883
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.889
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.922
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 0.819
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.874
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.953
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.906
+        },
+        {
+          "cmd": "reset",
+          "src": "gesture",
+          "conf": 0.895
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.941
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.928
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.916
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.918
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.843
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.947
+        },
+        {
+          "cmd": "reset",
+          "src": "gesture",
+          "conf": 0.907
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.96
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 0.911
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.863
+        }
+      ],
+      "participant_id": 3,
+      "n_raw_events": 125
+    },
+    {
+      "total_raw_events": 89,
+      "stabilized_events": 87,
+      "rejected_by_stabilization": 2,
+      "conflicts_detected": 3,
+      "conflicts_resolved": 3,
+      "conflict_rate_pct": 3.37,
+      "arbitration_accuracy_pct": 100.0,
+      "total_commands_submitted": 84,
+      "command_queue": [
+        {
+          "cmd": "deselect",
+          "src": "ray",
+          "conf": 0.982
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.945
+        },
+        {
+          "cmd": "scene_prov",
+          "src": "gesture",
+          "conf": 0.973
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 0.919
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.91
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.946
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.972
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 1.0
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.935
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.842
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.894
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.863
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.878
+        },
+        {
+          "cmd": "set_year",
+          "src": "speech",
+          "conf": 0.874
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.96
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 1.0
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.86
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.89
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.885
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.888
+        }
+      ],
+      "participant_id": 4,
+      "n_raw_events": 89
+    },
+    {
+      "total_raw_events": 100,
+      "stabilized_events": 100,
+      "rejected_by_stabilization": 0,
+      "conflicts_detected": 3,
+      "conflicts_resolved": 3,
+      "conflict_rate_pct": 3.0,
+      "arbitration_accuracy_pct": 100.0,
+      "total_commands_submitted": 97,
+      "command_queue": [
+        {
+          "cmd": "filter_region",
+          "src": "speech",
+          "conf": 0.835
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.92
+        },
+        {
+          "cmd": "query_explain",
+          "src": "speech",
+          "conf": 0.9
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.875
+        },
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.863
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.877
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.881
+        },
+        {
+          "cmd": "query_explain",
+          "src": "speech",
+          "conf": 0.966
+        },
+        {
+          "cmd": "set_year",
+          "src": "speech",
+          "conf": 0.943
+        },
+        {
+          "cmd": "deselect",
+          "src": "ray",
+          "conf": 0.848
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.875
+        },
+        {
+          "cmd": "query_explain",
+          "src": "speech",
+          "conf": 0.914
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.871
+        },
+        {
+          "cmd": "query_explain",
+          "src": "speech",
+          "conf": 0.887
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.876
+        },
+        {
+          "cmd": "set_year",
+          "src": "speech",
+          "conf": 0.827
+        },
+        {
+          "cmd": "switch_del",
+          "src": "gesture",
+          "conf": 0.997
+        },
+        {
+          "cmd": "reset",
+          "src": "gesture",
+          "conf": 0.912
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.924
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 0.973
+        }
+      ],
+      "participant_id": 5,
+      "n_raw_events": 100
+    },
+    {
+      "total_raw_events": 92,
+      "stabilized_events": 91,
+      "rejected_by_stabilization": 1,
+      "conflicts_detected": 3,
+      "conflicts_resolved": 3,
+      "conflict_rate_pct": 3.26,
+      "arbitration_accuracy_pct": 100.0,
+      "total_commands_submitted": 88,
+      "command_queue": [
+        {
+          "cmd": "switch_es",
+          "src": "gesture",
+          "conf": 0.91
+        },
+        {
+          "cmd": "switch_indicator",
+          "src": "speech",
+          "conf": 0.882
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.952
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.921
+        },
+        {
+          "cmd": "switch_indicator",
+          "src": "speech",
+          "conf": 0.835
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.869
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.932
+        },
+        {
+          "cmd": "switch_indicator",
+          "src": "speech",
+          "conf": 0.858
+        },
+        {
+          "cmd": "select_province",
+          "src": "speech",
+          "conf": 0.891
+        },
+        {
+          "cmd": "hover_highlight",
+          "src": "ray",
+          "conf": 0.858
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.937
+        },
+        {
+          "cmd": "deselect",
+          "src": "ray",
+          "conf": 0.935
+        },
+        {
+          "cmd": "reset",
+          "src": "gesture",
+          "conf": 1.0
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.918
+        },
+        {
+          "cmd": "select_province",
+          "src": "ray",
+          "conf": 0.905
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.915
+        },
+        {
+          "cmd": "year_inc",
+          "src": "gesture",
+          "conf": 0.89
+        },
+        {
+          "cmd": "scene_main",
+          "src": "gesture",
+          "conf": 0.95
+        },
+        {
+          "cmd": "year_dec",
+          "src": "gesture",
+          "conf": 0.932
+        },
+        {
+          "cmd": "switch_indicator",
+          "src": "speech",
+          "conf": 0.799
+        }
+      ],
+      "participant_id": 6,
+      "n_raw_events": 92
+    }
+  ]
+}

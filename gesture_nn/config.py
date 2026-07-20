@@ -7,7 +7,7 @@ All tunable parameters in one place for reproducibility.
 # Simulated Rokid UXR hand skeleton: 26 joints × 3 coords (x,y,z in meters)
 N_JOINTS = 26
 JOINT_DIMS = 3
-N_GESTURE_CLASSES = 7  # 6 gestures + NONE/transition
+N_GESTURE_CLASSES = 11  # 11 gesture classes (no NONE)
 FPS = 60
 GESTURE_DURATION_SEC = 2.0  # typical gesture hold duration
 WINDOW_SIZE = 32  # frames per input window
@@ -15,13 +15,17 @@ WINDOW_STRIDE = 4  # stride for sliding window during training
 
 # Gesture class mapping (matching thesis Table tab:ges_map)
 GESTURE_MAP = {
-    0: "NONE",           # no gesture / transition
-    1: "index_left",     # single finger left → year - 1
-    2: "index_right",    # single finger right → year + 1
-    3: "two_finger_palm",  # two fingers palm → switch to DEL
-    4: "two_finger_back",  # two fingers back → switch to ES
-    5: "four_finger_palm", # four fingers palm → main scene
-    6: "fist",           # fist → reset
+    0:  "fist",                # 握拳
+    1:  "index_left",          # 单指向左
+    2:  "index_right",         # 单指向右
+    3:  "two_finger_palm",     # 二指手心
+    4:  "two_finger_back",     # 二指手背
+    5:  "three_finger_palm",   # 三指手心
+    6:  "three_finger_back",   # 三指手背
+    7:  "four_finger_palm",    # 四指手心
+    8:  "four_finger_back",    # 四指手背
+    9:  "five_finger_palm",    # 五指手心
+    10: "five_finger_back",    # 五指手背
 }
 
 # Number of participants for synthetic data
@@ -71,4 +75,4 @@ THETA_EXT = 0.85  # collinearity threshold for rule-based (≈32° max angular d
 # ── Export ───────────────────────────────────────────────────────
 ONNX_OPSET = 14
 EXPORT_INPUT_NAME = "skeleton_sequence"  # [1, 32, 26, 3]
-EXPORT_OUTPUT_NAME = "gesture_logits"    # [1, 7]
+EXPORT_OUTPUT_NAME = "gesture_logits"    # [1, 11]
