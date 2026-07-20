@@ -92,7 +92,7 @@ CIF是ChartForge的中继表示层，借鉴React中Virtual DOM作为“平台无
 
 其中$f_i$为数据字段名（如\texttt{"DEL"}, \texttt{"province"}, \texttt{"year"}），$t_i \in \{\text{nominal}, \text{ordinal}, \text{quantitative}, \text{temporal}\}$为字段数据类型，$s_i \in \{\text{x}, \text{y}, \text{color}, \text{size}, \text{shape}, \text{facet}, \text{text}\}$为建议的视觉通道，$a_i \in \{\text{sum}, \text{mean}, \text{count}, \text{none}\}$为聚合函数。
 
-在省域经济分析场景中，数据语义层的字段词汇表与第五章指标体系严格对齐：省份（nominal）、区域（nominal）、年份（temporal）、DEL（quantitative）、ES（quantitative）、PGDP（quantitative）、URBAN（quantitative）、INDS（quantitative）、TEIN（quantitative）等。这种对齐确保了从“用户说出的指标名”到“数据引擎中的列名”再到“回归表中的变量名”的全程一致性。
+在省域经济分析场景中，数据语义层的字段词汇表与第五章指标体系严格对齐：省份、区域、年份、DEL、ES、PGDP、URBAN、INDS、TEIN等。这种对齐确保了从”用户说出的指标名”到”数据引擎中的列名”再到”回归表中的变量名”的全程一致性。
 
 \subsection{视觉编码层 $\mathcal{V}$ (Visual Encoding)}
 
@@ -102,7 +102,7 @@ CIF是ChartForge的中继表示层，借鉴React中Virtual DOM作为“平台无
     \mathcal{V} = \langle \mathcal{G},\; \mathcal{E},\; \Theta \rangle
 \end{equation}
 
-其中$\mathcal{G} \in \Gamma$为目标图表类型，$\Gamma = \{\text{bar},\, \text{line},\, \text{scatter},\, \text{area},\, \text{heatmap},\, \text{pie},\, \text{radar},\, \text{sankey},\, \text{treemap},\, \text{boxplot},\, \text{gauge},\, \text{funnel}\}$覆盖12类常用图表；$\mathcal{E}: \mathcal{D} \to \{\text{position}, \text{color}, \text{size}, \text{shape}, \text{opacity}, \text{text}\}$为视觉编码映射函数；$\Theta = \{\theta_1, \dots, \theta_k\}$为样式参数集（配色方案、字体、标注位置等）。
+其中$\mathcal{G} \in \Gamma$为目标图表类型，$\Gamma$覆盖柱状图、折线图、散点图、面积图、热力图、饼图、雷达图、桑基图、矩形树图、箱线图、仪表盘、漏斗图共12类常用图表；$\mathcal{E}: \mathcal{D} \to \{\text{position}, \text{color}, \text{size}, \text{shape}, \text{opacity}, \text{text}\}$为视觉编码映射函数；$\Theta = \{\theta_1, \dots, \theta_k\}$为样式参数集（配色方案、字体、标注位置等）。
 
 \subsection{交互约束层 $\mathcal{I}$ (Interaction Constraints)}
 
@@ -244,7 +244,7 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
     \big]
 \end{equation}
 
-对每个CIF要求的数据字段，检查其在生成图表中的存在性（70\%权重）和通道兼容性（30\%权重）。例如，quantitative类型的DEL必须映射到y/color/size等连续通道，若被映射到x（类别通道）则仅获部分分数。
+对每个CIF要求的数据字段，检查其在生成图表中的存在性（70\%权重）和通道兼容性（30\%权重）。例如，数值型字段DEL必须映射到y/color/size等连续通道，若被映射到x（类别通道）则仅获部分分数。
 
 \subsection{视觉完整度 $\Phi_{\text{vis}}$}
 
@@ -555,7 +555,7 @@ $-$ 视觉精炼阶段（跳过REINFORCE优化）& 84.9\% & 0.867 & $-6.8\%$ CA 
 
 ChartForge在复杂图表类型（热力图、桑基图、组合图表）上的优势更为显著。组合图表的提升幅度最大（$+18.4\%$），这得益于CCA的代数组合能力——LLM直接生成组合图表代码时容易出现“两套坐标系冲突”“图例重复”等结构化错误，而CCA通过形式化的Compose和Layer操作保证了组合的正确性。桑基图和热力图的提升（$+12.6\%$和$+11.9\%$）则归因于PCG对复杂图表结构的概率建模——这些图表类型在训练语料中占比较低（各约8\%），固定语法的均匀先验导致其被采样概率偏低，而PCG为每种图表类型维护了专门的产生式规则链。
 
-基础图表类型（柱状图、饼图）上ChartForge与最佳基线的差距相对较小（$+6.3\%\sim+10.4\%$），因为这类简单图表的结构规律性强，LLM的涌现能力足以覆盖大部分正确生成路径。ChartForge的增量收益主要来自字段映射校验——在约3.8\%的基础图表样本中，LLM-Direct将省份名（nominal）误映射到数值轴（quantitative），而PCG的轴类型约束在语法层面即阻止了此类错误。
+基础图表类型（柱状图、饼图）上ChartForge与最佳基线的差距相对较小（$+6.3\%\sim+10.4\%$），因为这类简单图表的结构规律性强，LLM的涌现能力足以覆盖大部分正确生成路径。ChartForge的增量收益主要来自字段映射校验——在约3.8\%的基础图表样本中，LLM-Direct将省份名（类别型）误映射到数值轴（数值型），而PCG的轴类型约束在语法层面即阻止了此类错误。
 
 \subsection{用户研究}
 

@@ -1,0 +1,273 @@
+<mxfile host="app.diagrams.net" modified="2026-07-20T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+  <diagram name="ChartForge-SDCR-Vis-Arch" id="ch4-architecture">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="8" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1050" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- LAYER 1: 意图层 (bottom) -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="L1-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a3a5c;strokeColor=#0d2137;strokeWidth=2;opacity=12;" vertex="1" parent="1">
+          <mxGeometry x="140" y="760" width="1100" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="L1-label" value="&lt;b style=&quot;font-size:13px&quot;&gt;意图层&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Intent Layer&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#1a3a5c;" vertex="1" parent="1">
+          <mxGeometry x="40" y="810" width="88" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L1-nl" value="&lt;b&gt;多模态NL查询&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;手势 / 语音 / 射线&lt;br&gt;来自第三章通道&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="180" y="810" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="L1-cif" value="&lt;b&gt;CIF 解析器&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;GPT-4o + 结构化提示词&lt;br&gt;字段验证 · 类型推断补充&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="810" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="L1-output" value="&lt;b&gt;结构化图表意图&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;font-family:Courier New&quot;&gt;⟨D, V, I⟩&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;与 TSTQ-Fusion 共享时基&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="700" y="810" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="L1-domain" value="&lt;font style=&quot;font-size:8px&quot;&gt;领域知识库&lt;br&gt;DOMAIN_FIELDS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=1;fontSize=9;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="818" width="110" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L1-a1" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6c8ebf;" edge="1" parent="1" source="L1-nl" target="L1-cif">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L1-a2" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6c8ebf;" edge="1" parent="1" source="L1-cif" target="L1-output">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L1-a3" style="endArrow=open;html=1;strokeWidth=1;strokeColor=#9673a6;dashed=1;dashPattern=4 4;" edge="1" parent="1" source="L1-domain" target="L1-cif">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- LAYER 2: 生成精炼层 -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="L2-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2d6a9f;strokeColor=#1a4d7a;strokeWidth=2;opacity=12;" vertex="1" parent="1">
+          <mxGeometry x="140" y="520" width="1100" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-label" value="&lt;b style=&quot;font-size:13px&quot;&gt;生成精炼层&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Generation &amp;amp; Refinement&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2d6a9f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="570" width="88" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L2-pcg" value="&lt;b&gt;PCG 束搜索&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;概率图表语法派生&lt;br&gt;束宽 k=5, 深度≤10&lt;br&gt;单次采样 &amp;lt; 1 ms&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0d4f1;strokeColor=#4a90c4;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="180" y="568" width="190" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L2-arrow1" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#4a90c4;" edge="1" parent="1" source="L2-pcg">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="618" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="L2-msgro" value="&lt;b&gt;MS-GRP 管线&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0d4f1;strokeColor=#4a90c4;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="420" y="555" width="460" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-s1" value="&lt;b&gt;粗生成&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;生成候选&lt;br&gt;图表规约&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e4f8;strokeColor=#4a90c4;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="592" width="96" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-s2" value="&lt;b&gt;语义验证&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;SVAS 评分&lt;br&gt;Φ_sem ≥ 0.7&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e4f8;strokeColor=#4a90c4;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="542" y="592" width="96" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-s3" value="&lt;b&gt;视觉精炼&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;Φ_vis 优化&lt;br&gt;配色/布局&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e4f8;strokeColor=#4a90c4;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="654" y="592" width="96" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-s4" value="&lt;b&gt;交互注入&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;绑定事件&lt;br&gt;处理器&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0e4f8;strokeColor=#4a90c4;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="766" y="592" width="96" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L2-a-s1" style="endArrow=block;html=1;strokeWidth=1;strokeColor=#4a90c4;" edge="1" parent="1" source="L2-s1" target="L2-s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-a-s2" style="endArrow=block;html=1;strokeWidth=1;strokeColor=#4a90c4;" edge="1" parent="1" source="L2-s2" target="L2-s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L2-a-s3" style="endArrow=block;html=1;strokeWidth=1;strokeColor=#4a90c4;" edge="1" parent="1" source="L2-s3" target="L2-s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L2-a-pcg2msg" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#4a90c4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="618" as="sourcePoint" />
+            <mxPoint x="430" y="622" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="L2-output" value="&lt;b&gt;优化 ChartSpec&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;平台无关图表规约&lt;br&gt;JSON 中间表示&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0d4f1;strokeColor=#4a90c4;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="568" width="190" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L2-a-out" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#4a90c4;" edge="1" parent="1" source="L2-s4" target="L2-output">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L2-fb" value="&lt;font style=&quot;font-size:8px&quot;&gt;迭代精炼 (max 3 rounds)&lt;/font&gt;" style="endArrow=open;html=1;strokeWidth=1;strokeColor=#d6b656;dashed=1;dashPattern=6 4;fontSize=8;fontColor=#996600;" edge="1" parent="1">
+          <mxGeometry x="0.1" y="40" relative="1" as="geometry">
+            <mxPoint x="640" y="680" as="sourcePoint" />
+            <mxPoint x="640" y="652" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="590" y="680" />
+              <mxPoint x="590" y="652" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- LAYER 3: 渲染适配层 -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="L3-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4a90c4;strokeColor=#2d6a9f;strokeWidth=2;opacity=12;" vertex="1" parent="1">
+          <mxGeometry x="140" y="320" width="1100" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-label" value="&lt;b style=&quot;font-size:13px&quot;&gt;渲染适配层&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Render &amp;amp; Adaptation&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#4a90c4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="88" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L3-input" value="&lt;b&gt;ChartSpec&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;平台无关&lt;br&gt;中间表示&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8daf5;strokeColor=#6cb4d9;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="180" y="362" width="160" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-format" value="&lt;b&gt;多目标格式转换&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8daf5;strokeColor=#6cb4d9;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="410" y="362" width="250" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L3-targets" value="&lt;b&gt;AR 端&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;Unity ChartRenderer&lt;br&gt;JSON 格式&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8daf5;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="730" y="344" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-web" value="&lt;b&gt;Web / 离线&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;Vega-Lite / ECharts&lt;br&gt;基线对比评测&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8daf5;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="730" y="404" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-desktop" value="&lt;b&gt;桌面端&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;Plotly / Matplotlib&lt;br&gt;离线渲染&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b8daf5;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="930" y="362" width="140" height="76" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L3-a1" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L3-input" target="L3-format">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-a2" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L3-format" target="L3-targets">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-a3" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L3-format" target="L3-web">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L3-a4" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L3-format" target="L3-desktop">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- LAYER 4: 交互运行时层 (top) -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="L4-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6cb4d9;strokeColor=#4a90c4;strokeWidth=2;opacity=12;" vertex="1" parent="1">
+          <mxGeometry x="140" y="80" width="1100" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-label" value="&lt;b style=&quot;font-size:13px&quot;&gt;交互运行时层&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Interaction Runtime&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#6cb4d9;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="88" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L4-sync" value="&lt;b&gt;ChartStateSync&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;状态同步协调器&lt;br&gt;与 SDCR-Vis 共享 s&lt;sub&gt;t&lt;/sub&gt;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e4f7;strokeColor=#6cb4d9;strokeWidth=1.5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="180" y="120" width="190" height="88" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L4-v1" value="&lt;b&gt;省域地图&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;热力图 · 分级着色&lt;br&gt;区域下钻 · 空间筛选&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e4f7;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="440" y="120" width="160" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-v2" value="&lt;b&gt;时间轴&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;时序折线 · 年度对比&lt;br&gt;时间窗滑动&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e4f7;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="440" y="196" width="160" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-v3" value="&lt;b&gt;ChartForge 图表&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;动态生成 · CCA 组合&lt;br&gt;12类图表类型&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e4f7;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="120" width="170" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-v4" value="&lt;b&gt;结果面板&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;回归表 · 机制图&lt;br&gt;计量分析呈现&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e4f7;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="196" width="170" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L4-events" value="&lt;b&gt;交互事件处理&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;点击 · 悬停 · 刷选&lt;br&gt;缩放 · 筛选 · 下钻&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e4f7;strokeColor=#6cb4d9;strokeWidth=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="900" y="146" width="150" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="L4-a1" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L4-sync" target="L4-v1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-a2" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L4-sync" target="L4-v2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-a3" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L4-v1" target="L4-v3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-a4" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L4-v2" target="L4-v4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L4-a5" style="endArrow=block;html=1;strokeWidth=1.5;strokeColor=#6cb4d9;" edge="1" parent="1" source="L4-v3" target="L4-events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- VERTICAL DATA FLOW ARROWS -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="V1" value="&lt;font style=&quot;font-size:9px&quot;&gt;CIF ⟨D,V,I⟩&lt;/font&gt;" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#555555;fontSize=9;fontColor=#555555;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="805" y="760" as="sourcePoint" />
+            <mxPoint x="805" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="V2" value="&lt;font style=&quot;font-size:9px&quot;&gt;ChartSpec&lt;/font&gt;" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#555555;fontSize=9;fontColor=#555555;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="805" y="520" as="sourcePoint" />
+            <mxPoint x="805" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="V3" value="&lt;font style=&quot;font-size:9px&quot;&gt;渲染指令&lt;/font&gt;" style="endArrow=block;html=1;strokeWidth=2;strokeColor=#555555;fontSize=9;fontColor=#555555;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="805" y="320" as="sourcePoint" />
+            <mxPoint x="805" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- RIGHT SIDE: s_t state vector -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <mxCell id="st-line" value="" style="endArrow=none;html=1;strokeWidth=2.5;strokeColor=#e8a820;dashed=1;dashPattern=8 6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1290" y="120" as="sourcePoint" />
+            <mxPoint x="1290" y="910" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="st-label" value="&lt;b&gt;s&lt;sub&gt;t&lt;/sub&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;统一&lt;br&gt;状态&lt;br&gt;向量&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#e8a820;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="470" width="60" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="st-l4" style="endArrow=open;html=1;strokeWidth=1.2;strokeColor=#e8a820;dashed=1;dashPattern=4 3;startArrow=open;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1290" y="180" as="sourcePoint" />
+            <mxPoint x="1240" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="st-l3" style="endArrow=open;html=1;strokeWidth=1.2;strokeColor=#e8a820;dashed=1;dashPattern=4 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1290" y="400" as="sourcePoint" />
+            <mxPoint x="1240" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="st-l2" style="endArrow=open;html=1;strokeWidth=1.2;strokeColor=#e8a820;dashed=1;dashPattern=4 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1290" y="620" as="sourcePoint" />
+            <mxPoint x="1240" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="st-l1" style="endArrow=open;html=1;strokeWidth=1.2;strokeColor=#e8a820;dashed=1;dashPattern=4 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1290" y="850" as="sourcePoint" />
+            <mxPoint x="1240" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- TITLE -->
+        <mxCell id="title" value="&lt;b style=&quot;font-size:16px&quot;&gt;ChartForge + SDCR–Vis 融合系统架构&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="280" y="12" width="700" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- FOOTNOTE -->
+        <mxCell id="footnote" value="&lt;font style=&quot;font-size:9px;color:#888888&quot;&gt;数据源: 第五章省域面板数据  ·  自底向上数据流: 意图 → 生成 → 适配 → 呈现  ·  右侧虚线: s&lt;sub&gt;t&lt;/sub&gt; 状态同步 (ChartStateSync ↔ SDCR-Vis)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="180" y="970" width="1000" height="28" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
