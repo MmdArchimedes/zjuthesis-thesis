@@ -63,25 +63,25 @@ Renderer        & Platform Adapter        & 跨平台（AR/Web/Desktop）图表�
 \section{图表意图形式化表示（CIF）}
 \label{sec:cif}
 
-CIF是ChartForge的中继表示层，借鉴React中Virtual DOM作为”平台无关UI描述”的角色，将模糊的自然语言需求$\mathcal{Q}$映射为结构化的图表意图三元组：
+CIF是ChartForge的中继表示层，借鉴React中Virtual DOM作为平台无关UI描述的角色，将模糊的自然语言需求$\mathcal{Q}$映射为结构化的图表意图三元组$\text{CIF}(\mathcal{Q}) = \langle \mathcal{D}, \mathcal{V}, \mathcal{I} \rangle$（式~\ref{eq:cif}）。三元组分别对应数据语义、视觉编码与交互约束三个正交维度，共同构成从”用户说了什么”到”系统需要画什么”的完整语义桥梁。
 
 \begin{equation}\label{eq:cif}
     \text{CIF}(\mathcal{Q}) = \langle \mathcal{D},\; \mathcal{V},\; \mathcal{I} \rangle
 \end{equation}
 
-数据语义层$\mathcal{D}$描述用户意图中涉及的数据字段及其语义角色：$\mathcal{D} = \big\{ (f_i,\, t_i,\, s_i,\, a_i) \big\}_{i=1}^{n}$，其中$f_i$为数据字段名（如\texttt{“DEL”}, \texttt{“province”}, \texttt{“year”}），$t_i \in \{\text{nominal}, \text{ordinal}, \text{quantitative}, \text{temporal}\}$为字段数据类型，$s_i \in \{\text{x}, \text{y}, \text{color}, \text{size}, \text{shape}, \text{facet}, \text{text}\}$为建议的视觉通道，$a_i \in \{\text{sum}, \text{mean}, \text{count}, \text{none}\}$为聚合函数。在省域经济分析场景中，数据语义层的字段词汇表与第五章指标体系严格对齐：省份、区域、年份、DEL、ES、PGDP、URBAN、INDS、TEIN等，确保了从用户说出的指标名到数据引擎中的列名再到回归表中的变量名的全程一致性。
+数据语义层$\mathcal{D} = \big\{ (f_i, t_i, s_i, a_i) \big\}_{i=1}^{n}$刻画用户意图中涉及的数据字段。对每个字段$f_i$（如\texttt{“DEL”}, \texttt{“province”}, \texttt{“year”}），CIF同时标注其数据类型$t_i$（离散、有序、数值或时序）、建议的视觉通道$s_i$（坐标轴、颜色、尺寸等）以及聚合函数$a_i$（求和、均值、计数或不聚合）。在省域经济分析场景中，数据语义层的字段词汇表与第五章指标体系严格对齐——省份、区域、年份、DEL、ES、PGDP、URBAN、INDS、TEIN等——确保了从用户说出的指标名到数据引擎中的列名再到回归表中的变量名的全程一致性。
 
-视觉编码层$\mathcal{V} = \langle \mathcal{G},\; \mathcal{E},\; \Theta \rangle$指定图表的视觉呈现方式。$\mathcal{G} \in \Gamma$为目标图表类型，$\Gamma$覆盖柱状图、折线图、散点图、面积图、热力图、饼图、雷达图、桑基图、矩形树图、箱线图、仪表盘、漏斗图共12类常用图表；$\mathcal{E}: \mathcal{D} \to \{\text{position}, \text{color}, \text{size}, \text{shape}, \text{opacity}, \text{text}\}$为视觉编码映射函数；$\Theta = \{\theta_1, \dots, \theta_k\}$为样式参数集（配色方案、字体、标注位置等）。
+视觉编码层$\mathcal{V} = \langle \mathcal{G}, \mathcal{E}, \Theta \rangle$指定图表的视觉呈现方式。$\mathcal{G} \in \Gamma$为目标图表类型，$\Gamma$覆盖柱状图、折线图、散点图、面积图、热力图、饼图、雷达图、桑基图、矩形树图、箱线图、仪表盘和漏斗图共12类常用图表；$\mathcal{E}: \mathcal{D} \to \{\text{position}, \text{color}, \text{size}, \text{shape}, \text{opacity}, \text{text}\}$将数据字段映射到视觉通道；$\Theta = \{\theta_1, \dots, \theta_k\}$收纳配色方案、字体、标注位置等样式参数。
 
-交互约束层$\mathcal{I} = \big\{ (e_j,\, h_j,\, c_j) \big\}_{j=1}^{m}$描述用户对图表交互行为的期望。$e_j$为交互事件类型（点击、悬停、刷选、缩放、筛选、下钻），$h_j$为事件处理器规约，$c_j$为约束条件（如响应时间$< 200$\,ms）。该层与第三章TSTQ--Fusion的交互事件模型共享相同的类型系统，确保交互事件可在ChartForge图表和AR视图之间路由。
+交互约束层$\mathcal{I} = \big\{ (e_j, h_j, c_j) \big\}_{j=1}^{m}$描述用户对图表交互行为的期望，每条约束指定交互事件类型$e_j$（点击、悬停、刷选、缩放、筛选、下钻）、事件处理器规约$h_j$以及性能约束$c_j$（如响应时间低于200\,ms）。该层与第三章TSTQ--Fusion的交互事件模型共享相同的类型系统，确保交互事件可在ChartForge图表和AR视图之间无歧义路由。
 
-CIF的解析由GPT-4o结合结构化提示词完成，系统提示词定义了完整的JSON输出模式，包含字段类型约束、图表类型枚举和交互事件白名单。解析后进行三项后处理：字段验证，检查解析出的字段名是否在领域词汇表中，对误识别字段进行模糊匹配修正；类型推断补充，对缺失类型信息的字段从领域知识库中自动补充；置信度标记，解析失败的查询返回低置信度标记，由上游语音交互层通过AR HUD给出轻提示。
+CIF的解析由GPT-4o结合结构化提示词完成，系统提示词定义了完整的JSON输出模式，包含字段类型约束、图表类型枚举和交互事件白名单。解析后执行三项后处理：字段验证（检查解析出的字段名是否在领域词汇表中，对误识别字段进行模糊匹配修正）、类型推断补充（对缺失类型信息的字段从领域知识库中自动补充）以及置信度标记（解析失败的查询返回低置信度标记，由上游语音交互层通过AR HUD给出轻提示）。
 
 % =====================================================================
 \section{概率图表语法（PCG）}
 \label{sec:pcg}
 
-PCG是ChartForge的理论核心，借鉴了React Reconciliation中“协调算法搜索最小变更集”的思想——正如Reconciliation在Virtual DOM树上搜索最优更新路径，PCG在图表语法树上搜索最符合用户意图的图表派生路径。其形式定义如下。
+PCG是ChartForge的理论核心，借鉴了React Reconciliation中协调算法搜索最小变更集的思想——正如Reconciliation在Virtual DOM树上搜索最优更新路径，PCG在图表语法树上搜索最符合用户意图的图表派生路径。PCG形式上定义为一个五元组$\text{PCG} = \langle N, T, S, R, P \rangle$（式~\ref{eq:pcg}），其中各分量的含义与设计如下。
 
 \begin{definition}[概率图表语法]
 一个概率图表语法定义为一个五元组：
@@ -90,74 +90,19 @@ PCG是ChartForge的理论核心，借鉴了React Reconciliation中“协调算�
 \end{equation}
 \end{definition}
 
-其中各分量定义如下：
+非终结符集合$N$表示图表的抽象组件层级，包含$\texttt{Chart}$（图表根节点）、$\texttt{Layout}$（布局容器）、$\texttt{Glyph}$（几何标记）、$\texttt{Axis}$（坐标轴）、$\texttt{Scale}$（比例尺）、$\texttt{Legend}$（图例）、$\texttt{Guide}$（辅助线）、$\texttt{Facet}$（分面）、$\texttt{Layer}$（图层）和$\texttt{Annotation}$（注释）共10个抽象组件。终结符集合$T$包含21种可渲染的图表原子元素，涵盖几何元素（$\texttt{BarGlyph}$、$\texttt{PointGlyph}$、$\texttt{LinePath}$、$\texttt{AreaPath}$、$\texttt{ArcGlyph}$、$\texttt{RectCell}$）、文字与刻度（$\texttt{TextLabel}$、$\texttt{TickMark}$、$\texttt{GridLine}$）、比例尺（$\texttt{ColorScale}$、$\texttt{SizeScale}$、$\texttt{OpacityScale}$、$\texttt{ShapeScale}$）、坐标轴（$\texttt{OrdinalAxis}$、$\texttt{QuantitativeAxis}$、$\texttt{TemporalAxis}$）以及辅助元素（$\texttt{LegendDef}$、$\texttt{GuideLine}$、$\texttt{FacetGrid}$、$\texttt{AnnotationText}$、$\texttt{AnnotationRegion}$）。起始符号$S = \texttt{Chart}$表示所有图表派生均从根节点开始。
 
-\textbf{非终结符集合$N$：}表示图表的抽象组件层级：
-\begin{equation}
-    \begin{aligned}
-    N = \{ &
-        \texttt{Chart},\, \texttt{Layout},\, \texttt{Glyph},\, \texttt{Axis},\,
-        \texttt{Scale},\, \texttt{Legend},\, \\
-        & \texttt{Guide},\, \texttt{Facet},\,
-        \texttt{Layer},\, \texttt{Annotation}
-    \}
-    \end{aligned}
-\end{equation}
+产生式规则集$R$定义了从非终结符到符号串的合法展开方式。核心规则包括：图表根节点展开为布局、至少一个几何标记、可选辅助线与注释的组合（$\texttt{Chart} \to \texttt{Layout} \; \texttt{Glyph}^+ \; \texttt{Guide}^* \; \texttt{Annotation}^*$）；布局展开为横纵坐标轴与可选分面（$\texttt{Layout} \to \texttt{Axis}_x \; \texttt{Axis}_y \; \texttt{Facet}^*$）；几何标记可从六种原子图形中选择（$\texttt{Glyph} \to \texttt{BarGlyph} \mid \texttt{PointGlyph} \mid \ldots$）；坐标轴与比例尺各有相应的类型派生规则。当前PCG共定义23条产生式规则，构成一个紧凑但表达能力充分的图表生成空间——虽然规则数量有限，但通过递归组合可覆盖12类图表类型的任意合法实例。
 
-\textbf{终结符集合$T$：}表示可渲染的图表原子元素：
-\begin{equation}
-    \begin{aligned}
-    T = \{ &
-        \texttt{BarGlyph},\, \texttt{PointGlyph},\, \texttt{LinePath},\,
-        \texttt{AreaPath},\, \texttt{ArcGlyph},\, \\
-        & \texttt{RectCell},\,
-        \texttt{TextLabel},\, \texttt{TickMark},\, \texttt{GridLine},\,
-        \texttt{ColorScale},\, \\
-        & \texttt{SizeScale},\, \texttt{OpacityScale},\,
-        \texttt{ShapeScale},\, \texttt{OrdinalAxis},\,
-        \texttt{QuantitativeAxis},\, \\
-        & \texttt{TemporalAxis},\, \texttt{LegendDef},\,
-        \texttt{GuideLine},\, \texttt{FacetGrid},\,
-        \texttt{AnnotationText},\, \\
-        & \texttt{AnnotationRegion}
-    \}
-    \end{aligned}
-\end{equation}
+概率分布$P: R \to [0, 1]$为每条产生式规则赋予可学习的权重，并满足对每个非终结符$A$其候选规则概率之和为1的归一化条件$\sum_{r \in R_A} P(r) = 1$。这一概率层使PCG区别于普通的上下文无关文法——在生成时不是随机选择规则，而是依据从图表语料库中学习到的先验偏好进行加权采样。
 
-\textbf{起始符号：}$S = \texttt{Chart}$
-
-\textbf{产生式规则集$R$：}核心产生式规则包括：
-\begin{align}
-    \texttt{Chart}    &\to \texttt{Layout} \; \texttt{Glyph}^+ \; \texttt{Guide}^* \; \texttt{Annotation}^* \label{rule:chart} \\
-    \texttt{Layout}   &\to \texttt{Axis}_x \; \texttt{Axis}_y \; \texttt{Facet}^* \label{rule:layout} \\
-    \texttt{Glyph}    &\to \texttt{BarGlyph} \mid \texttt{PointGlyph} \mid \texttt{LinePath} \nonumber\\
-                      &\quad \mid \texttt{AreaPath} \mid \texttt{ArcGlyph} \mid \texttt{RectCell} \label{rule:glyph} \\
-    \texttt{Axis}     &\to \texttt{OrdinalAxis} \mid \texttt{QuantitativeAxis} \mid \texttt{TemporalAxis} \label{rule:axis} \\
-    \texttt{Scale}    &\to \texttt{ColorScale} \mid \texttt{SizeScale} \mid \texttt{OpacityScale} \mid \texttt{ShapeScale} \label{rule:scale}
-\end{align}
-
-当前PCG共定义23条产生式规则，覆盖10个非终结符和21个终结符，构成一个紧凑但表达能力充分的图表生成空间。
-
-\textbf{概率分布$P: R \to [0, 1]$：}每条产生式规则的可学习概率权重，满足归一化条件：
-\begin{equation}
-    \sum_{r \in R_A} P(r) = 1, \quad \forall A \in N
-\end{equation}
-
-其中$R_A \subseteq R$表示左侧非终结符为$A$的所有产生式规则。
-
-\medskip
-\noindent\textbf{概率学习。}
-PCG的概率分布$P$通过图表语料库的最大似然估计学习得到。给定训练集$\mathcal{C} = \{(x_i, y_i)\}_{i=1}^{M}$（来自ChartIntent-10K数据集的7000条训练样本），最大化图表语法树的似然：
+PCG的概率分布$P$通过图表语料库的最大似然估计学习得到。给定训练集$\mathcal{C} = \{(x_i, y_i)\}_{i=1}^{M}$（来自ChartIntent-10K数据集的7000条训练样本），训练目标为最大化图表语法树的似然$\mathcal{L}_{\text{PCG}} = \sum_{i=1}^{M} \sum_{r \in \text{parse}(y_i)} \log P(r \mid \text{parent}(r)) + \lambda \cdot \mathcal{R}(P)$，其中$\text{parse}(y_i)$是图表$y_i$对应的语法树展开所使用的产生式序列。为防止未见规则出现零概率，采用Laplace平滑为每条规则保留$1/(n+k)$的最小概率质量（$n$为规则使用总次数，$k$为该非终结符的候选规则数）。
 
 \begin{equation}\label{eq:pcloss}
     \mathcal{L}_{\text{PCG}} = \sum_{i=1}^{M} \sum_{r \in \text{parse}(y_i)} \log P\big(r \mid \text{parent}(r)\big) + \lambda \cdot \mathcal{R}(P)
 \end{equation}
 
-其中$\text{parse}(y_i)$是图表$y_i$对应的语法树展开所使用的产生式序列。为防止未见规则的零概率问题，采用Laplace（加一）平滑，使每条规则至少获得$1/(n + k)$的最小概率质量（$n$为规则使用总次数，$k$为该非终结符的规则数）。
-
-\medskip
-\noindent\textbf{条件生成与束搜索。}
-给定用户意图$\mathcal{Q}$的CIF表示，图表生成转化为求解最优语法树的优化问题：
+在推理阶段，给定用户意图$\mathcal{Q}$的CIF表示，图表生成转化为在PCG语法树空间中求解最优派生路径的优化问题$T^* = \arg\max_{T \in \mathcal{T}(\text{PCG})} P(T \mid \text{PCG}) \cdot P(\text{CIF}(\mathcal{Q}) \mid T)$，其中$\mathcal{T}(\text{PCG})$是PCG可派生的所有语法树集合，两项因子分别编码了从语料库学习的先验图表偏好和当前用户意图的匹配度。本文采用束搜索（束宽$k=5$），在每个扩展步评估产生式规则的对数概率与CIF意图匹配分数之和。算法复杂度为$O(k \cdot |R| \cdot d)$，其中语法树最大深度$d \leq 10$，$|R| \approx 23$，每张图表生成仅需约1150次产生式扩展评估，在Python实现中单次采样耗时低于1\,ms。
 
 \begin{equation}\label{eq:conditional}
     T^* = \arg\max_{T \in \mathcal{T}(\text{PCG})} \;
@@ -165,10 +110,7 @@ PCG的概率分布$P$通过图表语料库的最大似然估计学习得到。�
           \underbrace{P\big(\text{CIF}(\mathcal{Q}) \mid T\big)}_{\text{意图匹配度}}
 \end{equation}
 
-其中$\mathcal{T}(\text{PCG})$是PCG可派生的所有语法树集合。本文采用束搜索（beam search），束宽$k=5$，在每个扩展步评估产生式规则的对数概率与CIF意图匹配分数之和。算法的时间复杂度为$O(k \cdot |R| \cdot d)$，其中$d$为语法树最大深度（$\leq 10$），$|R| \approx 23$，每张图表生成仅需约$5 \times 23 \times 10 = 1150$次产生式扩展评估，在Python实现中单次采样耗时$< 1$ms。
-
-\medskip
-\noindent\textbf{理论性质。}
+PCG具备两条基本的理论性质，为ChartForge的生成能力提供了形式化保障。
 \begin{theorem}[完备性]\label{thm:completeness}
 PCG的生成空间$\mathcal{T}(\text{PCG})$包含所有12类图表类型的任意合法实例。
 \end{theorem}
@@ -189,7 +131,9 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
 \section{语义-视觉对齐分数（SVAS）}
 \label{sec:svas}
 
-仅有PCG的语法约束不足以保证生成质量——语法正确的图表可能语义错误（如将省份名映射到数值轴）。SVAS定义了生成图表$C$与用户CIF意图$\mathcal{Q}$的定量匹配度：
+仅有PCG的语法约束不足以保证生成质量——语法正确的图表可能存在语义错误，例如将省份名称错误地映射到数值轴。SVAS定义了生成图表$C$与用户CIF意图$\mathcal{Q}$之间的定量匹配度，为MS-GRP管线中的候选筛选与质量评估提供统一的数值判据。
+
+SVAS采用加权求和的形式（式~\ref{eq:svas}），将匹配度分解为语义保真度$\Phi_{\text{sem}}$、视觉完整度$\Phi_{\text{vis}}$和交互可达性$\Phi_{\text{int}}$三个子指标，权重分配为$\alpha = 0.40, \beta = 0.40, \gamma = 0.20$。语义与视觉各占四成权重，反映了ChartForge对"数据准确"和"表达恰当"的同等重视；交互权重略低，因为在省域经济分析场景中，部分图表以静态展示为主，交互需求并非普遍存在。
 
 \begin{equation}\label{eq:svas}
     \text{SVAS}(C, \mathcal{Q}) = \alpha \cdot \Phi_{\text{sem}}(C, \mathcal{D})
@@ -197,11 +141,9 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
                                 + \gamma \cdot \Phi_{\text{int}}(C, \mathcal{I})
 \end{equation}
 
-其中$\alpha = 0.40, \beta = 0.40, \gamma = 0.20$。
+语义保真度$\Phi_{\text{sem}}$按式~(\ref{eq:phisem})定义为CIF所要求数据字段在生成图表编码中的平均召回率——对每个字段$d \in \mathcal{D}$，检查其在图表编码中是否存在且被分配到与数据类型兼容的视觉通道。例如数值型字段DEL须映射到y轴、颜色或尺寸等连续通道，若被错误分配到类别型x轴则仅获部分分数。评估时存在性检查占70\%权重，通道兼容性占30\%权重。
 
-语义保真度$\Phi_{\text{sem}}$衡量图表使用的数据字段与用户意图的一致性：
-
-\begin{equation}
+\begin{equation}\label{eq:phisem}
     \Phi_{\text{sem}}(C, \mathcal{D}) =
     \frac{1}{|\mathcal{D}|} \sum_{d \in \mathcal{D}}
     \mathbb{1}\big[\,\exists e \in C.\text{encodings} :
@@ -210,9 +152,7 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
     \big]
 \end{equation}
 
-对每个CIF要求的数据字段，检查其在生成图表中的存在性（70\%权重）和通道兼容性（30\%权重）。例如，数值型字段DEL必须映射到y/color/size等连续通道，若被映射到x（类别通道）则仅获部分分数。
-
-视觉完整度$\Phi_{\text{vis}}$衡量图表视觉配置与意图的匹配度：
+视觉完整度$\Phi_{\text{vis}}$（式~\ref{eq:phivis}）从图表类型匹配、视觉编码对齐和样式一致性三个层面评估视觉呈现质量，三项子权重依次为0.40、0.35和0.25。类型匹配函数typeMatch在图表类型完全匹配时得分为1.0，相关类型间按语义距离衰减——柱状图与折线图同属关系组，相似度0.5；柱状图与饼图语义无关，相似度仅0.1。编码匹配函数encodingMatch逐字段比较实际使用的视觉通道与CIF建议通道的对齐程度。样式匹配函数styleMatch评估配色方案、字体大小等样式参数与用户偏好的一致性。
 
 \begin{equation}\label{eq:phivis}
     \begin{aligned}
@@ -223,63 +163,23 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
     \end{aligned}
 \end{equation}
 
-其中$\omega_1 = 0.40, \omega_2 = 0.35, \omega_3 = 0.25$。typeMatch在图表类型完全匹配时为1.0，相关类型间按语义距离衰减（如bar与line同属关系组，相似度0.5；bar与pie无关，相似度0.1）。encodingMatch比较每个字段在实际vs.期望通道上的对齐情况。styleMatch评估配色方案、字体大小等样式参数的一致性。
+交互可达性$\Phi_{\text{int}}$（式~\ref{eq:phiint}）以CIF交互约束$\mathcal{I}$中各条目为基准，综合评估交互可行性与性能约束满足程度。不同图表类型具有差异化的交互能力——柱状图、折线图和散点图天然支持点击、悬停、刷选、缩放和筛选五类交互，而饼图和仪表盘仅支持点击和悬停两类基础交互。当用户请求的交互类型超出图表原生能力时，可行性得分取0.3而非零，因为系统可通过替代交互（如以点击代替刷选）实现近似功能。
 
-交互可达性$\Phi_{\text{int}}$定义为：
 \begin{equation}\label{eq:phiint}
     \Phi_{\text{int}}(C, \mathcal{I}) =
     \frac{1}{|\mathcal{I}|} \sum_{(e, h, c) \in \mathcal{I}}
     \text{interactionFeasibility}(C, e, h) \cdot \text{constraintSatisfaction}(C, c)
 \end{equation}
 
-每种图表类型具有不同的交互能力矩阵：
-\begin{itemize}[leftmargin=*]
-    \item 柱状图/折线图/散点图支持
-          $\{\text{click}, \text{hover}, \text{brush}, \text{zoom}, \text{filter}\}$
-          五类交互；
-    \item 饼图/仪表盘仅支持
-          $\{\text{click}, \text{hover}\}$
-          两类基础交互。
-\end{itemize}
-若用户请求的交互类型超出图表能力范围，feasibility取0.3（而非0，因为可通过替代交互实现近似功能）。
-
 % =====================================================================
 \section{多阶段生成精炼管线（MS-GRP）}
 \label{sec:msgrp}
 
-MS-GRP借鉴React Reconciliation的”计算→对比→应用”循环设计，包含四个串行阶段。
+MS-GRP借鉴React Reconciliation中”计算→对比→应用”的循环思想，将图表生成组织为粗生成、语义验证、视觉精炼与交互注入四个串行步骤，各步骤之间以CIF意图和SVAS分数为统一的信息载体。
 
-\medskip
-\noindent\textbf{阶段1：粗生成。}
+管线首先在PCG的语法树空间中执行束搜索（束宽$k=5$），从CIF意图出发采样生成候选图表规约$C_{\text{coarse}} = \arg\max_{T \in \mathcal{T}(\text{PCG})} P(T \mid \text{PCG}) \cdot P(\text{CIF}(\mathcal{Q}) \mid T)$。粗生成阶段产出的$k$个候选随后进入语义验证环节：对每个候选计算SVAS分数，仅保留满足$\text{SVAS}(C, \mathcal{Q}) > \tau_{\text{sem}}$的规约（$\tau_{\text{sem}} = 0.7$）；若全部候选均未通过阈值，系统将$\tau_{\text{sem}}$降至$0.5$重新过滤并标记该生成为低置信度，以保证管线在边缘案例下仍能产出可用结果。
 
-基于PCG从CIF意图中进行束搜索采样，生成$k=5$个候选图表规约：
-
-\begin{equation}
-    C_{\text{coarse}} = \arg\max_{T \in \mathcal{T}(\text{PCG})}
-    P(T \mid \text{PCG}) \cdot P\big(\text{CIF}(\mathcal{Q}) \mid T\big)
-\end{equation}
-
-\medskip
-\noindent\textbf{阶段2：语义验证。}
-
-对每个候选规约计算SVAS分数，过滤低质量候选：
-
-\begin{equation}
-    C_{\text{filtered}} = \{\, C \in C_{\text{coarse}} \mid \text{SVAS}(C, \mathcal{Q}) > \tau_{\text{sem}} \,\}
-\end{equation}
-
-其中$\tau_{\text{sem}} = 0.7$为语义阈值。若所有候选均不通过，系统以降低阈值（$\tau_{\text{sem}} \leftarrow 0.5$）重新过滤，并标记该生成为“低置信度”。
-
-\medskip
-\noindent\textbf{阶段3：视觉精炼。}
-
-对通过验证的图表进行视觉参数优化：
-
-\begin{equation}
-    \Theta^* = \arg\min_{\Theta} \; \mathcal{L}_{\text{visual}}\big(C[\Theta],\, \mathcal{Q}\big)
-\end{equation}
-
-其中视觉损失函数定义为：
+通过语义验证的候选规约进入视觉精炼阶段。该阶段以视觉损失函数$\mathcal{L}_{\text{visual}}$为目标，优化图表的样式参数$\Theta$（配色方案、字体、标注位置等）。$\mathcal{L}_{\text{visual}}$由三项加权的子目标构成（式~\ref{eq:visloss}）：配色与用户偏好的距离、视觉杂乱度惩罚、以及无障碍性得分。由于无障碍性检查涉及离散规则，部分损失项不可微，故采用REINFORCE风格的梯度估计（式~\ref{eq:reinforce}）——以$N=16$组探索噪声$\epsilon_n \sim \mathcal{N}(0, \sigma^2 I)$扰动当前参数，通过蒙特卡洛采样估计梯度方向，其中$\sigma$随迭代步以0.95的速率指数衰减。优化在50步内收敛，每步仅需评估16个候选样式参数的视觉损失，计算开销在移动端可忽略。
 
 \begin{equation}\label{eq:visloss}
     \begin{aligned}
@@ -290,8 +190,6 @@ MS-GRP借鉴React Reconciliation的”计算→对比→应用”循环设计，
     \end{aligned}
 \end{equation}
 
-由于$\mathcal{L}_{\text{visual}}$的部分项不可微（如无障碍性检查涉及离散规则），采用REINFORCE风格的梯度估计：
-
 \begin{equation}\label{eq:reinforce}
     \nabla_\Theta \mathcal{L} \approx
     \frac{1}{N} \sum_{n=1}^{N}
@@ -299,86 +197,19 @@ MS-GRP借鉴React Reconciliation的”计算→对比→应用”循环设计，
     \nabla_\Theta \log p(\Theta + \epsilon_n)
 \end{equation}
 
-其中$\epsilon_n \sim \mathcal{N}(0, \sigma^2 I)$是探索噪声，$N = 16$，$\sigma$随迭代步指数衰减（衰减率0.95）。优化迭代50步，每步仅需评估16个候选样式参数的视觉损失，总计算开销可忽略。
-
-\medskip
-\noindent\textbf{阶段4：交互注入。}
-
-根据CIF的交互约束$\mathcal{I}$，为图表注入交互行为：
-
-\begin{equation}
-    C_{\text{final}} = \text{injectInteractions}(C_{\text{refined}},\, \mathcal{I})
-\end{equation}
-
-交互注入包括三个步骤：首先将CIF指定的交互类型映射为目标平台可响应的事件处理函数，随后根据图表类型自动补充合理的默认交互行为（如柱状图默认开启hover tooltip），最后执行约束检查以确保注入的交互不违反响应时间等性能约束。
+最后的交互注入步骤根据CIF的交互约束$\mathcal{I}$为精炼后的图表规约绑定交互行为。该步骤依次完成三项工作：将CIF指定的交互类型映射为目标平台可响应的事件处理函数，根据图表类型自动补充合理的默认交互（如柱状图默认开启hover tooltip），并执行约束检查确保注入的交互不违反响应时间等性能约束。经交互注入后得到最终图表规约$C_{\text{final}}$，交由渲染适配层转换为目标平台的图表渲染指令。
 
 % =====================================================================
 \section{可组合图表代数（CCA）}
 \label{sec:cca}
 
-借鉴React组件可组合性的理念，CCA定义了图表组件的代数系统，使复杂图表可以通过基本操作组合生成。对任意两个图表组件$C_1, C_2$，定义以下代数操作。
+借鉴React组件可组合性的理念，CCA定义了图表组件的代数系统，使复杂图表可以通过少量基本操作的组合来构造，而不必为每种图表变体单独编写渲染逻辑。
 
-\medskip
-\noindent\textbf{基本操作。}
-\begin{definition}[组合 Compose $\circ$]
-    \begin{equation}
-        C_1 \circ C_2 = \text{Chart}\big(
-            \text{mergeLayout}(C_1, C_2),\;
-            C_1.\text{glyphs} \cup C_2.\text{glyphs}
-        \big)
-    \end{equation}
-    组合操作合并两个图表的布局和几何元素，适用于创建仪表盘式的多图组合。
-\end{definition}
+CCA提供四种基本代数操作。组合操作$\circ$将两个图表合并为仪表盘式的多图布局：$C_1 \circ C_2 = \text{Chart}(\text{mergeLayout}(C_1, C_2),\; C_1.\text{glyphs} \cup C_2.\text{glyphs})$，它合并两个图表的布局并集齐几何元素。叠加操作$\oplus$在共享坐标系上叠加几何标记：$C_1 \oplus C_2 = \text{Chart}(C_1.\text{layout},\; C_1.\text{glyphs} \cup C_2.\text{glyphs})$，典型的应用场景是在同一坐标系上叠加柱状图和折线图构成组合图表，如用户请求”在同一张图上显示DEL的柱状图和ES的折线趋势”。变换操作$\mathcal{T}_\phi$对图表的几何元素施加统一的变换函数$\phi$：$\mathcal{T}_\phi(C) = \text{Chart}(C.\text{layout},\; \{ \phi(g) \mid g \in C.\text{glyphs} \})$，$\phi$可以是配色方案变更、坐标轴翻转、缩放调整或标注添加等。参数化操作$\mathcal{P}_\theta$将图表模板中的自由变量替换为具体参数值，例如$\mathcal{P}_{\{\text{province}=\text{浙江}, \text{year}=2022, \text{metric}=\text{DEL}\}}(\text{bar\_chart})$将通用柱状图模板实例化为”2022年浙江省DEL柱状图”。
 
-\begin{definition}[叠加 Layer $\oplus$]
-    \begin{equation}
-        C_1 \oplus C_2 = \text{Chart}\big(
-            C_1.\text{layout},\;
-            C_1.\text{glyphs} \cup C_2.\text{glyphs}
-        \big)
-    \end{equation}
-要求在共享坐标系上叠加（如在同一坐标系上叠加柱状图和折线图构成组合图表）。典型应用场景：用户请求“在同一张图上显示DEL的柱状图和ES的折线趋势”。
-\end{definition}
+CCA操作满足结合律、交换律、分配律与恒等元等基本代数性质。叠加操作满足结合律和交换律（当布局兼容时），变换操作对叠加满足分配律，空图表$C_\emptyset$作为恒等元。实验验证中，随机生成的图表三元组在叠加操作结合律两侧的glyph集合和layout结构完全一致。这些性质为图表的声明式组合提供了数学保障。
 
-\begin{definition}[变换 Transform $\mathcal{T}_\phi$]
-    \begin{equation}
-        \mathcal{T}_\phi(C) = \text{Chart}\big(
-            C.\text{layout},\;
-            \{ \phi(g) \mid g \in C.\text{glyphs} \}
-        \big)
-    \end{equation}
-其中$\phi$是图表几何元素的变换函数，包括但不限于：配色方案变更、坐标轴翻转（x$\leftrightarrow$y）、缩放调整、标注添加。
-\end{definition}
-
-\begin{definition}[参数化 Parameterize $\mathcal{P}_\theta$]
-    \begin{equation}
-        \mathcal{P}_\theta(C) = C[\theta \,/\, \text{vars}(C)]
-    \end{equation}
-将图表模板中的自由变量替换为具体参数值。例如：
-\begin{equation*}
-    \mathcal{P}_{\{\text{province}=\text{浙江},\; \text{year}=2022,\; \text{metric}=\text{DEL}\}}(\text{bar\_chart})
-\end{equation*}
-将通用柱状图模板实例化为”2022年浙江省DEL柱状图”。
-\end{definition}
-
-\medskip
-\noindent\textbf{代数性质。}
-
-CCA操作满足结合律、交换律、分配律与恒等元等基本代数性质，这些性质为图表的声明式组合提供了数学保障：叠加操作满足结合律和交换律（当布局兼容时），变换操作对叠加满足分配律，且存在空图表$C_\emptyset$作为恒等元。实验验证中，随机生成的图表三元组在叠加操作的结合律两侧的glyph集合和layout结构完全一致。
-
-\medskip
-\noindent\textbf{声明式图表组合。}
-
-利用CCA，用户可以用声明式语法组合复杂图表。例如，一个“带趋势线的双轴柱线图”可表示为：
-
-\begin{equation}
-    \texttt{combo\_chart} =
-    \mathcal{P}_{\text{config}}\Big(
-        \big(\mathcal{T}_{\text{theme}}(\texttt{bar\_chart})\big) \;\oplus\; \texttt{line\_chart}
-    \Big) \;\circ\; \texttt{annotation\_layer}
-\end{equation}
-
-这种代数表示天然支持AIGC的组合搜索——模型可以在代数空间中搜索最优的图表组合方案（CCA搜索模块以束搜索在Compose、Layer、Transform操作空间中探索，最大搜索深度$d=3$，束宽$k=5$）。
+利用CCA，用户可以用声明式语法组合复杂图表。例如，一个带趋势线的双轴柱线图可表示为$\texttt{combo\_chart} = \mathcal{P}_{\text{config}}((\mathcal{T}_{\text{theme}}(\texttt{bar\_chart})) \oplus \texttt{line\_chart}) \circ \texttt{annotation\_layer}$——先对柱状图模板施加主题变换，再与折线图在共享坐标系上叠加，最后组合注释层。这种代数表示天然支持AIGC的组合搜索：CCA搜索模块以束搜索在Compose、Layer、Transform操作空间中探索图表组合方案（最大搜索深度$d=3$，束宽$k=5$），模型可以在代数空间中自动发现最优的图表组合，而不必依赖人工枚举所有可能的视图配置。
 
 % =====================================================================
 \section{实验评估}
@@ -389,13 +220,11 @@ CCA操作满足结合律、交换律、分配律与恒等元等基本代数性�
 \medskip
 \noindent\textbf{实验设置。}
 
-\textbf{数据集ChartIntent-10K。}
+本文构建了ChartIntent-10K数据集，包含11,400条自然语言需求与专家图表的配对样本（含数据增强）。数据覆盖12类图表类型（柱状图883条、折线图906条、散点图1053条、面积图945条、热力图890条、饼图833条、雷达图925条、桑基图984条、树图1023条、箱线图1039条、仪表盘1008条、漏斗图884条），各类别分布均衡。每条数据包含完整的CIF标注（数据语义层、视觉编码层、交互约束层）和Vega-Lite格式的ground truth图表规约。数据集按7:1.5:1.5划分为训练集（8400条）、验证集（1500条）和测试集（1500条）。
 
-本文构建了ChartIntent-10K数据集，包含\textbf{11,400条}（自然语言需求，专家图表）配对（含数据增强）。数据覆盖\textbf{12类}图表类型（柱状图883、折线图906、散点图1053、面积图945、热力图890、饼图833、雷达图925、桑基图984、树图1023、箱线图1039、仪表盘1008、漏斗图884），各类别分布均衡。每条数据包含完整的CIF标注（数据语义层、视觉编码层、交互约束层）和Vega-Lite格式的ground truth图表规约。数据集按7:1.5:1.5划分为训练集（8,400条）、验证集（1,500条）和测试集（1,500条）。
+数据生成采用合成模板、LLM增强与专家标注相结合的混合策略。其中7000条由参数化NL模板自动生成——为12种图表类型各设计35至50个NL模板，填充省份、年份、指标、区域等参数；2000条由GPT-4o对模板输出进行自然语言变异增强以提升语言多样性；1000条保留为专家标注通道（当前以占位符标注，可在后续工作中由人类专家填充）。训练集额外应用20\%的数据增强，包括NL改写、字段置换、交互注入和样式变异。
 
-数据生成采用“合成模板+LLM增强+专家标注”的混合策略：7000条由参数化NL模板自动生成（为12种图表类型各设计35--50个NL模板，填充省份、年份、指标、区域等参数），2000条由GPT-4o对模板输出进行自然语言变异增强，1000条保留为专家标注通道（当前以占位符标注，可在后续工作中由人类专家填充）。训练集额外应用20\%的数据增强（NL改写、字段置换、交互注入、样式变异）。
-
-\textbf{基线方法。}
+实验选取四种基线方法进行对比。
 
 \begin{table}[H]
 \centering
@@ -416,9 +245,7 @@ AMACE        & 多智能体协作（Generator + Reviewer + Evaluator + Integrato
 \end{tabularx}
 \end{table}
 
-\textbf{评估指标。}
-
-评估采用四项指标。图表准确率（Chart Accuracy, CA）衡量图表类型、数据映射、视觉编码三者完全正确的比例，定义为CA = $\frac{1}{N}\sum_i \mathbb{1}[\text{type}_i = \text{type}^*_i \land \text{data}_i \subseteq \text{data}^*_i \land \text{enc}_i = \text{enc}^*_i]$。SVAS分数为\S\ref{sec:svas}定义的语义-视觉对齐分数，综合$\Phi_{\text{sem}}$、$\Phi_{\text{vis}}$、$\Phi_{\text{int}}$三项子指标。用户满意度（User Satisfaction, US）采用5分制Likert量表（1=非常不满意，5=非常满意）。生成延迟（Latency）指从用户NL输入到可渲染图表输出的端到端时间（秒）。
+评估采用四项指标。图表准确率（Chart Accuracy, CA）衡量图表类型、数据映射、视觉编码三者完全正确的比例，定义为$\text{CA} = \frac{1}{N}\sum_i \mathbb{1}[\text{type}_i = \text{type}^*_i \land \text{data}_i \subseteq \text{data}^*_i \land \text{enc}_i = \text{enc}^*_i]$。SVAS分数为第\ref{sec:svas}节定义的语义-视觉对齐分数，综合$\Phi_{\text{sem}}$、$\Phi_{\text{vis}}$、$\Phi_{\text{int}}$三项子指标。用户满意度（User Satisfaction, US）采用5分制Likert量表。生成延迟指从用户NL输入到可渲染图表输出的端到端时间。
 
 \medskip
 \noindent\textbf{主实验结果。}
