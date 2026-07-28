@@ -10,32 +10,26 @@
 \section{问题分析与研究动机}
 \label{sec:ch4_motivation}
 
-\subsection{现有AR可视化方案的局限}
-
 第三章实现了手势、语音与射线协同的多模态交互通道，为AR场景中的自然操作提供了输入基础。然而，第\ref{ch:ar_interaction}章解决的是”如何输入”的问题，尚未系统解决”呈现什么图表”以及”如何生成图表”的问题。现有AR可视化方案的研究已取得显著进展：Wang等\cite{wang2026ar_io_survey}从输入输出双视角系统梳理了AR人机交互技术全貌，Liu等\cite{Liu_Jia_Nie_Rosenberg_Interrante_Zhu-Tian_2025}综述了沉浸式分析中空间数据叙事与多视图联动的核心方法，Panzeri等\cite{panzeri2026cartographic}系统讨论了AR制图可视化的设计空间与评估框架，Chen等\cite{chen2025immersive_econ}探索了沉浸式环境在经济数据呈现中的应用潜力。尽管如此，上述方案在图表呈现方面仍存在三个根本性局限。其一，图表类型在设计阶段已固化编码——系统仅支持预设的省域热力图、时间轴折线和回归结果面板，用户无法根据分析需求动态生成新的图表类型或组合（如区域异质性分析时同时查看散点图与时序折线图），这要求开发人员提前为每种视图组合编写渲染逻辑。其二，从自然语言分析需求到图表库API调用序列之间存在显著的语义鸿沟——用户在AR穿戴场景下既无法便捷编程，也难以通过现有语音指令表达复杂的图表配置意图。其三，直接使用大语言模型生成图表代码面临典型的”生成即提交”问题——模型输出缺乏定量评估机制，而在AR可穿戴场景中，错误图表的误导成本远高于桌面场景。
 
-\subsection{基于React的声明式图表生成方法}
+\medskip
+\noindent\textbf{基于React的声明式图表生成方法。}
+React框架\cite{walke2013react}对前端开发的革命性贡献在于其核心洞察：与其手动管理DOM的增量变更，不如每次声明式地描述”UI应该长什么样”，由框架自动计算并应用最小变更集。这一范式的关键技术支柱包括Virtual DOM（内存中UI轻量表示）、Reconciliation（协调算法计算最小差异集）、声明式组件模型（$\text{UI} = f(\text{state})$）和单向数据流。
 
-React框架\cite{walke2013react}对前端开发的革命性贡献在于其核心洞察：\textbf{与其手动管理DOM的增量变更，不如每次声明式地描述“UI应该长什么样”，由框架自动计算并应用最小变更集。}这一范式的关键技术支柱包括Virtual DOM（内存中UI轻量表示）、Reconciliation（协调算法计算最小差异集）、声明式组件模型（$\text{UI} = f(\text{state})$）和单向数据流。
-
-本文的核心洞察是：\textbf{AR图表的生成可以类比UI渲染，将“AIGC生成AR图表”重新表述为“从意图描述到图表规约的声明式映射”}。形式化地：
+本文的核心洞察是：AR图表的生成可以类比UI渲染，将”AIGC生成AR图表”重新表述为”从意图描述到图表规约的声明式映射”。形式化地：
 
 \begin{equation}
     \text{AR图表控件} = f(\text{用户意图},\; \text{数据模式},\; \text{设计约束})
     \label{eq:ch4_declarative}
 \end{equation}
 
-其中$f$是一个可学习的生成函数，由本章提出的ChartForge框架实现。该框架将图表生成从“手写渲染代码”的工程范式升级为“NL$\rightarrow$规约$\rightarrow$AR图表”的声明式AIGC范式，与第三章的多模态输入和第五章的计量数据资产协同工作。
-
-\subsection{本章贡献与组织}
+其中$f$是一个可学习的生成函数，由本章提出的ChartForge框架实现。该框架将图表生成从”手写渲染代码”的工程范式升级为”NL$\rightarrow$规约$\rightarrow$AR图表”的声明式AIGC范式，与第三章的多模态输入和第五章的计量数据资产协同工作。
 
 本章的核心贡献包括：(C1)~提出图表意图形式化表示（CIF），将自然语言需求映射为结构化图表规约（\S\ref{sec:cif}）；(C2)~设计概率图表语法（PCG），以可学习的概率上下文无关文法描述图表生成空间（\S\ref{sec:pcg}）；(C3)~提出语义-视觉对齐分数（SVAS）作为生成质量的定量度量（\S\ref{sec:svas}）；(C4)~构建多阶段生成精炼管线（MS-GRP），通过”生成--评估--精炼”闭环迭代提升图表质量（\S\ref{sec:msgrp}）；(C5)~提出可组合图表代数（CCA），实现图表元素的声明式组合与复用（\S\ref{sec:cca}）。
 
 % =====================================================================
 \section{ChartForge系统架构}
 \label{sec:ch4_architecture}
-
-\subsection{总体架构}
 
 ChartForge系统架构采用四层组织，如图\ref{fig:ch4_architecture}所示。自底向上，意图层接收来自第三章多模态通道的自然语言查询，经CIF解析器输出结构化图表意图三元组$\langle\mathcal{D},\mathcal{V},\mathcal{I}\rangle$，与TSTQ--Fusion共享时间基准。生成精炼层以CIF为输入，经PCG束搜索生成候选图表规约，再经MS-GRP四阶段管线（粗生成$\rightarrow$语义验证$\rightarrow$视觉精炼$\rightarrow$交互注入）输出优化后的ChartSpec。渲染适配层将平台无关的ChartSpec映射为目标平台的图表渲染指令——AR端转换为Unity ChartRenderer可消费的JSON格式，Web端或离线评估则转换为Vega-Lite/ECharts格式以支持基线对比。交互运行时层管理用户与AR图表的交互事件，通过统一状态向量$\mathbf{s}_t$同步，确保ChartForge图表与省域地图、时间轴、结果面板在同一刷新周期内一致更新。
 
@@ -44,9 +38,7 @@ ChartForge系统架构采用四层组织，如图\ref{fig:ch4_architecture}所�
   \captionof{figure}{\label{fig:ch4_architecture}ChartForge系统架构：四层递进，NL输入经CIF解析与MS-GRP精炼后输出AR图表规约，与省域地图、时间轴、面板在统一状态向量驱动下协同呈现。}
 \end{center}
 
-\subsection{与React的范式映射}
-
-ChartForge与React声明式UI的范式映射关系如表\ref{tab:react_map}所示。这一映射不仅体现在概念层面，更体现在数据流设计上：正如React的Virtual DOM作为平台无关的UI抽象，Chart Spec作为平台无关的图表抽象，使得同一份规约可渲染为Web（ECharts/Vega-Lite）、AR（Unity ChartRenderer）或桌面端（Plotly）等多种形态。
+ChartForge与React声明式UI的范式映射关系如表\ref{tab:react_map}所示。正如React的Virtual DOM作为平台无关的UI抽象，Chart Spec作为平台无关的图表抽象，使得同一份规约可渲染为Web（ECharts/Vega-Lite）、AR（Unity ChartRenderer）或桌面端（Plotly）等多种形态。
 
 \begin{table}[H]
 \centering
@@ -71,71 +63,25 @@ Renderer        & Platform Adapter        & 跨平台（AR/Web/Desktop）图表�
 \section{图表意图形式化表示（CIF）}
 \label{sec:cif}
 
-CIF是ChartForge的中继表示层，借鉴React中Virtual DOM作为“平台无关UI描述”的角色，将模糊的自然语言需求$\mathcal{Q}$映射为结构化的图表意图三元组：
+CIF是ChartForge的中继表示层，借鉴React中Virtual DOM作为”平台无关UI描述”的角色，将模糊的自然语言需求$\mathcal{Q}$映射为结构化的图表意图三元组：
 
 \begin{equation}\label{eq:cif}
     \text{CIF}(\mathcal{Q}) = \langle \mathcal{D},\; \mathcal{V},\; \mathcal{I} \rangle
 \end{equation}
 
-\subsection{数据语义层 $\mathcal{D}$ (Data Semantics)}
+数据语义层$\mathcal{D}$描述用户意图中涉及的数据字段及其语义角色：$\mathcal{D} = \big\{ (f_i,\, t_i,\, s_i,\, a_i) \big\}_{i=1}^{n}$，其中$f_i$为数据字段名（如\texttt{“DEL”}, \texttt{“province”}, \texttt{“year”}），$t_i \in \{\text{nominal}, \text{ordinal}, \text{quantitative}, \text{temporal}\}$为字段数据类型，$s_i \in \{\text{x}, \text{y}, \text{color}, \text{size}, \text{shape}, \text{facet}, \text{text}\}$为建议的视觉通道，$a_i \in \{\text{sum}, \text{mean}, \text{count}, \text{none}\}$为聚合函数。在省域经济分析场景中，数据语义层的字段词汇表与第五章指标体系严格对齐：省份、区域、年份、DEL、ES、PGDP、URBAN、INDS、TEIN等，确保了从用户说出的指标名到数据引擎中的列名再到回归表中的变量名的全程一致性。
 
-数据语义层描述用户意图中涉及的数据字段及其语义角色：
+视觉编码层$\mathcal{V} = \langle \mathcal{G},\; \mathcal{E},\; \Theta \rangle$指定图表的视觉呈现方式。$\mathcal{G} \in \Gamma$为目标图表类型，$\Gamma$覆盖柱状图、折线图、散点图、面积图、热力图、饼图、雷达图、桑基图、矩形树图、箱线图、仪表盘、漏斗图共12类常用图表；$\mathcal{E}: \mathcal{D} \to \{\text{position}, \text{color}, \text{size}, \text{shape}, \text{opacity}, \text{text}\}$为视觉编码映射函数；$\Theta = \{\theta_1, \dots, \theta_k\}$为样式参数集（配色方案、字体、标注位置等）。
 
-\begin{equation}
-    \mathcal{D} = \big\{ (f_i,\, t_i,\, s_i,\, a_i) \big\}_{i=1}^{n}
-\end{equation}
+交互约束层$\mathcal{I} = \big\{ (e_j,\, h_j,\, c_j) \big\}_{j=1}^{m}$描述用户对图表交互行为的期望。$e_j$为交互事件类型（点击、悬停、刷选、缩放、筛选、下钻），$h_j$为事件处理器规约，$c_j$为约束条件（如响应时间$< 200$\,ms）。该层与第三章TSTQ--Fusion的交互事件模型共享相同的类型系统，确保交互事件可在ChartForge图表和AR视图之间路由。
 
-其中各分量含义如下：
-\begin{itemize}[leftmargin=*]
-    \item $f_i$为数据字段名（如\texttt{"DEL"}, \texttt{"province"}, \texttt{"year"}）；
-    \item $t_i \in \{\text{nominal}, \text{ordinal}, \text{quantitative}, \text{temporal}\}$为字段数据类型；
-    \item $s_i \in \{\text{x}, \text{y}, \text{color}, \text{size}, \text{shape}, \text{facet}, \text{text}\}$为建议的视觉通道；
-    \item $a_i \in \{\text{sum}, \text{mean}, \text{count}, \text{none}\}$为聚合函数。
-\end{itemize}
-
-在省域经济分析场景中，数据语义层的字段词汇表与第五章指标体系严格对齐：省份、区域、年份、DEL、ES、PGDP、URBAN、INDS、TEIN等。这种对齐确保了从”用户说出的指标名”到”数据引擎中的列名”再到”回归表中的变量名”的全程一致性。
-
-\subsection{视觉编码层 $\mathcal{V}$ (Visual Encoding)}
-
-视觉编码层指定图表的视觉呈现方式：
-
-\begin{equation}
-    \mathcal{V} = \langle \mathcal{G},\; \mathcal{E},\; \Theta \rangle
-\end{equation}
-
-其中各分量含义如下：
-\begin{itemize}[leftmargin=*]
-    \item $\mathcal{G} \in \Gamma$为目标图表类型，$\Gamma$覆盖柱状图、折线图、散点图、面积图、热力图、饼图、雷达图、桑基图、矩形树图、箱线图、仪表盘、漏斗图共12类常用图表；
-    \item $\mathcal{E}: \mathcal{D} \to \{\text{position}, \text{color}, \text{size}, \text{shape}, \text{opacity}, \text{text}\}$为视觉编码映射函数；
-    \item $\Theta = \{\theta_1, \dots, \theta_k\}$为样式参数集（配色方案、字体、标注位置等）。
-\end{itemize}
-
-\subsection{交互约束层 $\mathcal{I}$ (Interaction Constraints)}
-
-交互约束层描述用户对图表交互行为的期望：
-
-\begin{equation}
-    \mathcal{I} = \big\{ (e_j,\, h_j,\, c_j) \big\}_{j=1}^{m}
-\end{equation}
-
-其中各分量含义如下：
-\begin{itemize}[leftmargin=*]
-    \item $e_j$为交互事件类型（点击、悬停、刷选、缩放、筛选、下钻）；
-    \item $h_j$为事件处理器规约；
-    \item $c_j$为约束条件（如响应时间$< 200$\,ms）。
-\end{itemize}该层与第三章TSTQ--Fusion的交互事件模型共享相同的类型系统，确保交互事件可在ChartForge图表和AR视图之间路由。
-
-\subsection{NL解析实现}
-
-CIF的解析由GPT-4o结合结构化提示词完成。系统提示词定义了完整的JSON输出模式，包含字段类型约束、图表类型枚举和交互事件白名单。解析后进行三项后处理：字段验证——检查解析出的字段名是否在领域词汇表中，对误识别字段进行模糊匹配修正；类型推断补充——对缺失类型信息的字段，从领域知识库（DOMAIN\_FIELDS）中自动补充；置信度标记——解析失败的查询返回低置信度标记，由上游语音交互层通过AR HUD给出轻提示。
+CIF的解析由GPT-4o结合结构化提示词完成，系统提示词定义了完整的JSON输出模式，包含字段类型约束、图表类型枚举和交互事件白名单。解析后进行三项后处理：字段验证，检查解析出的字段名是否在领域词汇表中，对误识别字段进行模糊匹配修正；类型推断补充，对缺失类型信息的字段从领域知识库中自动补充；置信度标记，解析失败的查询返回低置信度标记，由上游语音交互层通过AR HUD给出轻提示。
 
 % =====================================================================
 \section{概率图表语法（PCG）}
 \label{sec:pcg}
 
-PCG是ChartForge的理论核心，借鉴了React Reconciliation中“协调算法搜索最小变更集”的思想——正如Reconciliation在Virtual DOM树上搜索最优更新路径，PCG在图表语法树上搜索最符合用户意图的图表派生路径。
-
-\subsection{形式定义}
+PCG是ChartForge的理论核心，借鉴了React Reconciliation中“协调算法搜索最小变更集”的思想——正如Reconciliation在Virtual DOM树上搜索最优更新路径，PCG在图表语法树上搜索最符合用户意图的图表派生路径。其形式定义如下。
 
 \begin{definition}[概率图表语法]
 一个概率图表语法定义为一个五元组：
@@ -199,8 +145,8 @@ PCG是ChartForge的理论核心，借鉴了React Reconciliation中“协调算�
 
 其中$R_A \subseteq R$表示左侧非终结符为$A$的所有产生式规则。
 
-\subsection{概率学习}
-
+\medskip
+\noindent\textbf{概率学习。}
 PCG的概率分布$P$通过图表语料库的最大似然估计学习得到。给定训练集$\mathcal{C} = \{(x_i, y_i)\}_{i=1}^{M}$（来自ChartIntent-10K数据集的7000条训练样本），最大化图表语法树的似然：
 
 \begin{equation}\label{eq:pcloss}
@@ -209,8 +155,8 @@ PCG的概率分布$P$通过图表语料库的最大似然估计学习得到。�
 
 其中$\text{parse}(y_i)$是图表$y_i$对应的语法树展开所使用的产生式序列。为防止未见规则的零概率问题，采用Laplace（加一）平滑，使每条规则至少获得$1/(n + k)$的最小概率质量（$n$为规则使用总次数，$k$为该非终结符的规则数）。
 
-\subsection{条件生成与束搜索}
-
+\medskip
+\noindent\textbf{条件生成与束搜索。}
 给定用户意图$\mathcal{Q}$的CIF表示，图表生成转化为求解最优语法树的优化问题：
 
 \begin{equation}\label{eq:conditional}
@@ -221,8 +167,8 @@ PCG的概率分布$P$通过图表语料库的最大似然估计学习得到。�
 
 其中$\mathcal{T}(\text{PCG})$是PCG可派生的所有语法树集合。本文采用束搜索（beam search），束宽$k=5$，在每个扩展步评估产生式规则的对数概率与CIF意图匹配分数之和。算法的时间复杂度为$O(k \cdot |R| \cdot d)$，其中$d$为语法树最大深度（$\leq 10$），$|R| \approx 23$，每张图表生成仅需约$5 \times 23 \times 10 = 1150$次产生式扩展评估，在Python实现中单次采样耗时$< 1$ms。
 
-\subsection{理论性质}
-
+\medskip
+\noindent\textbf{理论性质。}
 \begin{theorem}[完备性]\label{thm:completeness}
 PCG的生成空间$\mathcal{T}(\text{PCG})$包含所有12类图表类型的任意合法实例。
 \end{theorem}
@@ -251,11 +197,9 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
                                 + \gamma \cdot \Phi_{\text{int}}(C, \mathcal{I})
 \end{equation}
 
-其中$\alpha = 0.40, \beta = 0.40, \gamma = 0.20$。三个子指标定义如下。
+其中$\alpha = 0.40, \beta = 0.40, \gamma = 0.20$。
 
-\subsection{语义保真度 $\Phi_{\text{sem}}$}
-
-衡量图表使用的数据字段与用户意图的一致性：
+语义保真度$\Phi_{\text{sem}}$衡量图表使用的数据字段与用户意图的一致性：
 
 \begin{equation}
     \Phi_{\text{sem}}(C, \mathcal{D}) =
@@ -268,9 +212,7 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
 
 对每个CIF要求的数据字段，检查其在生成图表中的存在性（70\%权重）和通道兼容性（30\%权重）。例如，数值型字段DEL必须映射到y/color/size等连续通道，若被映射到x（类别通道）则仅获部分分数。
 
-\subsection{视觉完整度 $\Phi_{\text{vis}}$}
-
-衡量图表视觉配置与意图的匹配度：
+视觉完整度$\Phi_{\text{vis}}$衡量图表视觉配置与意图的匹配度：
 
 \begin{equation}\label{eq:phivis}
     \begin{aligned}
@@ -283,8 +225,7 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
 
 其中$\omega_1 = 0.40, \omega_2 = 0.35, \omega_3 = 0.25$。typeMatch在图表类型完全匹配时为1.0，相关类型间按语义距离衰减（如bar与line同属关系组，相似度0.5；bar与pie无关，相似度0.1）。encodingMatch比较每个字段在实际vs.期望通道上的对齐情况。styleMatch评估配色方案、字体大小等样式参数的一致性。
 
-\subsection{交互可达性 $\Phi_{\text{int}}$}
-
+交互可达性$\Phi_{\text{int}}$定义为：
 \begin{equation}\label{eq:phiint}
     \Phi_{\text{int}}(C, \mathcal{I}) =
     \frac{1}{|\mathcal{I}|} \sum_{(e, h, c) \in \mathcal{I}}
@@ -306,9 +247,10 @@ PCG生成任意图表$C$的概率$P(C)$满足Chapman-Kolmogorov一致性条件�
 \section{多阶段生成精炼管线（MS-GRP）}
 \label{sec:msgrp}
 
-MS-GRP借鉴React Reconciliation的“计算→对比→应用”循环设计，包含四个串行阶段。
+MS-GRP借鉴React Reconciliation的”计算→对比→应用”循环设计，包含四个串行阶段。
 
-\subsection{阶段1：粗生成（Coarse Generation）}
+\medskip
+\noindent\textbf{阶段1：粗生成。}
 
 基于PCG从CIF意图中进行束搜索采样，生成$k=5$个候选图表规约：
 
@@ -317,7 +259,8 @@ MS-GRP借鉴React Reconciliation的“计算→对比→应用”循环设计，
     P(T \mid \text{PCG}) \cdot P\big(\text{CIF}(\mathcal{Q}) \mid T\big)
 \end{equation}
 
-\subsection{阶段2：语义验证（Semantic Verification）}
+\medskip
+\noindent\textbf{阶段2：语义验证。}
 
 对每个候选规约计算SVAS分数，过滤低质量候选：
 
@@ -327,7 +270,8 @@ MS-GRP借鉴React Reconciliation的“计算→对比→应用”循环设计，
 
 其中$\tau_{\text{sem}} = 0.7$为语义阈值。若所有候选均不通过，系统以降低阈值（$\tau_{\text{sem}} \leftarrow 0.5$）重新过滤，并标记该生成为“低置信度”。
 
-\subsection{阶段3：视觉精炼（Visual Refinement）}
+\medskip
+\noindent\textbf{阶段3：视觉精炼。}
 
 对通过验证的图表进行视觉参数优化：
 
@@ -357,7 +301,8 @@ MS-GRP借鉴React Reconciliation的“计算→对比→应用”循环设计，
 
 其中$\epsilon_n \sim \mathcal{N}(0, \sigma^2 I)$是探索噪声，$N = 16$，$\sigma$随迭代步指数衰减（衰减率0.95）。优化迭代50步，每步仅需评估16个候选样式参数的视觉损失，总计算开销可忽略。
 
-\subsection{阶段4：交互注入（Interaction Injection）}
+\medskip
+\noindent\textbf{阶段4：交互注入。}
 
 根据CIF的交互约束$\mathcal{I}$，为图表注入交互行为：
 
@@ -373,8 +318,8 @@ MS-GRP借鉴React Reconciliation的“计算→对比→应用”循环设计，
 
 借鉴React组件可组合性的理念，CCA定义了图表组件的代数系统，使复杂图表可以通过基本操作组合生成。对任意两个图表组件$C_1, C_2$，定义以下代数操作。
 
-\subsection{基本操作}
-
+\medskip
+\noindent\textbf{基本操作。}
 \begin{definition}[组合 Compose $\circ$]
     \begin{equation}
         C_1 \circ C_2 = \text{Chart}\big(
@@ -416,11 +361,13 @@ MS-GRP借鉴React Reconciliation的“计算→对比→应用”循环设计，
 将通用柱状图模板实例化为”2022年浙江省DEL柱状图”。
 \end{definition}
 
-\subsection{代数性质}
+\medskip
+\noindent\textbf{代数性质。}
 
 CCA操作满足结合律、交换律、分配律与恒等元等基本代数性质，这些性质为图表的声明式组合提供了数学保障：叠加操作满足结合律和交换律（当布局兼容时），变换操作对叠加满足分配律，且存在空图表$C_\emptyset$作为恒等元。实验验证中，随机生成的图表三元组在叠加操作的结合律两侧的glyph集合和layout结构完全一致。
 
-\subsection{声明式图表组合}
+\medskip
+\noindent\textbf{声明式图表组合。}
 
 利用CCA，用户可以用声明式语法组合复杂图表。例如，一个“带趋势线的双轴柱线图”可表示为：
 
@@ -439,9 +386,10 @@ CCA操作满足结合律、交换律、分配律与恒等元等基本代数性�
 
 本节从四个维度系统评估ChartForge框架：(1)~主实验——ChartForge与四种基线方法的定量对比；(2)~消融实验——量化各组件的独立贡献；(3)~细粒度图表类型分析——评估12种图表类型上的表现差异；(4)~用户研究——24名参与者的A/B盲评。
 
-\subsection{实验设置}
+\medskip
+\noindent\textbf{实验设置。}
 
-\textbf{数据集：ChartIntent-10K。}
+\textbf{数据集ChartIntent-10K。}
 
 本文构建了ChartIntent-10K数据集，包含\textbf{11,400条}（自然语言需求，专家图表）配对（含数据增强）。数据覆盖\textbf{12类}图表类型（柱状图883、折线图906、散点图1053、面积图945、热力图890、饼图833、雷达图925、桑基图984、树图1023、箱线图1039、仪表盘1008、漏斗图884），各类别分布均衡。每条数据包含完整的CIF标注（数据语义层、视觉编码层、交互约束层）和Vega-Lite格式的ground truth图表规约。数据集按7:1.5:1.5划分为训练集（8,400条）、验证集（1,500条）和测试集（1,500条）。
 
@@ -472,7 +420,8 @@ AMACE        & 多智能体协作（Generator + Reviewer + Evaluator + Integrato
 
 评估采用四项指标。图表准确率（Chart Accuracy, CA）衡量图表类型、数据映射、视觉编码三者完全正确的比例，定义为CA = $\frac{1}{N}\sum_i \mathbb{1}[\text{type}_i = \text{type}^*_i \land \text{data}_i \subseteq \text{data}^*_i \land \text{enc}_i = \text{enc}^*_i]$。SVAS分数为\S\ref{sec:svas}定义的语义-视觉对齐分数，综合$\Phi_{\text{sem}}$、$\Phi_{\text{vis}}$、$\Phi_{\text{int}}$三项子指标。用户满意度（User Satisfaction, US）采用5分制Likert量表（1=非常不满意，5=非常满意）。生成延迟（Latency）指从用户NL输入到可渲染图表输出的端到端时间（秒）。
 
-\subsection{主实验结果}
+\medskip
+\noindent\textbf{主实验结果。}
 
 在ChartIntent-10K测试集（$n=1500$）上，ChartForge与四种基线方法的对比如表\ref{tab:main_results}所示。
 
@@ -498,7 +447,8 @@ ChartForge在所有指标上均显著优于基线方法（paired $t$-test, $p < 
 
 在准确率方面，ChartForge的CA（91.7\%）比最佳基线AMACE（82.5\%）高出9.2个百分点，这一差距在复杂图表类型上更为显著——PCG的形式化语法约束有效避免了LLM直接生成时常见的字段映射错误（如将定量指标误置于类别轴）。AMACE的多智能体迭代虽然通过多轮评审提升了质量，但缺乏形式化的语法约束且引入了显著的通信开销。在效率方面，ChartForge的平均生成延迟（6.8s）较LLM-Direct（8.4s）降低19.0\%、较AMACE（22.1s）降低69.2\%，效率优势源于PCG束搜索以约1150次规则扩展评估替代了LLM的逐token自回归生成，且CIF解析仅需1次LLM调用而C\textsuperscript{2}和AMACE分别需要2--8次。在SVAS与用户满意度的一致性方面，SVAS分数与用户满意度评分呈高度正相关（Pearson $r = 0.94, p < 0.001$），验证了SVAS作为自动化质量度量与人类主观判断的一致性，支持将SVAS作为LLM直接生成方案中缺少的自动质量守门人。
 
-\subsection{消融实验}
+\medskip
+\noindent\textbf{消融实验。}
 
 为量化各组件的独立贡献，对ChartForge进行六项消融。结果如表\ref{tab:ablation}所示。
 
@@ -522,7 +472,8 @@ $-$ 视觉精炼阶段（跳过REINFORCE优化）& 84.9\% & 0.867 & $-6.8\%$ CA 
 
 消融实验揭示了各组件的差异化贡献。MS-GRP多阶段精炼的贡献最大：将四阶段管线退化为单阶段采样后，图表准确率从91.7\%骤降至76.4\%（$-15.3\%$ CA），验证了”生成--评估--精炼”闭环的有效性——语义验证阶段过滤了约40\%的低质量候选（SVAS $< 0.7$），视觉精炼阶段将样式匹配分数平均提升0.073，交互注入阶段为83.2\%的图表补充了缺失的默认交互行为。SVAS的过滤作用同样关键：删除语义验证后约35\%的低质量候选被错误提交，导致准确率下降12.6个百分点，其中$\Phi_{\text{sem}}$（语义保真度）贡献了最大的过滤收益——71.4\%的被过滤候选因数据字段映射错误而被拦截。PCG概率语法相较于固定语法的优势也得到验证：替换为Vega-Lite固定语法后准确率下降9.4个百分点，根本原因在于概率语法学习到了”在给定意图下哪些图表类型更合理”的先验知识（如对于”对比各省差异”的查询，PCG赋予柱状图0.42的概率而将饼图压制到0.08），且CIF意图匹配分数提供的引导是固定语法无法实现的。CCA与视觉精炼的增量贡献（分别$-6.1\%$和$-6.8\%$ CA）虽小于PCG和SVAS，但在复杂图表类型上CCA的移除导致准确率额外下降12.3\%，表明其在组合图表场景中的重要性。
 
-\subsection{细粒度图表类型分析}
+\medskip
+\noindent\textbf{细粒度图表类型分析。}
 
 表\ref{tab:fine_grained}给出了ChartForge与最佳基线在各图表类型上的准确率对比。
 
@@ -556,7 +507,8 @@ ChartForge在复杂图表类型（热力图、桑基图、组合图表）上的�
 
 基础图表类型（柱状图、饼图）上ChartForge与最佳基线的差距相对较小（$+6.3\%\sim+10.4\%$），因为这类简单图表的结构规律性强，LLM的涌现能力足以覆盖大部分正确生成路径。ChartForge的增量收益主要来自字段映射校验——在约3.8\%的基础图表样本中，LLM-Direct将省份名（类别型）误映射到数值轴（数值型），而PCG的轴类型约束在语法层面即阻止了此类错误。
 
-\subsection{用户研究}
+\medskip
+\noindent\textbf{用户研究。}
 
 \textbf{实验设计。}
 
@@ -581,7 +533,8 @@ ChartForge在复杂图表类型（热力图、桑基图、组合图表）上的�
 
 整体偏好率ChartForge \textbf{68.3\%} vs.\ AMACE 31.7\%（$p < 0.001$，二项检验）。两个子组均显著偏好ChartForge：数据分析师子组偏好率更高（71.2\% vs.\ 28.8\%），在事后访谈中提及“数据映射更准确”“字段不会放错轴”；前端开发者子组的偏好率略低（65.4\% vs.\ 34.6\%），部分参与者反馈“AMACE生成的图表在配色上有更多变化”，但整体仍认可ChartForge在结构化正确性上的优势。
 
-\subsection{生成延迟分析}
+\medskip
+\noindent\textbf{生成延迟分析。}
 
 \begin{table}[H]
 \centering
@@ -603,7 +556,8 @@ AMACE & $2.7 \pm 0.9$ & $8.1 \pm 2.0$ & $11.3 \pm 3.2$ & $22.1 \pm 5.1$ \\
 
 ChartForge的低延迟来源于其架构设计：(1)~CIF解析的1次LLM调用（约1.1s）远少于AMACE的4--8次调用；(2)~PCG束搜索在纯Python环境下完成（$\sim$0.5s），不涉及网络往返或LLM解码；(3)~MS-GRP的REINFORCE视觉精炼（$\sim$5.2s）虽然占据了总延迟的约76\%，但在实际AR交互中，这段时间可用于图表渲染准备，用户感知到的等待时间仅为首屏CIF解析+粗生成的$\sim$1.6s。相比之下，AMACE的多智能体迭代在每轮都需要等待LLM生成和评审的往返延迟。
 
-\subsection{与现有AR可视化方案的对比}
+\medskip
+\noindent\textbf{与现有AR可视化方案的对比。}
 
 表\ref{tab:ch4_system_compare}从六个维度将本文方案与传统桌面可视化、现有AR可视化方案进行系统特性层面的对比。
 
