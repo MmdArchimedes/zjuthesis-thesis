@@ -1,0 +1,3738 @@
+{
+  "model_type": "full",
+  "best_epoch": 22,
+  "test_metrics": {
+    "accuracy": 0.9994,
+    "macro_f1": 0.9994,
+    "loss": 0.0003,
+    "per_class": {
+      "fist": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 434
+      },
+      "index_left": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 454
+      },
+      "index_right": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 446
+      },
+      "two_finger_palm": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 417
+      },
+      "two_finger_back": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 436
+      },
+      "three_finger_palm": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 443
+      },
+      "three_finger_back": {
+        "precision": 1.0,
+        "recall": 0.9934,
+        "f1": 0.9967,
+        "support": 453
+      },
+      "four_finger_palm": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 463
+      },
+      "four_finger_back": {
+        "precision": 0.9935,
+        "recall": 1.0,
+        "f1": 0.9967,
+        "support": 459
+      },
+      "five_finger_palm": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 464
+      },
+      "five_finger_back": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 463
+      }
+    }
+  },
+  "latency": {
+    "latency_ms_mean": 1.486,
+    "throughput_fps": 672.8,
+    "n_params": 145163
+  },
+  "history": {
+    "train": [
+      {
+        "accuracy": 0.7028,
+        "macro_f1": 0.7063,
+        "loss": 0.3906,
+        "per_class": {
+          "fist": {
+            "precision": 0.8028,
+            "recall": 0.7632,
+            "f1": 0.7825,
+            "support": 1115
+          },
+          "index_left": {
+            "precision": 0.8095,
+            "recall": 0.7858,
+            "f1": 0.7975,
+            "support": 1130
+          },
+          "index_right": {
+            "precision": 0.816,
+            "recall": 0.786,
+            "f1": 0.8007,
+            "support": 1089
+          },
+          "two_finger_palm": {
+            "precision": 0.5391,
+            "recall": 0.7425,
+            "f1": 0.6246,
+            "support": 1161
+          },
+          "two_finger_back": {
+            "precision": 0.7297,
+            "recall": 0.5877,
+            "f1": 0.651,
+            "support": 1038
+          },
+          "three_finger_palm": {
+            "precision": 0.7114,
+            "recall": 0.609,
+            "f1": 0.6563,
+            "support": 1105
+          },
+          "three_finger_back": {
+            "precision": 0.4569,
+            "recall": 0.6174,
+            "f1": 0.5252,
+            "support": 1116
+          },
+          "four_finger_palm": {
+            "precision": 0.6735,
+            "recall": 0.6717,
+            "f1": 0.6726,
+            "support": 1124
+          },
+          "four_finger_back": {
+            "precision": 0.7436,
+            "recall": 0.5679,
+            "f1": 0.644,
+            "support": 1134
+          },
+          "five_finger_palm": {
+            "precision": 0.8857,
+            "recall": 0.8059,
+            "f1": 0.8439,
+            "support": 1154
+          },
+          "five_finger_back": {
+            "precision": 0.7595,
+            "recall": 0.7825,
+            "f1": 0.7709,
+            "support": 1122
+          }
+        }
+      },
+      {
+        "accuracy": 0.8674,
+        "macro_f1": 0.8678,
+        "loss": 0.0658,
+        "per_class": {
+          "fist": {
+            "precision": 0.8952,
+            "recall": 0.916,
+            "f1": 0.9055,
+            "support": 1119
+          },
+          "index_left": {
+            "precision": 0.8844,
+            "recall": 0.8648,
+            "f1": 0.8745,
+            "support": 1124
+          },
+          "index_right": {
+            "precision": 0.8711,
+            "recall": 0.8876,
+            "f1": 0.8793,
+            "support": 1165
+          },
+          "two_finger_palm": {
+            "precision": 0.824,
+            "recall": 0.824,
+            "f1": 0.824,
+            "support": 1182
+          },
+          "two_finger_back": {
+            "precision": 0.8535,
+            "recall": 0.8833,
+            "f1": 0.8681,
+            "support": 1088
+          },
+          "three_finger_palm": {
+            "precision": 0.8365,
+            "recall": 0.8252,
+            "f1": 0.8308,
+            "support": 1110
+          },
+          "three_finger_back": {
+            "precision": 0.7904,
+            "recall": 0.759,
+            "f1": 0.7744,
+            "support": 1133
+          },
+          "four_finger_palm": {
+            "precision": 0.8857,
+            "recall": 0.8759,
+            "f1": 0.8808,
+            "support": 1088
+          },
+          "four_finger_back": {
+            "precision": 0.8463,
+            "recall": 0.85,
+            "f1": 0.8482,
+            "support": 1127
+          },
+          "five_finger_palm": {
+            "precision": 0.9374,
+            "recall": 0.9444,
+            "f1": 0.9409,
+            "support": 1079
+          },
+          "five_finger_back": {
+            "precision": 0.9206,
+            "recall": 0.9189,
+            "f1": 0.9198,
+            "support": 1073
+          }
+        }
+      },
+      {
+        "accuracy": 0.9208,
+        "macro_f1": 0.9204,
+        "loss": 0.0387,
+        "per_class": {
+          "fist": {
+            "precision": 0.9489,
+            "recall": 0.961,
+            "f1": 0.9549,
+            "support": 1102
+          },
+          "index_left": {
+            "precision": 0.9317,
+            "recall": 0.9084,
+            "f1": 0.9199,
+            "support": 1081
+          },
+          "index_right": {
+            "precision": 0.9118,
+            "recall": 0.933,
+            "f1": 0.9223,
+            "support": 1075
+          },
+          "two_finger_palm": {
+            "precision": 0.9168,
+            "recall": 0.9135,
+            "f1": 0.9152,
+            "support": 1110
+          },
+          "two_finger_back": {
+            "precision": 0.9177,
+            "recall": 0.9503,
+            "f1": 0.9337,
+            "support": 1126
+          },
+          "three_finger_palm": {
+            "precision": 0.9187,
+            "recall": 0.9145,
+            "f1": 0.9166,
+            "support": 1088
+          },
+          "three_finger_back": {
+            "precision": 0.8688,
+            "recall": 0.8247,
+            "f1": 0.8462,
+            "support": 1124
+          },
+          "four_finger_palm": {
+            "precision": 0.9432,
+            "recall": 0.9367,
+            "f1": 0.9399,
+            "support": 1153
+          },
+          "four_finger_back": {
+            "precision": 0.8579,
+            "recall": 0.8803,
+            "f1": 0.8689,
+            "support": 1111
+          },
+          "five_finger_palm": {
+            "precision": 0.9689,
+            "recall": 0.9689,
+            "f1": 0.9689,
+            "support": 1158
+          },
+          "five_finger_back": {
+            "precision": 0.941,
+            "recall": 0.9353,
+            "f1": 0.9382,
+            "support": 1160
+          }
+        }
+      },
+      {
+        "accuracy": 0.9288,
+        "macro_f1": 0.9286,
+        "loss": 0.0332,
+        "per_class": {
+          "fist": {
+            "precision": 0.9479,
+            "recall": 0.9663,
+            "f1": 0.957,
+            "support": 1187
+          },
+          "index_left": {
+            "precision": 0.9277,
+            "recall": 0.9085,
+            "f1": 0.918,
+            "support": 1115
+          },
+          "index_right": {
+            "precision": 0.9112,
+            "recall": 0.9283,
+            "f1": 0.9197,
+            "support": 1116
+          },
+          "two_finger_palm": {
+            "precision": 0.9117,
+            "recall": 0.9054,
+            "f1": 0.9085,
+            "support": 1152
+          },
+          "two_finger_back": {
+            "precision": 0.917,
+            "recall": 0.9483,
+            "f1": 0.9324,
+            "support": 1084
+          },
+          "three_finger_palm": {
+            "precision": 0.9153,
+            "recall": 0.9137,
+            "f1": 0.9145,
+            "support": 1124
+          },
+          "three_finger_back": {
+            "precision": 0.8894,
+            "recall": 0.8528,
+            "f1": 0.8707,
+            "support": 1141
+          },
+          "four_finger_palm": {
+            "precision": 0.9483,
+            "recall": 0.9342,
+            "f1": 0.9412,
+            "support": 1079
+          },
+          "four_finger_back": {
+            "precision": 0.9092,
+            "recall": 0.9143,
+            "f1": 0.9117,
+            "support": 1062
+          },
+          "five_finger_palm": {
+            "precision": 0.9699,
+            "recall": 0.9734,
+            "f1": 0.9716,
+            "support": 1091
+          },
+          "five_finger_back": {
+            "precision": 0.9676,
+            "recall": 0.9719,
+            "f1": 0.9697,
+            "support": 1137
+          }
+        }
+      },
+      {
+        "accuracy": 0.9258,
+        "macro_f1": 0.9259,
+        "loss": 0.0344,
+        "per_class": {
+          "fist": {
+            "precision": 0.9482,
+            "recall": 0.964,
+            "f1": 0.956,
+            "support": 1083
+          },
+          "index_left": {
+            "precision": 0.9358,
+            "recall": 0.9263,
+            "f1": 0.9311,
+            "support": 1086
+          },
+          "index_right": {
+            "precision": 0.9311,
+            "recall": 0.9392,
+            "f1": 0.9351,
+            "support": 1151
+          },
+          "two_finger_palm": {
+            "precision": 0.9139,
+            "recall": 0.9022,
+            "f1": 0.908,
+            "support": 1094
+          },
+          "two_finger_back": {
+            "precision": 0.9387,
+            "recall": 0.9646,
+            "f1": 0.9515,
+            "support": 1159
+          },
+          "three_finger_palm": {
+            "precision": 0.8988,
+            "recall": 0.8955,
+            "f1": 0.8972,
+            "support": 1091
+          },
+          "three_finger_back": {
+            "precision": 0.8846,
+            "recall": 0.8444,
+            "f1": 0.864,
+            "support": 1144
+          },
+          "four_finger_palm": {
+            "precision": 0.9362,
+            "recall": 0.9393,
+            "f1": 0.9378,
+            "support": 1187
+          },
+          "four_finger_back": {
+            "precision": 0.8675,
+            "recall": 0.8883,
+            "f1": 0.8778,
+            "support": 1128
+          },
+          "five_finger_palm": {
+            "precision": 0.9783,
+            "recall": 0.9737,
+            "f1": 0.976,
+            "support": 1063
+          },
+          "five_finger_back": {
+            "precision": 0.9526,
+            "recall": 0.9483,
+            "f1": 0.9504,
+            "support": 1102
+          }
+        }
+      },
+      {
+        "accuracy": 0.9563,
+        "macro_f1": 0.9562,
+        "loss": 0.0211,
+        "per_class": {
+          "fist": {
+            "precision": 0.9714,
+            "recall": 0.9774,
+            "f1": 0.9744,
+            "support": 1148
+          },
+          "index_left": {
+            "precision": 0.9686,
+            "recall": 0.9583,
+            "f1": 0.9635,
+            "support": 1128
+          },
+          "index_right": {
+            "precision": 0.9587,
+            "recall": 0.9689,
+            "f1": 0.9638,
+            "support": 1126
+          },
+          "two_finger_palm": {
+            "precision": 0.9557,
+            "recall": 0.9515,
+            "f1": 0.9536,
+            "support": 1134
+          },
+          "two_finger_back": {
+            "precision": 0.9483,
+            "recall": 0.9664,
+            "f1": 0.9573,
+            "support": 1101
+          },
+          "three_finger_palm": {
+            "precision": 0.9583,
+            "recall": 0.95,
+            "f1": 0.9542,
+            "support": 1041
+          },
+          "three_finger_back": {
+            "precision": 0.9132,
+            "recall": 0.8886,
+            "f1": 0.9007,
+            "support": 1113
+          },
+          "four_finger_palm": {
+            "precision": 0.9611,
+            "recall": 0.9698,
+            "f1": 0.9654,
+            "support": 1094
+          },
+          "four_finger_back": {
+            "precision": 0.9224,
+            "recall": 0.9319,
+            "f1": 0.9271,
+            "support": 1160
+          },
+          "five_finger_palm": {
+            "precision": 0.9862,
+            "recall": 0.9828,
+            "f1": 0.9845,
+            "support": 1164
+          },
+          "five_finger_back": {
+            "precision": 0.9749,
+            "recall": 0.9731,
+            "f1": 0.974,
+            "support": 1079
+          }
+        }
+      },
+      {
+        "accuracy": 0.9631,
+        "macro_f1": 0.963,
+        "loss": 0.0171,
+        "per_class": {
+          "fist": {
+            "precision": 0.9703,
+            "recall": 0.9756,
+            "f1": 0.9729,
+            "support": 1105
+          },
+          "index_left": {
+            "precision": 0.9724,
+            "recall": 0.9689,
+            "f1": 0.9707,
+            "support": 1127
+          },
+          "index_right": {
+            "precision": 0.9669,
+            "recall": 0.9705,
+            "f1": 0.9687,
+            "support": 1083
+          },
+          "two_finger_palm": {
+            "precision": 0.956,
+            "recall": 0.9551,
+            "f1": 0.9555,
+            "support": 1091
+          },
+          "two_finger_back": {
+            "precision": 0.9514,
+            "recall": 0.9793,
+            "f1": 0.9651,
+            "support": 1159
+          },
+          "three_finger_palm": {
+            "precision": 0.9736,
+            "recall": 0.9659,
+            "f1": 0.9697,
+            "support": 1144
+          },
+          "three_finger_back": {
+            "precision": 0.9286,
+            "recall": 0.8938,
+            "f1": 0.9109,
+            "support": 1092
+          },
+          "four_finger_palm": {
+            "precision": 0.9752,
+            "recall": 0.9795,
+            "f1": 0.9774,
+            "support": 1124
+          },
+          "four_finger_back": {
+            "precision": 0.934,
+            "recall": 0.9389,
+            "f1": 0.9364,
+            "support": 1145
+          },
+          "five_finger_palm": {
+            "precision": 0.9854,
+            "recall": 0.9872,
+            "f1": 0.9863,
+            "support": 1096
+          },
+          "five_finger_back": {
+            "precision": 0.9804,
+            "recall": 0.9786,
+            "f1": 0.9795,
+            "support": 1122
+          }
+        }
+      },
+      {
+        "accuracy": 0.9692,
+        "macro_f1": 0.9692,
+        "loss": 0.014,
+        "per_class": {
+          "fist": {
+            "precision": 0.9754,
+            "recall": 0.9841,
+            "f1": 0.9797,
+            "support": 1130
+          },
+          "index_left": {
+            "precision": 0.9778,
+            "recall": 0.9616,
+            "f1": 0.9697,
+            "support": 1147
+          },
+          "index_right": {
+            "precision": 0.9616,
+            "recall": 0.9773,
+            "f1": 0.9694,
+            "support": 1103
+          },
+          "two_finger_palm": {
+            "precision": 0.9642,
+            "recall": 0.961,
+            "f1": 0.9626,
+            "support": 1178
+          },
+          "two_finger_back": {
+            "precision": 0.9718,
+            "recall": 0.9853,
+            "f1": 0.9785,
+            "support": 1085
+          },
+          "three_finger_palm": {
+            "precision": 0.9661,
+            "recall": 0.9644,
+            "f1": 0.9653,
+            "support": 1095
+          },
+          "three_finger_back": {
+            "precision": 0.9533,
+            "recall": 0.932,
+            "f1": 0.9425,
+            "support": 1117
+          },
+          "four_finger_palm": {
+            "precision": 0.9763,
+            "recall": 0.9736,
+            "f1": 0.975,
+            "support": 1060
+          },
+          "four_finger_back": {
+            "precision": 0.9484,
+            "recall": 0.9595,
+            "f1": 0.954,
+            "support": 1112
+          },
+          "five_finger_palm": {
+            "precision": 0.9835,
+            "recall": 0.9835,
+            "f1": 0.9835,
+            "support": 1149
+          },
+          "five_finger_back": {
+            "precision": 0.9829,
+            "recall": 0.9802,
+            "f1": 0.9815,
+            "support": 1112
+          }
+        }
+      },
+      {
+        "accuracy": 0.9753,
+        "macro_f1": 0.9754,
+        "loss": 0.0113,
+        "per_class": {
+          "fist": {
+            "precision": 0.9757,
+            "recall": 0.9808,
+            "f1": 0.9782,
+            "support": 1145
+          },
+          "index_left": {
+            "precision": 0.9823,
+            "recall": 0.972,
+            "f1": 0.9771,
+            "support": 1142
+          },
+          "index_right": {
+            "precision": 0.97,
+            "recall": 0.9807,
+            "f1": 0.9753,
+            "support": 1088
+          },
+          "two_finger_palm": {
+            "precision": 0.9703,
+            "recall": 0.9608,
+            "f1": 0.9655,
+            "support": 1123
+          },
+          "two_finger_back": {
+            "precision": 0.9738,
+            "recall": 0.9789,
+            "f1": 0.9763,
+            "support": 1137
+          },
+          "three_finger_palm": {
+            "precision": 0.9769,
+            "recall": 0.9839,
+            "f1": 0.9804,
+            "support": 1119
+          },
+          "three_finger_back": {
+            "precision": 0.9586,
+            "recall": 0.9535,
+            "f1": 0.9561,
+            "support": 1141
+          },
+          "four_finger_palm": {
+            "precision": 0.9836,
+            "recall": 0.9765,
+            "f1": 0.9801,
+            "support": 1107
+          },
+          "four_finger_back": {
+            "precision": 0.9685,
+            "recall": 0.9668,
+            "f1": 0.9677,
+            "support": 1083
+          },
+          "five_finger_palm": {
+            "precision": 0.9829,
+            "recall": 0.9874,
+            "f1": 0.9851,
+            "support": 1107
+          },
+          "five_finger_back": {
+            "precision": 0.9863,
+            "recall": 0.9881,
+            "f1": 0.9872,
+            "support": 1096
+          }
+        }
+      },
+      {
+        "accuracy": 0.9602,
+        "macro_f1": 0.9603,
+        "loss": 0.0188,
+        "per_class": {
+          "fist": {
+            "precision": 0.9573,
+            "recall": 0.9676,
+            "f1": 0.9624,
+            "support": 1112
+          },
+          "index_left": {
+            "precision": 0.9842,
+            "recall": 0.9742,
+            "f1": 0.9792,
+            "support": 1085
+          },
+          "index_right": {
+            "precision": 0.9757,
+            "recall": 0.9846,
+            "f1": 0.9801,
+            "support": 1101
+          },
+          "two_finger_palm": {
+            "precision": 0.9305,
+            "recall": 0.9271,
+            "f1": 0.9288,
+            "support": 1098
+          },
+          "two_finger_back": {
+            "precision": 0.9724,
+            "recall": 0.9811,
+            "f1": 0.9768,
+            "support": 1114
+          },
+          "three_finger_palm": {
+            "precision": 0.9394,
+            "recall": 0.9377,
+            "f1": 0.9386,
+            "support": 1124
+          },
+          "three_finger_back": {
+            "precision": 0.9396,
+            "recall": 0.9197,
+            "f1": 0.9295,
+            "support": 1133
+          },
+          "four_finger_palm": {
+            "precision": 0.9692,
+            "recall": 0.965,
+            "f1": 0.9671,
+            "support": 1143
+          },
+          "four_finger_back": {
+            "precision": 0.9284,
+            "recall": 0.9397,
+            "f1": 0.934,
+            "support": 1160
+          },
+          "five_finger_palm": {
+            "precision": 0.9938,
+            "recall": 0.9921,
+            "f1": 0.9929,
+            "support": 1135
+          },
+          "five_finger_back": {
+            "precision": 0.9733,
+            "recall": 0.9751,
+            "f1": 0.9742,
+            "support": 1083
+          }
+        }
+      },
+      {
+        "accuracy": 0.9875,
+        "macro_f1": 0.9873,
+        "loss": 0.0059,
+        "per_class": {
+          "fist": {
+            "precision": 0.9937,
+            "recall": 0.9911,
+            "f1": 0.9924,
+            "support": 1120
+          },
+          "index_left": {
+            "precision": 0.9877,
+            "recall": 0.9886,
+            "f1": 0.9882,
+            "support": 1139
+          },
+          "index_right": {
+            "precision": 0.9873,
+            "recall": 0.9873,
+            "f1": 0.9873,
+            "support": 1106
+          },
+          "two_finger_palm": {
+            "precision": 0.9893,
+            "recall": 0.992,
+            "f1": 0.9906,
+            "support": 1120
+          },
+          "two_finger_back": {
+            "precision": 0.99,
+            "recall": 0.9933,
+            "f1": 0.9916,
+            "support": 1195
+          },
+          "three_finger_palm": {
+            "precision": 0.9928,
+            "recall": 0.9937,
+            "f1": 0.9933,
+            "support": 1115
+          },
+          "three_finger_back": {
+            "precision": 0.9773,
+            "recall": 0.9667,
+            "f1": 0.9719,
+            "support": 1111
+          },
+          "four_finger_palm": {
+            "precision": 0.9899,
+            "recall": 0.9854,
+            "f1": 0.9876,
+            "support": 1094
+          },
+          "four_finger_back": {
+            "precision": 0.9689,
+            "recall": 0.9772,
+            "f1": 0.973,
+            "support": 1053
+          },
+          "five_finger_palm": {
+            "precision": 0.9903,
+            "recall": 0.9938,
+            "f1": 0.9921,
+            "support": 1133
+          },
+          "five_finger_back": {
+            "precision": 0.9936,
+            "recall": 0.9918,
+            "f1": 0.9927,
+            "support": 1102
+          }
+        }
+      },
+      {
+        "accuracy": 0.9855,
+        "macro_f1": 0.9855,
+        "loss": 0.0066,
+        "per_class": {
+          "fist": {
+            "precision": 0.9807,
+            "recall": 0.9824,
+            "f1": 0.9815,
+            "support": 1136
+          },
+          "index_left": {
+            "precision": 0.9941,
+            "recall": 0.9958,
+            "f1": 0.9949,
+            "support": 1183
+          },
+          "index_right": {
+            "precision": 0.9947,
+            "recall": 0.9929,
+            "f1": 0.9938,
+            "support": 1124
+          },
+          "two_finger_palm": {
+            "precision": 0.9738,
+            "recall": 0.9747,
+            "f1": 0.9743,
+            "support": 1068
+          },
+          "two_finger_back": {
+            "precision": 0.9869,
+            "recall": 0.9953,
+            "f1": 0.9911,
+            "support": 1062
+          },
+          "three_finger_palm": {
+            "precision": 0.9839,
+            "recall": 0.9822,
+            "f1": 0.9831,
+            "support": 1122
+          },
+          "three_finger_back": {
+            "precision": 0.9851,
+            "recall": 0.9689,
+            "f1": 0.9769,
+            "support": 1159
+          },
+          "four_finger_palm": {
+            "precision": 0.9819,
+            "recall": 0.9793,
+            "f1": 0.9806,
+            "support": 1111
+          },
+          "four_finger_back": {
+            "precision": 0.9753,
+            "recall": 0.9849,
+            "f1": 0.9801,
+            "support": 1123
+          },
+          "five_finger_palm": {
+            "precision": 0.9893,
+            "recall": 0.9911,
+            "f1": 0.9902,
+            "support": 1120
+          },
+          "five_finger_back": {
+            "precision": 0.9944,
+            "recall": 0.9935,
+            "f1": 0.994,
+            "support": 1080
+          }
+        }
+      },
+      {
+        "accuracy": 0.9857,
+        "macro_f1": 0.9857,
+        "loss": 0.0064,
+        "per_class": {
+          "fist": {
+            "precision": 0.9913,
+            "recall": 0.9894,
+            "f1": 0.9903,
+            "support": 1034
+          },
+          "index_left": {
+            "precision": 0.9885,
+            "recall": 0.9867,
+            "f1": 0.9876,
+            "support": 1130
+          },
+          "index_right": {
+            "precision": 0.9877,
+            "recall": 0.9885,
+            "f1": 0.9881,
+            "support": 1134
+          },
+          "two_finger_palm": {
+            "precision": 0.9865,
+            "recall": 0.9873,
+            "f1": 0.9869,
+            "support": 1185
+          },
+          "two_finger_back": {
+            "precision": 0.9859,
+            "recall": 0.9878,
+            "f1": 0.9869,
+            "support": 1064
+          },
+          "three_finger_palm": {
+            "precision": 0.9919,
+            "recall": 0.9919,
+            "f1": 0.9919,
+            "support": 1111
+          },
+          "three_finger_back": {
+            "precision": 0.9605,
+            "recall": 0.964,
+            "f1": 0.9622,
+            "support": 1110
+          },
+          "four_finger_palm": {
+            "precision": 0.9946,
+            "recall": 0.9955,
+            "f1": 0.995,
+            "support": 1107
+          },
+          "four_finger_back": {
+            "precision": 0.9669,
+            "recall": 0.9643,
+            "f1": 0.9656,
+            "support": 1121
+          },
+          "five_finger_palm": {
+            "precision": 0.9982,
+            "recall": 0.9964,
+            "f1": 0.9973,
+            "support": 1117
+          },
+          "five_finger_back": {
+            "precision": 0.9906,
+            "recall": 0.9906,
+            "f1": 0.9906,
+            "support": 1175
+          }
+        }
+      },
+      {
+        "accuracy": 0.9919,
+        "macro_f1": 0.9919,
+        "loss": 0.0035,
+        "per_class": {
+          "fist": {
+            "precision": 0.9954,
+            "recall": 0.9972,
+            "f1": 0.9963,
+            "support": 1087
+          },
+          "index_left": {
+            "precision": 0.9945,
+            "recall": 0.9936,
+            "f1": 0.9941,
+            "support": 1097
+          },
+          "index_right": {
+            "precision": 0.9939,
+            "recall": 0.9947,
+            "f1": 0.9943,
+            "support": 1139
+          },
+          "two_finger_palm": {
+            "precision": 0.9954,
+            "recall": 0.9927,
+            "f1": 0.9941,
+            "support": 1101
+          },
+          "two_finger_back": {
+            "precision": 0.9886,
+            "recall": 0.9947,
+            "f1": 0.9916,
+            "support": 1131
+          },
+          "three_finger_palm": {
+            "precision": 0.9945,
+            "recall": 0.9936,
+            "f1": 0.994,
+            "support": 1091
+          },
+          "three_finger_back": {
+            "precision": 0.9849,
+            "recall": 0.9805,
+            "f1": 0.9827,
+            "support": 1130
+          },
+          "four_finger_palm": {
+            "precision": 0.9923,
+            "recall": 0.994,
+            "f1": 0.9931,
+            "support": 1160
+          },
+          "four_finger_back": {
+            "precision": 0.9851,
+            "recall": 0.9817,
+            "f1": 0.9834,
+            "support": 1148
+          },
+          "five_finger_palm": {
+            "precision": 0.9955,
+            "recall": 0.9964,
+            "f1": 0.9959,
+            "support": 1106
+          },
+          "five_finger_back": {
+            "precision": 0.9909,
+            "recall": 0.9918,
+            "f1": 0.9914,
+            "support": 1098
+          }
+        }
+      },
+      {
+        "accuracy": 0.9864,
+        "macro_f1": 0.9864,
+        "loss": 0.0062,
+        "per_class": {
+          "fist": {
+            "precision": 0.9851,
+            "recall": 0.9888,
+            "f1": 0.987,
+            "support": 1071
+          },
+          "index_left": {
+            "precision": 0.9945,
+            "recall": 0.9945,
+            "f1": 0.9945,
+            "support": 1095
+          },
+          "index_right": {
+            "precision": 0.9947,
+            "recall": 0.9929,
+            "f1": 0.9938,
+            "support": 1125
+          },
+          "two_finger_palm": {
+            "precision": 0.978,
+            "recall": 0.978,
+            "f1": 0.978,
+            "support": 1093
+          },
+          "two_finger_back": {
+            "precision": 0.9904,
+            "recall": 0.9956,
+            "f1": 0.993,
+            "support": 1135
+          },
+          "three_finger_palm": {
+            "precision": 0.9735,
+            "recall": 0.9777,
+            "f1": 0.9756,
+            "support": 1166
+          },
+          "three_finger_back": {
+            "precision": 0.9826,
+            "recall": 0.9702,
+            "f1": 0.9764,
+            "support": 1107
+          },
+          "four_finger_palm": {
+            "precision": 0.9828,
+            "recall": 0.9758,
+            "f1": 0.9793,
+            "support": 1115
+          },
+          "four_finger_back": {
+            "precision": 0.9776,
+            "recall": 0.9838,
+            "f1": 0.9807,
+            "support": 1108
+          },
+          "five_finger_palm": {
+            "precision": 0.9946,
+            "recall": 0.9955,
+            "f1": 0.9951,
+            "support": 1120
+          },
+          "five_finger_back": {
+            "precision": 0.9965,
+            "recall": 0.9974,
+            "f1": 0.997,
+            "support": 1153
+          }
+        }
+      },
+      {
+        "accuracy": 0.9895,
+        "macro_f1": 0.9895,
+        "loss": 0.0046,
+        "per_class": {
+          "fist": {
+            "precision": 0.9929,
+            "recall": 0.992,
+            "f1": 0.9924,
+            "support": 1120
+          },
+          "index_left": {
+            "precision": 0.992,
+            "recall": 0.9946,
+            "f1": 0.9933,
+            "support": 1119
+          },
+          "index_right": {
+            "precision": 0.9946,
+            "recall": 0.9919,
+            "f1": 0.9933,
+            "support": 1115
+          },
+          "two_finger_palm": {
+            "precision": 0.9904,
+            "recall": 0.9896,
+            "f1": 0.99,
+            "support": 1152
+          },
+          "two_finger_back": {
+            "precision": 0.9845,
+            "recall": 0.9917,
+            "f1": 0.9881,
+            "support": 1089
+          },
+          "three_finger_palm": {
+            "precision": 0.9914,
+            "recall": 0.9957,
+            "f1": 0.9935,
+            "support": 1154
+          },
+          "three_finger_back": {
+            "precision": 0.9782,
+            "recall": 0.972,
+            "f1": 0.9751,
+            "support": 1107
+          },
+          "four_finger_palm": {
+            "precision": 0.9928,
+            "recall": 0.9892,
+            "f1": 0.991,
+            "support": 1111
+          },
+          "four_finger_back": {
+            "precision": 0.9812,
+            "recall": 0.9794,
+            "f1": 0.9803,
+            "support": 1119
+          },
+          "five_finger_palm": {
+            "precision": 0.9944,
+            "recall": 0.9944,
+            "f1": 0.9944,
+            "support": 1080
+          },
+          "five_finger_back": {
+            "precision": 0.992,
+            "recall": 0.9938,
+            "f1": 0.9929,
+            "support": 1122
+          }
+        }
+      },
+      {
+        "accuracy": 0.9954,
+        "macro_f1": 0.9953,
+        "loss": 0.0025,
+        "per_class": {
+          "fist": {
+            "precision": 0.9955,
+            "recall": 0.9955,
+            "f1": 0.9955,
+            "support": 1101
+          },
+          "index_left": {
+            "precision": 0.9967,
+            "recall": 0.9958,
+            "f1": 0.9962,
+            "support": 1200
+          },
+          "index_right": {
+            "precision": 0.9954,
+            "recall": 0.9963,
+            "f1": 0.9958,
+            "support": 1080
+          },
+          "two_finger_palm": {
+            "precision": 0.9942,
+            "recall": 0.9958,
+            "f1": 0.995,
+            "support": 1199
+          },
+          "two_finger_back": {
+            "precision": 0.9982,
+            "recall": 0.9982,
+            "f1": 0.9982,
+            "support": 1099
+          },
+          "three_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9963,
+            "f1": 0.9977,
+            "support": 1075
+          },
+          "three_finger_back": {
+            "precision": 0.99,
+            "recall": 0.9882,
+            "f1": 0.9891,
+            "support": 1101
+          },
+          "four_finger_palm": {
+            "precision": 0.9956,
+            "recall": 0.9982,
+            "f1": 0.9969,
+            "support": 1134
+          },
+          "four_finger_back": {
+            "precision": 0.9889,
+            "recall": 0.9889,
+            "f1": 0.9889,
+            "support": 1080
+          },
+          "five_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9964,
+            "f1": 0.9978,
+            "support": 1115
+          },
+          "five_finger_back": {
+            "precision": 0.9964,
+            "recall": 0.9991,
+            "f1": 0.9977,
+            "support": 1104
+          }
+        }
+      },
+      {
+        "accuracy": 0.996,
+        "macro_f1": 0.996,
+        "loss": 0.0024,
+        "per_class": {
+          "fist": {
+            "precision": 0.9973,
+            "recall": 1.0,
+            "f1": 0.9986,
+            "support": 1090
+          },
+          "index_left": {
+            "precision": 0.9982,
+            "recall": 0.9991,
+            "f1": 0.9987,
+            "support": 1118
+          },
+          "index_right": {
+            "precision": 0.9991,
+            "recall": 0.9982,
+            "f1": 0.9986,
+            "support": 1100
+          },
+          "two_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9963,
+            "f1": 0.9977,
+            "support": 1083
+          },
+          "two_finger_back": {
+            "precision": 0.991,
+            "recall": 0.9937,
+            "f1": 0.9924,
+            "support": 1114
+          },
+          "three_finger_palm": {
+            "precision": 0.9983,
+            "recall": 0.9974,
+            "f1": 0.9979,
+            "support": 1171
+          },
+          "three_finger_back": {
+            "precision": 0.9918,
+            "recall": 0.99,
+            "f1": 0.9909,
+            "support": 1105
+          },
+          "four_finger_palm": {
+            "precision": 0.9955,
+            "recall": 0.9991,
+            "f1": 0.9973,
+            "support": 1102
+          },
+          "four_finger_back": {
+            "precision": 0.9938,
+            "recall": 0.9902,
+            "f1": 0.992,
+            "support": 1128
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9973,
+            "f1": 0.9987,
+            "support": 1124
+          },
+          "five_finger_back": {
+            "precision": 0.9922,
+            "recall": 0.9948,
+            "f1": 0.9935,
+            "support": 1153
+          }
+        }
+      },
+      {
+        "accuracy": 0.9972,
+        "macro_f1": 0.9971,
+        "loss": 0.0016,
+        "per_class": {
+          "fist": {
+            "precision": 0.9991,
+            "recall": 0.9974,
+            "f1": 0.9983,
+            "support": 1175
+          },
+          "index_left": {
+            "precision": 0.9991,
+            "recall": 0.9991,
+            "f1": 0.9991,
+            "support": 1131
+          },
+          "index_right": {
+            "precision": 0.9991,
+            "recall": 0.9991,
+            "f1": 0.9991,
+            "support": 1145
+          },
+          "two_finger_palm": {
+            "precision": 0.9964,
+            "recall": 0.9956,
+            "f1": 0.996,
+            "support": 1125
+          },
+          "two_finger_back": {
+            "precision": 0.9991,
+            "recall": 0.9982,
+            "f1": 0.9987,
+            "support": 1134
+          },
+          "three_finger_palm": {
+            "precision": 0.9927,
+            "recall": 0.9982,
+            "f1": 0.9954,
+            "support": 1088
+          },
+          "three_finger_back": {
+            "precision": 0.9963,
+            "recall": 0.9944,
+            "f1": 0.9953,
+            "support": 1069
+          },
+          "four_finger_palm": {
+            "precision": 0.9983,
+            "recall": 0.9957,
+            "f1": 0.997,
+            "support": 1155
+          },
+          "four_finger_back": {
+            "precision": 0.9927,
+            "recall": 0.9955,
+            "f1": 0.9941,
+            "support": 1099
+          },
+          "five_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9982,
+            "f1": 0.9986,
+            "support": 1084
+          },
+          "five_finger_back": {
+            "precision": 0.9963,
+            "recall": 0.9972,
+            "f1": 0.9968,
+            "support": 1083
+          }
+        }
+      },
+      {
+        "accuracy": 0.9967,
+        "macro_f1": 0.9967,
+        "loss": 0.0015,
+        "per_class": {
+          "fist": {
+            "precision": 0.9973,
+            "recall": 1.0,
+            "f1": 0.9987,
+            "support": 1113
+          },
+          "index_left": {
+            "precision": 0.9982,
+            "recall": 0.9973,
+            "f1": 0.9978,
+            "support": 1123
+          },
+          "index_right": {
+            "precision": 0.9972,
+            "recall": 0.9981,
+            "f1": 0.9976,
+            "support": 1060
+          },
+          "two_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9957,
+            "f1": 0.9974,
+            "support": 1152
+          },
+          "two_finger_back": {
+            "precision": 0.9955,
+            "recall": 0.9991,
+            "f1": 0.9973,
+            "support": 1113
+          },
+          "three_finger_palm": {
+            "precision": 0.9983,
+            "recall": 0.9983,
+            "f1": 0.9983,
+            "support": 1149
+          },
+          "three_finger_back": {
+            "precision": 0.9922,
+            "recall": 0.9913,
+            "f1": 0.9918,
+            "support": 1156
+          },
+          "four_finger_palm": {
+            "precision": 0.9962,
+            "recall": 0.9991,
+            "f1": 0.9976,
+            "support": 1058
+          },
+          "four_finger_back": {
+            "precision": 0.9943,
+            "recall": 0.9887,
+            "f1": 0.9915,
+            "support": 1064
+          },
+          "five_finger_palm": {
+            "precision": 0.9992,
+            "recall": 0.9975,
+            "f1": 0.9983,
+            "support": 1195
+          },
+          "five_finger_back": {
+            "precision": 0.9964,
+            "recall": 0.9991,
+            "f1": 0.9977,
+            "support": 1105
+          }
+        }
+      },
+      {
+        "accuracy": 0.996,
+        "macro_f1": 0.996,
+        "loss": 0.002,
+        "per_class": {
+          "fist": {
+            "precision": 0.9973,
+            "recall": 0.9947,
+            "f1": 0.996,
+            "support": 1126
+          },
+          "index_left": {
+            "precision": 0.9991,
+            "recall": 0.9973,
+            "f1": 0.9982,
+            "support": 1095
+          },
+          "index_right": {
+            "precision": 0.9964,
+            "recall": 0.9991,
+            "f1": 0.9978,
+            "support": 1119
+          },
+          "two_finger_palm": {
+            "precision": 0.9947,
+            "recall": 0.9947,
+            "f1": 0.9947,
+            "support": 1129
+          },
+          "two_finger_back": {
+            "precision": 0.9982,
+            "recall": 0.9974,
+            "f1": 0.9978,
+            "support": 1141
+          },
+          "three_finger_palm": {
+            "precision": 0.9956,
+            "recall": 0.9973,
+            "f1": 0.9965,
+            "support": 1130
+          },
+          "three_finger_back": {
+            "precision": 0.9937,
+            "recall": 0.9946,
+            "f1": 0.9941,
+            "support": 1107
+          },
+          "four_finger_palm": {
+            "precision": 0.9946,
+            "recall": 0.9937,
+            "f1": 0.9941,
+            "support": 1103
+          },
+          "four_finger_back": {
+            "precision": 0.9946,
+            "recall": 0.9937,
+            "f1": 0.9941,
+            "support": 1111
+          },
+          "five_finger_palm": {
+            "precision": 0.9946,
+            "recall": 0.9964,
+            "f1": 0.9955,
+            "support": 1117
+          },
+          "five_finger_back": {
+            "precision": 0.9973,
+            "recall": 0.9973,
+            "f1": 0.9973,
+            "support": 1110
+          }
+        }
+      },
+      {
+        "accuracy": 0.9986,
+        "macro_f1": 0.9986,
+        "loss": 0.001,
+        "per_class": {
+          "fist": {
+            "precision": 0.9972,
+            "recall": 1.0,
+            "f1": 0.9986,
+            "support": 1084
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.9991,
+            "f1": 0.9996,
+            "support": 1168
+          },
+          "index_right": {
+            "precision": 0.9991,
+            "recall": 1.0,
+            "f1": 0.9996,
+            "support": 1124
+          },
+          "two_finger_palm": {
+            "precision": 0.9982,
+            "recall": 0.9964,
+            "f1": 0.9973,
+            "support": 1115
+          },
+          "two_finger_back": {
+            "precision": 0.9973,
+            "recall": 1.0,
+            "f1": 0.9986,
+            "support": 1095
+          },
+          "three_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9974,
+            "f1": 0.9982,
+            "support": 1135
+          },
+          "three_finger_back": {
+            "precision": 0.9971,
+            "recall": 0.9952,
+            "f1": 0.9962,
+            "support": 1050
+          },
+          "four_finger_palm": {
+            "precision": 0.9991,
+            "recall": 1.0,
+            "f1": 0.9996,
+            "support": 1119
+          },
+          "four_finger_back": {
+            "precision": 0.9983,
+            "recall": 0.9966,
+            "f1": 0.9974,
+            "support": 1167
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 1109
+          },
+          "five_finger_back": {
+            "precision": 0.9991,
+            "recall": 1.0,
+            "f1": 0.9996,
+            "support": 1122
+          }
+        }
+      },
+      {
+        "accuracy": 0.998,
+        "macro_f1": 0.998,
+        "loss": 0.0012,
+        "per_class": {
+          "fist": {
+            "precision": 0.9991,
+            "recall": 0.9973,
+            "f1": 0.9982,
+            "support": 1124
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.9991,
+            "f1": 0.9996,
+            "support": 1124
+          },
+          "index_right": {
+            "precision": 0.9991,
+            "recall": 1.0,
+            "f1": 0.9996,
+            "support": 1153
+          },
+          "two_finger_palm": {
+            "precision": 0.9975,
+            "recall": 0.9958,
+            "f1": 0.9966,
+            "support": 1182
+          },
+          "two_finger_back": {
+            "precision": 0.9965,
+            "recall": 1.0,
+            "f1": 0.9982,
+            "support": 1135
+          },
+          "three_finger_palm": {
+            "precision": 0.9955,
+            "recall": 0.9991,
+            "f1": 0.9973,
+            "support": 1118
+          },
+          "three_finger_back": {
+            "precision": 0.999,
+            "recall": 0.9933,
+            "f1": 0.9962,
+            "support": 1042
+          },
+          "four_finger_palm": {
+            "precision": 0.9972,
+            "recall": 0.9972,
+            "f1": 0.9972,
+            "support": 1089
+          },
+          "four_finger_back": {
+            "precision": 0.9965,
+            "recall": 0.9982,
+            "f1": 0.9974,
+            "support": 1136
+          },
+          "five_finger_palm": {
+            "precision": 0.9982,
+            "recall": 0.9982,
+            "f1": 0.9982,
+            "support": 1130
+          },
+          "five_finger_back": {
+            "precision": 0.9991,
+            "recall": 0.9991,
+            "f1": 0.9991,
+            "support": 1055
+          }
+        }
+      },
+      {
+        "accuracy": 0.9981,
+        "macro_f1": 0.9981,
+        "loss": 0.0012,
+        "per_class": {
+          "fist": {
+            "precision": 0.9972,
+            "recall": 1.0,
+            "f1": 0.9986,
+            "support": 1070
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.9991,
+            "f1": 0.9995,
+            "support": 1105
+          },
+          "index_right": {
+            "precision": 0.9991,
+            "recall": 1.0,
+            "f1": 0.9996,
+            "support": 1157
+          },
+          "two_finger_palm": {
+            "precision": 0.9982,
+            "recall": 0.9973,
+            "f1": 0.9978,
+            "support": 1125
+          },
+          "two_finger_back": {
+            "precision": 0.9991,
+            "recall": 0.9964,
+            "f1": 0.9978,
+            "support": 1119
+          },
+          "three_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9973,
+            "f1": 0.9982,
+            "support": 1105
+          },
+          "three_finger_back": {
+            "precision": 0.9954,
+            "recall": 0.9972,
+            "f1": 0.9963,
+            "support": 1076
+          },
+          "four_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9965,
+            "f1": 0.9978,
+            "support": 1155
+          },
+          "four_finger_back": {
+            "precision": 0.9965,
+            "recall": 0.9973,
+            "f1": 0.9969,
+            "support": 1129
+          },
+          "five_finger_palm": {
+            "precision": 0.9973,
+            "recall": 1.0,
+            "f1": 0.9987,
+            "support": 1119
+          },
+          "five_finger_back": {
+            "precision": 0.9982,
+            "recall": 0.9982,
+            "f1": 0.9982,
+            "support": 1128
+          }
+        }
+      },
+      {
+        "accuracy": 0.9977,
+        "macro_f1": 0.9977,
+        "loss": 0.0011,
+        "per_class": {
+          "fist": {
+            "precision": 0.9972,
+            "recall": 0.9991,
+            "f1": 0.9981,
+            "support": 1076
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.9981,
+            "f1": 0.9991,
+            "support": 1079
+          },
+          "index_right": {
+            "precision": 0.9983,
+            "recall": 1.0,
+            "f1": 0.9991,
+            "support": 1158
+          },
+          "two_finger_palm": {
+            "precision": 0.9991,
+            "recall": 0.9965,
+            "f1": 0.9978,
+            "support": 1156
+          },
+          "two_finger_back": {
+            "precision": 0.9962,
+            "recall": 0.9981,
+            "f1": 0.9971,
+            "support": 1038
+          },
+          "three_finger_palm": {
+            "precision": 0.9964,
+            "recall": 1.0,
+            "f1": 0.9982,
+            "support": 1105
+          },
+          "three_finger_back": {
+            "precision": 0.9947,
+            "recall": 0.9938,
+            "f1": 0.9942,
+            "support": 1130
+          },
+          "four_finger_palm": {
+            "precision": 0.9982,
+            "recall": 0.9964,
+            "f1": 0.9973,
+            "support": 1111
+          },
+          "four_finger_back": {
+            "precision": 0.9955,
+            "recall": 0.9964,
+            "f1": 0.9959,
+            "support": 1108
+          },
+          "five_finger_palm": {
+            "precision": 0.9992,
+            "recall": 0.9983,
+            "f1": 0.9988,
+            "support": 1211
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9982,
+            "f1": 0.9991,
+            "support": 1116
+          }
+        }
+      }
+    ],
+    "val": [
+      {
+        "accuracy": 0.5763,
+        "macro_f1": 0.5453,
+        "loss": 0.3674,
+        "per_class": {
+          "fist": {
+            "precision": 0.6408,
+            "recall": 1.0,
+            "f1": 0.7811,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.8186,
+            "f1": 0.9003,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 0.8506,
+            "recall": 1.0,
+            "f1": 0.9193,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.4824,
+            "recall": 0.4344,
+            "f1": 0.4571,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.4396,
+            "recall": 1.0,
+            "f1": 0.6107,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.602,
+            "recall": 0.5402,
+            "f1": 0.5694,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 0.9868,
+            "recall": 0.6507,
+            "f1": 0.7842,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9545,
+            "f1": 0.9767,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.919,
+        "macro_f1": 0.9192,
+        "loss": 0.0401,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8027,
+            "f1": 0.8905,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.9488,
+            "f1": 0.9737,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 0.9528,
+            "recall": 1.0,
+            "f1": 0.9758,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8095,
+            "recall": 0.8462,
+            "f1": 0.8274,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9858,
+            "f1": 0.9928,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.844,
+            "recall": 0.8214,
+            "f1": 0.8326,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9868,
+            "recall": 0.9698,
+            "f1": 0.9783,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 0.8095,
+            "recall": 0.7424,
+            "f1": 0.7745,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.9689,
+            "recall": 1.0,
+            "f1": 0.9842,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 0.7885,
+            "recall": 1.0,
+            "f1": 0.8818,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9566,
+        "macro_f1": 0.9568,
+        "loss": 0.02,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.9822,
+            "recall": 1.0,
+            "f1": 0.991,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.9295,
+            "recall": 1.0,
+            "f1": 0.9635,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.8594,
+            "recall": 0.9821,
+            "f1": 0.9167,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.8308,
+            "recall": 0.931,
+            "f1": 0.878,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.8428,
+            "f1": 0.9147,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.9667,
+            "recall": 0.7982,
+            "f1": 0.8744,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9737,
+            "f1": 0.9867,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.5354,
+        "macro_f1": 0.5046,
+        "loss": 0.4656,
+        "per_class": {
+          "fist": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 0.9598,
+            "recall": 1.0,
+            "f1": 0.9795,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 0.9595,
+            "f1": 0.9793,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.0714,
+            "recall": 0.0759,
+            "f1": 0.0736,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 0.3319,
+            "f1": 0.4984,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 0.2247,
+            "recall": 0.262,
+            "f1": 0.2419,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.3018,
+            "recall": 0.3073,
+            "f1": 0.3045,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 0.5656,
+            "recall": 1.0,
+            "f1": 0.7225,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 0.6016,
+            "recall": 1.0,
+            "f1": 0.7512,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9558,
+        "macro_f1": 0.9545,
+        "loss": 0.0189,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.6791,
+            "f1": 0.8089,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 0.7629,
+            "recall": 1.0,
+            "f1": 0.8655,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8911,
+            "recall": 1.0,
+            "f1": 0.9424,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.9867,
+            "recall": 0.9911,
+            "f1": 0.9889,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9869,
+            "f1": 0.9934,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9587,
+            "f1": 0.9789,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 0.962,
+            "recall": 1.0,
+            "f1": 0.9806,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9799,
+        "macro_f1": 0.98,
+        "loss": 0.0128,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.9912,
+            "recall": 1.0,
+            "f1": 0.9956,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9134,
+            "recall": 1.0,
+            "f1": 0.9547,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9913,
+            "f1": 0.9956,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.8991,
+            "f1": 0.9469,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9779,
+        "macro_f1": 0.978,
+        "loss": 0.0076,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.9655,
+            "recall": 1.0,
+            "f1": 0.9825,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.917,
+            "recall": 1.0,
+            "f1": 0.9567,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9651,
+            "f1": 0.9822,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9037,
+            "f1": 0.9494,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9505,
+        "macro_f1": 0.9504,
+        "loss": 0.0222,
+        "per_class": {
+          "fist": {
+            "precision": 0.9102,
+            "recall": 1.0,
+            "f1": 0.953,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.9851,
+            "recall": 0.9005,
+            "f1": 0.9409,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.7932,
+            "recall": 1.0,
+            "f1": 0.8847,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9866,
+            "f1": 0.9933,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.8119,
+            "recall": 0.7629,
+            "f1": 0.7867,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.8119,
+            "f1": 0.8962,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9709,
+        "macro_f1": 0.9705,
+        "loss": 0.009,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.814,
+            "f1": 0.8974,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 0.8473,
+            "recall": 1.0,
+            "f1": 0.9174,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9741,
+            "f1": 0.9869,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.9732,
+            "recall": 1.0,
+            "f1": 0.9864,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9816,
+        "macro_f1": 0.9816,
+        "loss": 0.0065,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.9953,
+            "recall": 1.0,
+            "f1": 0.9976,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.9912,
+            "recall": 1.0,
+            "f1": 0.9956,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9315,
+            "recall": 0.9957,
+            "f1": 0.9625,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9913,
+            "f1": 0.9956,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.922,
+            "f1": 0.9594,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9771,
+        "macro_f1": 0.9772,
+        "loss": 0.0089,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8911,
+            "recall": 1.0,
+            "f1": 0.9424,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.9814,
+            "recall": 1.0,
+            "f1": 0.9906,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 0.978,
+            "recall": 0.9911,
+            "f1": 0.9845,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9194,
+            "recall": 0.9828,
+            "f1": 0.95,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 0.9782,
+            "f1": 0.989,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9083,
+            "f1": 0.9519,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9816,
+        "macro_f1": 0.9814,
+        "loss": 0.0118,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8072,
+            "f1": 0.8933,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8371,
+            "recall": 1.0,
+            "f1": 0.9113,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9957,
+            "f1": 0.9978,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.9954,
+            "recall": 0.9954,
+            "f1": 0.9954,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 0.9956,
+            "recall": 1.0,
+            "f1": 0.9978,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9063,
+        "macro_f1": 0.8959,
+        "loss": 0.0533,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.5342,
+            "recall": 1.0,
+            "f1": 0.6964,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.7059,
+            "recall": 0.2069,
+            "f1": 0.32,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9083,
+            "f1": 0.9519,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9812,
+        "macro_f1": 0.9812,
+        "loss": 0.0087,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 0.9953,
+            "recall": 1.0,
+            "f1": 0.9976,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9203,
+            "recall": 0.9957,
+            "f1": 0.9565,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9083,
+            "f1": 0.9519,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9374,
+        "macro_f1": 0.9322,
+        "loss": 0.0431,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.4036,
+            "f1": 0.5751,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.6243,
+            "recall": 1.0,
+            "f1": 0.7687,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9206,
+            "recall": 1.0,
+            "f1": 0.9587,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9083,
+            "f1": 0.9519,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9898,
+        "macro_f1": 0.9897,
+        "loss": 0.0047,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9869,
+        "macro_f1": 0.9869,
+        "loss": 0.0073,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9707,
+            "recall": 1.0,
+            "f1": 0.9851,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9679,
+            "f1": 0.9837,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9881,
+        "macro_f1": 0.9881,
+        "loss": 0.0042,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9831,
+            "recall": 1.0,
+            "f1": 0.9915,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9817,
+            "f1": 0.9907,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9898,
+        "macro_f1": 0.9897,
+        "loss": 0.0042,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9836,
+        "macro_f1": 0.9834,
+        "loss": 0.0132,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.9821,
+            "f1": 0.991,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 0.8698,
+            "f1": 0.9303,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 0.888,
+            "recall": 1.0,
+            "f1": 0.9407,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.9822,
+            "recall": 1.0,
+            "f1": 0.991,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9655,
+            "f1": 0.9825,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 0.9646,
+            "recall": 1.0,
+            "f1": 0.982,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9832,
+        "macro_f1": 0.9832,
+        "loss": 0.0033,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9355,
+            "recall": 1.0,
+            "f1": 0.9667,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9266,
+            "f1": 0.9619,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9885,
+        "macro_f1": 0.9885,
+        "loss": 0.0029,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9872,
+            "recall": 1.0,
+            "f1": 0.9936,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9862,
+            "f1": 0.9931,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9914,
+        "macro_f1": 0.9914,
+        "loss": 0.002,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.9417,
+            "f1": 0.97,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.9444,
+            "recall": 1.0,
+            "f1": 0.9714,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9667,
+            "recall": 1.0,
+            "f1": 0.9831,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9633,
+            "f1": 0.9813,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.982,
+        "macro_f1": 0.982,
+        "loss": 0.0043,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9243,
+            "recall": 1.0,
+            "f1": 0.9607,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9128,
+            "f1": 0.9544,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      },
+      {
+        "accuracy": 0.9894,
+        "macro_f1": 0.9893,
+        "loss": 0.0039,
+        "per_class": {
+          "fist": {
+            "precision": 1.0,
+            "recall": 0.8879,
+            "f1": 0.9406,
+            "support": 223
+          },
+          "index_left": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 215
+          },
+          "index_right": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 222
+          },
+          "two_finger_palm": {
+            "precision": 0.8984,
+            "recall": 1.0,
+            "f1": 0.9465,
+            "support": 221
+          },
+          "two_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 211
+          },
+          "three_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 224
+          },
+          "three_finger_back": {
+            "precision": 0.9957,
+            "recall": 1.0,
+            "f1": 0.9978,
+            "support": 232
+          },
+          "four_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 229
+          },
+          "four_finger_back": {
+            "precision": 1.0,
+            "recall": 0.9954,
+            "f1": 0.9977,
+            "support": 218
+          },
+          "five_finger_palm": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 220
+          },
+          "five_finger_back": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 228
+          }
+        }
+      }
+    ]
+  }
+}

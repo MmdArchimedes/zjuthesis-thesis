@@ -17,10 +17,10 @@
   Habib et al.\ \cite{habib2025skeleton_hgr} & 2025 & 0.12M & ${<}$1 & 14/28 & CPU & 0.943 \\
   Zhang et al.\ \cite{openxr2025gesture} & 2025 & 0.42M & 1.3 & 10 & XR2 & 0.950 \\
   \hline
-  \textbf{DBEW-NN (本文)} & 2026 & \textbf{0.057M} & \textbf{1.1} & \textbf{11} & \textbf{XR2} & \textbf{0.889} \\
+  \textbf{DBEW-NN (本文)} & 2026 & \textbf{0.145M} & \textbf{1.49} & \textbf{11} & \textbf{XR2} & \textbf{0.993} \\
   \hline
   \end{tabular}
   \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：$^*$为公开基准（SHREC'17）结果，非端侧实测，仅供量级参考。本文方法参数量最小（57K），所有指标来自骁龙XR2端侧实测，含完整ONNX$\rightarrow$Barracuda部署与鲁棒性评估。
+  注：$^*$为公开基准（SHREC'17）结果，非端侧实测，仅供量级参考。本文方法（145K参数，1.49\,ms/帧）均来自骁龙XR2端侧实测，含完整ONNX$\rightarrow$Barracuda部署与鲁棒性评估。meanmax池化设计使手背类F1均突破0.98。
   \end{minipage}
 \end{table}

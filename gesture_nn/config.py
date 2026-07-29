@@ -39,8 +39,8 @@ VAL_SPLIT = 0.15
 TEST_SPLIT = 0.15
 
 # ── Model Architecture ───────────────────────────────────────────
-D_MODEL = 64          # hidden dimension
-N_HEADS = 4           # self-attention heads
+D_MODEL = 96          # hidden dimension (increased from 64 for palm/back discrimination)
+N_HEADS = 6           # self-attention heads (head_dim = 96/6 = 16)
 N_CNN_LAYERS = 3      # 1D-CNN layers
 CNN_KERNEL = 3        # CNN kernel size
 DILATIONS = [1, 2, 4] # dilated CNN for multi-scale temporal receptive field
@@ -50,21 +50,21 @@ DROPOUT = 0.1
 BATCH_SIZE = 64
 LEARNING_RATE = 1e-3
 WEIGHT_DECAY = 1e-4
-N_EPOCHS = 80
-WARMUP_EPOCHS = 5    # freeze self-attention for first N epochs
-EARLY_STOP_PATIENCE = 10
+N_EPOCHS = 120        # extended for harder palm/back convergence
+WARMUP_EPOCHS = 8     # longer warmup to stabilise CNN before attention unfreeze
+EARLY_STOP_PATIENCE = 15
 
 # Loss weights
-TEMPORAL_SMOOTH_LAMBDA = 0.1
+TEMPORAL_SMOOTH_LAMBDA = 0.05  # reduced to allow sharper palm/back discrimination
 
 # Data augmentation
 AUG_TIME_CROP_JITTER = 5   # ±5 frames random crop
 AUG_COORD_NOISE_SIGMA = 0.002  # 2mm gaussian noise (meters)
-AUG_MIRROR_PROB = 0.5      # random left/right hand mirror
+AUG_MIRROR_PROB = 0.2      # reduced: mirror can blur palm/back z-axis signal
 
 # Class balancing
 USE_FOCAL_LOSS = True
-FOCAL_GAMMA = 2.0
+FOCAL_GAMMA = 3.0           # stronger focus on hard samples (palm/back pairs)
 
 # ── DBEW Trigger Pipeline (matching thesis Section 3.3.4) ────────
 TAU_MS = 500           # cooldown window (ms)

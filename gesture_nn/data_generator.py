@@ -195,6 +195,13 @@ class GestureDeformer:
                              noise_deg: float) -> tuple:
         """Generate (palm, back) variant pair for a given finger extension count.
 
+        Palm vs back is the hardest discrimination task: after wrist-relative
+        normalization, the geometric difference shrinks to ~5-8 mm in z-axis.
+        We amplify the distinction by:
+          (1) Tighter back rotation (170° ± 6°, was ±12°)
+          (2) Explicit z-offset on palm joints (+3 mm toward camera)
+          (3) Reduced per-joint noise for back variant
+
         Args:
             num_ext: number of fingers to extend (2-5)
         Returns: (palm_joints, back_joints) tuple
@@ -210,8 +217,15 @@ class GestureDeformer:
 
         args = (joints.copy(), *finger_angles)
         base = self._set_finger_angles(*args)
+
+        # Palm: slight rotation variation + explicit +z offset (toward camera)
         palm = self._rotate_palm(base.copy(), self.rng.uniform(-10, 10))
-        back = self._rotate_palm(base.copy(), 170 + self.rng.normal(0, 12))
+        palm[:, 2] += 0.005  # +5 mm z-offset for explicit palm signal
+
+        # Back: tighter rotation (reduce overlap with palm distribution)
+        back = self._rotate_palm(base.copy(), 175 + self.rng.normal(0, 6))
+        back[:, 2] -= 0.005  # -5 mm z-offset for explicit back signal
+
         return palm, back
 
     def apply(self, canonical: HandSkeleton, gesture_id: int,

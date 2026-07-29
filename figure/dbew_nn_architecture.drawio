@@ -213,7 +213,7 @@
         <mxCell id="bar" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#90A4AE;strokeWidth=1;" vertex="1" parent="1">
           <mxGeometry x="46" y="754" width="1624" height="64" as="geometry" />
         </mxCell>
-        <mxCell id="bart" value="&lt;b&gt;57K 参数&lt;/b&gt;（CNN-only: 40K） | &lt;b&gt;221 KB&lt;/b&gt; float32 | &lt;b&gt;1.32 ms&lt;/b&gt; Snapdragon XR2 (Unity Barracuda)" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontColor=#37474F;" vertex="1" parent="1">
+        <mxCell id="bart" value="&lt;b&gt;145K 参数&lt;/b&gt;（CNN-only: 127K） | &lt;b&gt;567 KB&lt;/b&gt; float32 | &lt;b&gt;1.49 ms&lt;/b&gt; Snapdragon XR2 (Unity Barracuda)" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontColor=#37474F;" vertex="1" parent="1">
           <mxGeometry x="46" y="754" width="1624" height="64" as="geometry" />
         </mxCell>
 

@@ -174,7 +174,7 @@ class GestureClassifier(nn.Module):
     Lightweight 1D-CNN + Transformer gesture classifier for AR headsets.
 
     Input:  skeleton sequence [B, T=32, J=26, C=3]
-    Output: gesture logits   [B, 7]
+    Output: gesture logits   [B, 11]
     """
 
     def __init__(self, d_model: int = D_MODEL, n_heads: int = N_HEADS,
@@ -189,7 +189,10 @@ class GestureClassifier(nn.Module):
         self.spatial_embed = SpatialEmbedding(in_channels=3, d_model=d_model)
 
         # Stage 2: Joint pooling → [B, T, D]
-        self.joint_pool = JointWisePool(pool_type="mean")
+        # meanmax preserves extreme joint values (critical for palm/back z-axis discrimination)
+        self.joint_pool = JointWisePool(pool_type="meanmax")
+        # Project concatenated [mean; max] back to d_model
+        self.pool_proj = nn.Linear(d_model * 2, d_model, bias=False)
 
         # Stage 3: Positional encoding
         self.pos_enc = PositionalEncoding(d_model=d_model, max_len=64)
@@ -249,8 +252,9 @@ class GestureClassifier(nn.Module):
         # Stage 1: Spatial embedding
         x = self.spatial_embed(x)  # [B, T, J, D]
 
-        # Stage 2: Joint pooling
-        x = self.joint_pool(x)     # [B, T, D]
+        # Stage 2: Joint pooling + projection
+        x = self.joint_pool(x)     # [B, T, 2*D] for meanmax, [B, T, D] for mean
+        x = self.pool_proj(x)      # [B, T, D]
 
         # Stage 3: Positional encoding
         x = self.pos_enc(x)
