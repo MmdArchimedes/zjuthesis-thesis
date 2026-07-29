@@ -383,6 +383,33 @@ end for
   \captionof{figure}{十一类自定义手势实拍照片（Rokid Max Pro前置摄像头视角）。从(a)至(k)依次为：握拳、单指向左、单指向右、二指手心、二指手背、三指手心、三指手背、四指手心、四指手背、五指手心、五指手背。\label{fig:gesture_photos}}
 \end{center}
 
+\begin{center}
+    \captionof{table}{\label{tab:ch3_none_stats}滑动窗口数据集的类别分布统计}
+    \small
+    \begin{tabular}{lrrr}
+    \hline
+    类别 & 窗口数 & 占比（\%） & 类别权重$\alpha_c$ \\
+    \hline
+    握拳 & 2,580 & 9.3 & 1.54 \\
+    单指向左 & 2,530 & 9.1 & 1.57 \\
+    单指向右 & 2,480 & 8.9 & 1.60 \\
+    二指手心 & 2,540 & 9.1 & 1.57 \\
+    二指手背 & 2,520 & 9.1 & 1.58 \\
+    三指手心 & 2,510 & 9.0 & 1.59 \\
+    三指手背 & 2,490 & 9.0 & 1.60 \\
+    四指手心 & 2,550 & 9.2 & 1.56 \\
+    四指手背 & 2,530 & 9.1 & 1.57 \\
+    五指手心 & 2,540 & 9.1 & 1.57 \\
+    五指手背 & 2,530 & 9.1 & 1.57 \\
+    \hline
+    合计 & 27,800 & 100.0 & — \\
+    \hline
+    \end{tabular}
+    \noindent\begin{minipage}{\linewidth}\footnotesize
+    注：各类别占比基本均匀（约9\%），Focal Loss配合$\alpha_c$逆频率权重确保少数类不被多数类淹没。
+    \end{minipage}
+\end{center}
+
 \subsection{模型架构设计与训练策略}
 \label{sec:ch3_model_train}
 DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times T\times J\times C}$（$T=32$帧，$J=26$关节，$C=3$坐标），输出类别概率向量$\mathbf{p}\in\mathbb{R}^{11}$。图\ref{fig:dbew_nn_architecture}给出了完整的模型架构，各层标注了输入输出张量形状及关键超参数。
@@ -415,37 +442,9 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times 
 \end{equation}
 其中$\gamma=2.0$为聚焦参数，$\alpha_c$为各类别的逆频率权重。选择Focal Loss而非标准交叉熵的直接原因是类不平衡：NONE/过渡态类帧数占总帧数的约22.9\%（见表\ref{tab:ch3_none_stats}），若不加处理，模型将倾向于将所有输入预测为NONE以最小化经验损失。Focal Loss通过$(1-p_{i,c})^\gamma$因子降低已正确分类样本的损失贡献，使训练聚焦于难分样本，配合$\alpha_c$逆频率权重共同抑制了多数类的偏向。
 
-\begin{center}
-    \captionof{table}{\label{tab:ch3_none_stats}滑动窗口数据集的类别分布统计}
-    \small
-    \begin{tabular}{lrrr}
-    \hline
-    类别 & 窗口数 & 占比（\%） & 类别权重$\alpha_c$ \\
-    \hline
-    握拳 & 2,580 & 9.3 & 1.54 \\
-    单指向左 & 2,530 & 9.1 & 1.57 \\
-    单指向右 & 2,480 & 8.9 & 1.60 \\
-    二指手心 & 2,540 & 9.1 & 1.57 \\
-    二指手背 & 2,520 & 9.1 & 1.58 \\
-    三指手心 & 2,510 & 9.0 & 1.59 \\
-    三指手背 & 2,490 & 9.0 & 1.60 \\
-    四指手心 & 2,550 & 9.2 & 1.56 \\
-    四指手背 & 2,530 & 9.1 & 1.57 \\
-    五指手心 & 2,540 & 9.1 & 1.57 \\
-    五指手背 & 2,530 & 9.1 & 1.57 \\
-    \hline
-    合计 & 27,800 & 100.0 & — \\
-    \hline
-    \end{tabular}
-    \noindent\begin{minipage}{\linewidth}\footnotesize
-    注：各类别占比基本均匀（约9\%），Focal Loss配合$\alpha_c$逆频率权重确保少数类不被多数类淹没。
-    \end{minipage}
-\end{center}
-
 除主损失外，引入相邻训练批次间预测分布的KL散度作为时序平滑正则项$\mathcal{L}_{\mathrm{smooth}}$，惩罚模型在连续窗口上的剧烈预测跳变，总损失为$\mathcal{L}=\mathcal{L}_{\mathrm{focal}}+0.1\cdot\mathcal{L}_{\mathrm{smooth}}$。
 
 优化器选用AdamW（初始学习率$10^{-3}$，权重衰减$10^{-4}$，$\beta_1=0.9,\beta_2=0.999$），批次大小64，采用余弦退火学习率调度（$T_{\max}=80$，最低$10^{-6}$），早停耐心值设为10个epoch。前5个epoch冻结自注意力层参数以稳定底层CNN的时序特征提取，第6个epoch起解冻全部参数进行联合微调。正则化方面，Dropout（$p=0.1$）施加于自注意力层和分类头MLP的中间层；数据增强包括随机时间裁剪（$\pm5$帧滑动窗口偏移）、关节坐标高斯噪声（$\sigma=2$\,mm）和随机左右手镜像（概率0.5，$x$坐标取反）。
-
 
 \subsection{实验评估}
 
