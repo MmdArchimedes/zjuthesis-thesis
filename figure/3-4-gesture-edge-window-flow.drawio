@@ -5,23 +5,23 @@
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="v0" value="当前帧输入&#xa;g(t), s(t), t" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="40" y="200" width="150" height="56" as="geometry"/>
+        <mxCell id="v0" value="当前帧输入&#xa;g(t), s(t), t" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="170" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="v1" value="稳定计数更新&#xa;n_stable" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="230" y="200" width="150" height="56" as="geometry"/>
+        <mxCell id="v1" value="稳定计数更新&#xa;n_stable" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="250" y="180" width="170" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="v2" value="边沿候选&#xa;e(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="420" y="200" width="130" height="56" as="geometry"/>
+        <mxCell id="v2" value="边沿候选&#xa;e(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="460" y="180" width="150" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="v3" value="冷却窗检查&#xa;ψ(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="590" y="200" width="130" height="56" as="geometry"/>
+        <mxCell id="v3" value="冷却窗检查&#xa;ψ(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="650" y="180" width="150" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="v4" value="稳定帧检查&#xa;φ(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="760" y="200" width="130" height="56" as="geometry"/>
+        <mxCell id="v4" value="稳定帧检查&#xa;φ(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="840" y="180" width="150" height="70" as="geometry"/>
         </mxCell>
-        <mxCell id="v5" value="生成 GestureEvent&#xa;写入融合队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontFamily=Courier New;" vertex="1" parent="1">
-          <mxGeometry x="930" y="200" width="180" height="56" as="geometry"/>
+        <mxCell id="v5" value="生成 GestureEvent&#xa;写入融合队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=18;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="180" width="210" height="70" as="geometry"/>
         </mxCell>
 
         <mxCell id="e0" style="endArrow=block;html=1;strokeWidth=1.5;" edge="1" parent="1" source="v0" target="v1">
@@ -30,17 +30,17 @@
         <mxCell id="e1" style="endArrow=block;html=1;strokeWidth=1.5;" edge="1" parent="1" source="v1" target="v2">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e2" value="通过" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=11;" edge="1" parent="1" source="v2" target="v3">
+        <mxCell id="e2" value="通过" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=15;" edge="1" parent="1" source="v2" target="v3">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e3" value="通过" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=11;" edge="1" parent="1" source="v3" target="v4">
+        <mxCell id="e3" value="通过" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=15;" edge="1" parent="1" source="v3" target="v4">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e4" value="通过" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=11;" edge="1" parent="1" source="v4" target="v5">
+        <mxCell id="e4" value="通过" style="endArrow=block;html=1;strokeWidth=1.5;fontSize=15;" edge="1" parent="1" source="v4" target="v5">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <mxCell id="fb1" value="不通过" style="endArrow=block;html=1;strokeWidth=1.2;dashed=1;dashPattern=8 8;fontSize=10;fontColor=#666666;" edge="1" parent="1" source="v2" target="v0">
+        <mxCell id="fb1" value="不通过" style="endArrow=block;html=1;strokeWidth=1.2;dashed=1;dashPattern=8 8;fontSize=14;fontColor=#666666;" edge="1" parent="1" source="v2" target="v0">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="485" y="310"/>
@@ -48,7 +48,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="fb2" value="不通过" style="endArrow=block;html=1;strokeWidth=1.2;dashed=1;dashPattern=8 8;fontSize=10;fontColor=#666666;" edge="1" parent="1" source="v3" target="v0">
+        <mxCell id="fb2" value="不通过" style="endArrow=block;html=1;strokeWidth=1.2;dashed=1;dashPattern=8 8;fontSize=14;fontColor=#666666;" edge="1" parent="1" source="v3" target="v0">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="655" y="325"/>
@@ -56,7 +56,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="fb3" value="不通过" style="endArrow=block;html=1;strokeWidth=1.2;dashed=1;dashPattern=8 8;fontSize=10;fontColor=#666666;" edge="1" parent="1" source="v4" target="v0">
+        <mxCell id="fb3" value="不通过" style="endArrow=block;html=1;strokeWidth=1.2;dashed=1;dashPattern=8 8;fontSize=14;fontColor=#666666;" edge="1" parent="1" source="v4" target="v0">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="825" y="340"/>
