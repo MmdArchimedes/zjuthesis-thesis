@@ -1,0 +1,3063 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChartForge — AR沉浸式分析系统 第4章演示</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f5f7fa; color: #333; }
+header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; text-align: center; }
+header h1 { font-size: 24px; margin-bottom: 4px; }
+header p { font-size: 14px; opacity: 0.85; }
+.layout { display: flex; min-height: calc(100vh - 100px); }
+nav { width: 280px; background: white; border-right: 1px solid #e8e8e8; padding: 16px 0; overflow-y: auto; position: sticky; top: 0; height: 100vh; }
+nav ul { list-style: none; }
+nav li a { display: block; padding: 10px 20px; color: #555; text-decoration: none; font-size: 14px; border-left: 3px solid transparent; transition: all 0.2s; }
+nav li a:hover { background: #f0f2ff; color: #667eea; border-left-color: #667eea; }
+main { flex: 1; padding: 24px; max-width: 960px; }
+section { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+section h2 { font-size: 18px; margin-bottom: 16px; color: #333; }
+.chart-container { margin-bottom: 12px; }
+.chart-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.chart-badge { background: #667eea; color: white; padding: 2px 10px; border-radius: 12px; font-size: 12px; }
+.chart-query { color: #888; font-size: 13px; font-style: italic; }
+.chart-svas { margin-left: auto; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 8px; font-size: 12px; }
+.chart-details { margin-top: 8px; }
+.chart-details summary { cursor: pointer; color: #667eea; font-size: 12px; }
+.cif-json { background: #f8f8f8; padding: 10px; border-radius: 4px; font-size: 11px; overflow-x: auto; max-height: 200px; }
+footer { text-align: center; color: #aaa; font-size: 12px; padding: 20px; }
+</style>
+</head>
+<body>
+<header>
+    <h1>ChartForge — 声明式AR图表生成框架</h1>
+    <p>第4章 状态驱动的AR沉浸式可视化系统 | 12种图表类型 · 真实省域经济数据 · ECharts渲染</p>
+</header>
+<div class="layout">
+    <nav>
+        <ul>
+<li><a href="#section_bar">📊 2022年各省数字经济指数(DEL)柱状图</a></li>
+<li><a href="#section_line">📈 浙江省2014-2022年DEL与ES变化趋势</a></li>
+<li><a href="#section_scatter">🟢 各省DEL与ES散点图（按区域着色）</a></li>
+<li><a href="#section_area">🏔️ 2014-2022年全国数字经济与能源结构面积图</a></li>
+<li><a href="#section_heatmap">🔥 各省份各年份DEL热力图</a></li>
+<li><a href="#section_pie">🥧 2022年各区域DEL占比饼图</a></li>
+<li><a href="#section_radar">🎯 浙江省2022年综合指标雷达图</a></li>
+<li><a href="#section_sankey">🌊 能源结构区域流向桑基图</a></li>
+<li><a href="#section_treemap">🗺️ 2022年各省DEL矩形树图</a></li>
+<li><a href="#section_boxplot">📦 各区域DEL分布箱线图（2014-2022）</a></li>
+<li><a href="#section_gauge">⏱️ 2022年全国平均DEL仪表盘</a></li>
+<li><a href="#section_funnel">🔻 能源结构转化漏斗图</a></li>
+
+        </ul>
+    </nav>
+    <main>
+<section id="section_bar"><h2>📊 2022年各省数字经济指数(DEL)柱状图</h2>
+
+    <div class="chart-container" id="chart_76418">
+        <div class="chart-header">
+            <span class="chart-badge">柱状图</span>
+            <span class="chart-query">"2022年各省DEL柱状图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_76418_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "bar",
+  "metrics": ["DEL"],
+  "dimension": "province",
+  "year": 2022,
+  "confidence": 0.9
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_76418_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "2022年各省DEL指标",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "axis",
+    "axisPointer": {
+      "type": "shadow"
+    }
+  },
+  "xAxis": {
+    "type": "category",
+    "data": [
+      "北京",
+      "天津",
+      "河北",
+      "山西",
+      "内蒙古",
+      "辽宁",
+      "吉林",
+      "黑龙江",
+      "上海",
+      "江苏",
+      "浙江",
+      "安徽",
+      "福建",
+      "江西",
+      "山东",
+      "河南",
+      "湖北",
+      "湖南",
+      "广东",
+      "广西",
+      "海南",
+      "重庆",
+      "四川",
+      "贵州",
+      "云南",
+      "陕西",
+      "甘肃",
+      "青海",
+      "宁夏",
+      "新疆"
+    ],
+    "axisLabel": {
+      "rotate": 45,
+      "fontSize": 10
+    }
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "DEL"
+  },
+  "series": [
+    {
+      "type": "bar",
+      "data": [
+        0.589,
+        0.482,
+        0.278,
+        0.248,
+        0.288,
+        0.288,
+        0.23,
+        0.208,
+        0.578,
+        0.548,
+        0.562,
+        0.322,
+        0.418,
+        0.292,
+        0.462,
+        0.318,
+        0.362,
+        0.322,
+        0.602,
+        0.278,
+        0.328,
+        0.355,
+        0.318,
+        0.228,
+        0.242,
+        0.302,
+        0.228,
+        0.225,
+        0.252,
+        0.272
+      ],
+      "itemStyle": {
+        "color": {
+          "type": "linear",
+          "x": 0,
+          "y": 0,
+          "x2": 0,
+          "y2": 1,
+          "colorStops": [
+            {
+              "offset": 0,
+              "color": "#667eea"
+            },
+            {
+              "offset": 1,
+              "color": "#764ba2"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "grid": {
+    "bottom": 100
+  },
+  "dataZoom": [
+    {
+      "type": "slider",
+      "start": 0,
+      "end": 100
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_line"><h2>📈 浙江省2014-2022年DEL与ES变化趋势</h2>
+
+    <div class="chart-container" id="chart_35378">
+        <div class="chart-header">
+            <span class="chart-badge">折线图</span>
+            <span class="chart-query">"浙江省DEL和ES历年变化折线图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_35378_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "line",
+  "metrics": ["DEL", "ES"],
+  "dimension": "year",
+  "year": None,
+  "confidence": 0.8500000000000001
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_35378_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "DEL、ES变化趋势（2014-2022）",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "legend": {
+    "bottom": 0,
+    "type": "scroll"
+  },
+  "xAxis": {
+    "type": "category",
+    "data": [
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022"
+    ]
+  },
+  "yAxis": [
+    {
+      "type": "value",
+      "name": "DEL"
+    },
+    {
+      "type": "value",
+      "name": "ES"
+    }
+  ],
+  "series": [
+    {
+      "name": "浙江",
+      "type": "line",
+      "data": [
+        0.352,
+        0.375,
+        0.402,
+        0.432,
+        0.465,
+        0.495,
+        0.512,
+        0.538,
+        0.562
+      ],
+      "smooth": true,
+      "itemStyle": {
+        "color": "#5470c6"
+      }
+    },
+    {
+      "name": "ES(浙江)",
+      "type": "line",
+      "data": [
+        0.578,
+        0.592,
+        0.608,
+        0.625,
+        0.642,
+        0.658,
+        0.672,
+        0.688,
+        0.702
+      ],
+      "smooth": true,
+      "yAxisIndex": 1,
+      "itemStyle": {
+        "color": "#91cc75"
+      }
+    }
+  ],
+  "grid": {
+    "bottom": 80
+  }
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_scatter"><h2>🟢 各省DEL与ES散点图（按区域着色）</h2>
+
+    <div class="chart-container" id="chart_76654">
+        <div class="chart-header">
+            <span class="chart-badge">散点图</span>
+            <span class="chart-query">"各省DEL与ES散点图按区域着色"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_76654_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "scatter",
+  "metrics": ["DEL", "ES"],
+  "dimension": "region",
+  "year": None,
+  "confidence": 0.9
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_76654_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "2022年各省DEL vs ES",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "item",
+    "formatter": "function(p){{return p.value[2]+'<br/>'+'{m1}: '+p.value[0].toFixed(4)+'<br/>'+'{m2}: '+p.value[1].toFixed(4);}}"
+  },
+  "legend": {
+    "bottom": 0
+  },
+  "xAxis": {
+    "type": "value",
+    "name": "DEL",
+    "scale": true
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "ES",
+    "scale": true
+  },
+  "series": [
+    {
+      "name": "东部",
+      "type": "scatter",
+      "data": [
+        [
+          0.589,
+          0.738,
+          "北京"
+        ],
+        [
+          0.482,
+          0.672,
+          "天津"
+        ],
+        [
+          0.278,
+          0.462,
+          "河北"
+        ],
+        [
+          0.578,
+          0.728,
+          "上海"
+        ],
+        [
+          0.548,
+          0.685,
+          "江苏"
+        ],
+        [
+          0.562,
+          0.702,
+          "浙江"
+        ],
+        [
+          0.418,
+          0.589,
+          "福建"
+        ],
+        [
+          0.462,
+          0.602,
+          "山东"
+        ],
+        [
+          0.602,
+          0.722,
+          "广东"
+        ],
+        [
+          0.328,
+          0.562,
+          "海南"
+        ]
+      ],
+      "symbolSize": 12,
+      "itemStyle": {
+        "color": "#5470c6"
+      },
+      "emphasis": {
+        "itemStyle": {
+          "borderColor": "#333",
+          "borderWidth": 2
+        }
+      }
+    },
+    {
+      "name": "中部",
+      "type": "scatter",
+      "data": [
+        [
+          0.248,
+          0.428,
+          "山西"
+        ],
+        [
+          0.322,
+          0.515,
+          "安徽"
+        ],
+        [
+          0.292,
+          0.492,
+          "江西"
+        ],
+        [
+          0.318,
+          0.482,
+          "河南"
+        ],
+        [
+          0.362,
+          0.525,
+          "湖北"
+        ],
+        [
+          0.322,
+          0.505,
+          "湖南"
+        ]
+      ],
+      "symbolSize": 12,
+      "itemStyle": {
+        "color": "#91cc75"
+      },
+      "emphasis": {
+        "itemStyle": {
+          "borderColor": "#333",
+          "borderWidth": 2
+        }
+      }
+    },
+    {
+      "name": "西部",
+      "type": "scatter",
+      "data": [
+        [
+          0.288,
+          0.521,
+          "内蒙古"
+        ],
+        [
+          0.278,
+          0.485,
+          "广西"
+        ],
+        [
+          0.355,
+          0.552,
+          "重庆"
+        ],
+        [
+          0.318,
+          0.495,
+          "四川"
+        ],
+        [
+          0.228,
+          0.425,
+          "贵州"
+        ],
+        [
+          0.242,
+          0.442,
+          "云南"
+        ],
+        [
+          0.302,
+          0.482,
+          "陕西"
+        ],
+        [
+          0.228,
+          0.415,
+          "甘肃"
+        ],
+        [
+          0.225,
+          0.435,
+          "青海"
+        ],
+        [
+          0.252,
+          0.452,
+          "宁夏"
+        ],
+        [
+          0.272,
+          0.472,
+          "新疆"
+        ]
+      ],
+      "symbolSize": 12,
+      "itemStyle": {
+        "color": "#fac858"
+      },
+      "emphasis": {
+        "itemStyle": {
+          "borderColor": "#333",
+          "borderWidth": 2
+        }
+      }
+    },
+    {
+      "name": "东北",
+      "type": "scatter",
+      "data": [
+        [
+          0.288,
+          0.515,
+          "辽宁"
+        ],
+        [
+          0.23,
+          0.486,
+          "吉林"
+        ],
+        [
+          0.208,
+          0.472,
+          "黑龙江"
+        ]
+      ],
+      "symbolSize": 12,
+      "itemStyle": {
+        "color": "#ee6666"
+      },
+      "emphasis": {
+        "itemStyle": {
+          "borderColor": "#333",
+          "borderWidth": 2
+        }
+      }
+    }
+  ],
+  "grid": {
+    "bottom": 60,
+    "left": 60,
+    "right": 30
+  }
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_area"><h2>🏔️ 2014-2022年全国数字经济与能源结构面积图</h2>
+
+    <div class="chart-container" id="chart_61841">
+        <div class="chart-header">
+            <span class="chart-badge">面积图</span>
+            <span class="chart-query">"DEL和ES年度趋势面积图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_61841_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "area",
+  "metrics": ["DEL", "ES"],
+  "dimension": "province",
+  "year": None,
+  "confidence": 0.8
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_61841_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "全国数字经济与能源结构年度趋势",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "legend": {
+    "bottom": 0
+  },
+  "xAxis": {
+    "type": "category",
+    "data": [
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "boundaryGap": false
+  },
+  "yAxis": {
+    "type": "value"
+  },
+  "series": [
+    {
+      "name": "DEL",
+      "type": "line",
+      "data": [
+        0.1759,
+        0.1936,
+        0.214,
+        0.2368,
+        0.2616,
+        0.2866,
+        0.3027,
+        0.3247,
+        0.3475
+      ],
+      "smooth": true,
+      "areaStyle": {
+        "opacity": 0.6
+      },
+      "stack": "total",
+      "itemStyle": {
+        "color": "#5470c6"
+      }
+    },
+    {
+      "name": "ES",
+      "type": "line",
+      "data": [
+        0.4135,
+        0.4272,
+        0.4421,
+        0.4584,
+        0.4748,
+        0.4909,
+        0.5046,
+        0.5198,
+        0.5353
+      ],
+      "smooth": true,
+      "areaStyle": {
+        "opacity": 0.6
+      },
+      "stack": "total",
+      "itemStyle": {
+        "color": "#91cc75"
+      }
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_heatmap"><h2>🔥 各省份各年份DEL热力图</h2>
+
+    <div class="chart-container" id="chart_25620">
+        <div class="chart-header">
+            <span class="chart-badge">热力图</span>
+            <span class="chart-query">"各省各年份DEL热力图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_25620_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "heatmap",
+  "metrics": ["DEL"],
+  "dimension": "year",
+  "year": None,
+  "confidence": 0.9
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_25620_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "各省各年份DEL热力图",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "position": "top",
+    "formatter": "function(p){return y_labels[p.value[1]]+' '+x_labels[p.value[0]]+'<br/>DEL: '+p.value[2].toFixed(4);}"
+  },
+  "xAxis": {
+    "type": "category",
+    "data": [
+      "2014",
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "splitArea": {
+      "show": true
+    }
+  },
+  "yAxis": {
+    "type": "category",
+    "data": [
+      "北京",
+      "天津",
+      "河北",
+      "山西",
+      "内蒙古",
+      "辽宁",
+      "吉林",
+      "黑龙江",
+      "上海",
+      "江苏",
+      "浙江",
+      "安徽",
+      "福建",
+      "江西",
+      "山东",
+      "河南",
+      "湖北",
+      "湖南",
+      "广东",
+      "广西",
+      "海南",
+      "重庆",
+      "四川",
+      "贵州",
+      "云南",
+      "陕西",
+      "甘肃",
+      "青海",
+      "宁夏",
+      "新疆"
+    ],
+    "splitArea": {
+      "show": true
+    },
+    "axisLabel": {
+      "fontSize": 8
+    }
+  },
+  "visualMap": {
+    "min": 0.1,
+    "max": 0.8,
+    "calculable": true,
+    "orient": "horizontal",
+    "left": "center",
+    "bottom": "0%",
+    "inRange": {
+      "color": [
+        "#f0f9e8",
+        "#bae4bc",
+        "#7bccc4",
+        "#43a2ca",
+        "#0868ac"
+      ]
+    }
+  },
+  "series": [
+    {
+      "type": "heatmap",
+      "data": [
+        [
+          0,
+          0,
+          0.389
+        ],
+        [
+          1,
+          0,
+          0.412
+        ],
+        [
+          2,
+          0,
+          0.438
+        ],
+        [
+          3,
+          0,
+          0.465
+        ],
+        [
+          4,
+          0,
+          0.498
+        ],
+        [
+          5,
+          0,
+          0.528
+        ],
+        [
+          6,
+          0,
+          0.542
+        ],
+        [
+          7,
+          0,
+          0.568
+        ],
+        [
+          8,
+          0,
+          0.589
+        ],
+        [
+          0,
+          1,
+          0.312
+        ],
+        [
+          1,
+          1,
+          0.335
+        ],
+        [
+          2,
+          1,
+          0.358
+        ],
+        [
+          3,
+          1,
+          0.382
+        ],
+        [
+          4,
+          1,
+          0.405
+        ],
+        [
+          5,
+          1,
+          0.428
+        ],
+        [
+          6,
+          1,
+          0.445
+        ],
+        [
+          7,
+          1,
+          0.462
+        ],
+        [
+          8,
+          1,
+          0.482
+        ],
+        [
+          0,
+          2,
+          0.128
+        ],
+        [
+          1,
+          2,
+          0.142
+        ],
+        [
+          2,
+          2,
+          0.158
+        ],
+        [
+          3,
+          2,
+          0.175
+        ],
+        [
+          4,
+          2,
+          0.195
+        ],
+        [
+          5,
+          2,
+          0.218
+        ],
+        [
+          6,
+          2,
+          0.235
+        ],
+        [
+          7,
+          2,
+          0.256
+        ],
+        [
+          8,
+          2,
+          0.278
+        ],
+        [
+          0,
+          3,
+          0.098
+        ],
+        [
+          1,
+          3,
+          0.112
+        ],
+        [
+          2,
+          3,
+          0.128
+        ],
+        [
+          3,
+          3,
+          0.145
+        ],
+        [
+          4,
+          3,
+          0.165
+        ],
+        [
+          5,
+          3,
+          0.188
+        ],
+        [
+          6,
+          3,
+          0.205
+        ],
+        [
+          7,
+          3,
+          0.225
+        ],
+        [
+          8,
+          3,
+          0.248
+        ],
+        [
+          0,
+          4,
+          0.115
+        ],
+        [
+          1,
+          4,
+          0.132
+        ],
+        [
+          2,
+          4,
+          0.152
+        ],
+        [
+          3,
+          4,
+          0.175
+        ],
+        [
+          4,
+          4,
+          0.198
+        ],
+        [
+          5,
+          4,
+          0.224
+        ],
+        [
+          6,
+          4,
+          0.242
+        ],
+        [
+          7,
+          4,
+          0.265
+        ],
+        [
+          8,
+          4,
+          0.288
+        ],
+        [
+          0,
+          5,
+          0.168
+        ],
+        [
+          1,
+          5,
+          0.185
+        ],
+        [
+          2,
+          5,
+          0.202
+        ],
+        [
+          3,
+          5,
+          0.218
+        ],
+        [
+          4,
+          5,
+          0.232
+        ],
+        [
+          5,
+          5,
+          0.248
+        ],
+        [
+          6,
+          5,
+          0.258
+        ],
+        [
+          7,
+          5,
+          0.272
+        ],
+        [
+          8,
+          5,
+          0.288
+        ],
+        [
+          0,
+          6,
+          0.102
+        ],
+        [
+          1,
+          6,
+          0.118
+        ],
+        [
+          2,
+          6,
+          0.135
+        ],
+        [
+          3,
+          6,
+          0.152
+        ],
+        [
+          4,
+          6,
+          0.168
+        ],
+        [
+          5,
+          6,
+          0.182
+        ],
+        [
+          6,
+          6,
+          0.195
+        ],
+        [
+          7,
+          6,
+          0.212
+        ],
+        [
+          8,
+          6,
+          0.23
+        ],
+        [
+          0,
+          7,
+          0.095
+        ],
+        [
+          1,
+          7,
+          0.108
+        ],
+        [
+          2,
+          7,
+          0.122
+        ],
+        [
+          3,
+          7,
+          0.138
+        ],
+        [
+          4,
+          7,
+          0.152
+        ],
+        [
+          5,
+          7,
+          0.168
+        ],
+        [
+          6,
+          7,
+          0.178
+        ],
+        [
+          7,
+          7,
+          0.192
+        ],
+        [
+          8,
+          7,
+          0.208
+        ],
+        [
+          0,
+          8,
+          0.378
+        ],
+        [
+          1,
+          8,
+          0.402
+        ],
+        [
+          2,
+          8,
+          0.428
+        ],
+        [
+          3,
+          8,
+          0.455
+        ],
+        [
+          4,
+          8,
+          0.485
+        ],
+        [
+          5,
+          8,
+          0.512
+        ],
+        [
+          6,
+          8,
+          0.528
+        ],
+        [
+          7,
+          8,
+          0.552
+        ],
+        [
+          8,
+          8,
+          0.578
+        ],
+        [
+          0,
+          9,
+          0.345
+        ],
+        [
+          1,
+          9,
+          0.368
+        ],
+        [
+          2,
+          9,
+          0.392
+        ],
+        [
+          3,
+          9,
+          0.418
+        ],
+        [
+          4,
+          9,
+          0.448
+        ],
+        [
+          5,
+          9,
+          0.478
+        ],
+        [
+          6,
+          9,
+          0.498
+        ],
+        [
+          7,
+          9,
+          0.522
+        ],
+        [
+          8,
+          9,
+          0.548
+        ],
+        [
+          0,
+          10,
+          0.352
+        ],
+        [
+          1,
+          10,
+          0.375
+        ],
+        [
+          2,
+          10,
+          0.402
+        ],
+        [
+          3,
+          10,
+          0.432
+        ],
+        [
+          4,
+          10,
+          0.465
+        ],
+        [
+          5,
+          10,
+          0.495
+        ],
+        [
+          6,
+          10,
+          0.512
+        ],
+        [
+          7,
+          10,
+          0.538
+        ],
+        [
+          8,
+          10,
+          0.562
+        ],
+        [
+          0,
+          11,
+          0.142
+        ],
+        [
+          1,
+          11,
+          0.158
+        ],
+        [
+          2,
+          11,
+          0.178
+        ],
+        [
+          3,
+          11,
+          0.202
+        ],
+        [
+          4,
+          11,
+          0.228
+        ],
+        [
+          5,
+          11,
+          0.255
+        ],
+        [
+          6,
+          11,
+          0.272
+        ],
+        [
+          7,
+          11,
+          0.298
+        ],
+        [
+          8,
+          11,
+          0.322
+        ],
+        [
+          0,
+          12,
+          0.235
+        ],
+        [
+          1,
+          12,
+          0.255
+        ],
+        [
+          2,
+          12,
+          0.278
+        ],
+        [
+          3,
+          12,
+          0.302
+        ],
+        [
+          4,
+          12,
+          0.328
+        ],
+        [
+          5,
+          12,
+          0.352
+        ],
+        [
+          6,
+          12,
+          0.368
+        ],
+        [
+          7,
+          12,
+          0.392
+        ],
+        [
+          8,
+          12,
+          0.418
+        ],
+        [
+          0,
+          13,
+          0.112
+        ],
+        [
+          1,
+          13,
+          0.128
+        ],
+        [
+          2,
+          13,
+          0.148
+        ],
+        [
+          3,
+          13,
+          0.172
+        ],
+        [
+          4,
+          13,
+          0.198
+        ],
+        [
+          5,
+          13,
+          0.225
+        ],
+        [
+          6,
+          13,
+          0.242
+        ],
+        [
+          7,
+          13,
+          0.268
+        ],
+        [
+          8,
+          13,
+          0.292
+        ],
+        [
+          0,
+          14,
+          0.268
+        ],
+        [
+          1,
+          14,
+          0.288
+        ],
+        [
+          2,
+          14,
+          0.312
+        ],
+        [
+          3,
+          14,
+          0.338
+        ],
+        [
+          4,
+          14,
+          0.368
+        ],
+        [
+          5,
+          14,
+          0.395
+        ],
+        [
+          6,
+          14,
+          0.412
+        ],
+        [
+          7,
+          14,
+          0.438
+        ],
+        [
+          8,
+          14,
+          0.462
+        ],
+        [
+          0,
+          15,
+          0.135
+        ],
+        [
+          1,
+          15,
+          0.152
+        ],
+        [
+          2,
+          15,
+          0.172
+        ],
+        [
+          3,
+          15,
+          0.195
+        ],
+        [
+          4,
+          15,
+          0.222
+        ],
+        [
+          5,
+          15,
+          0.252
+        ],
+        [
+          6,
+          15,
+          0.268
+        ],
+        [
+          7,
+          15,
+          0.292
+        ],
+        [
+          8,
+          15,
+          0.318
+        ],
+        [
+          0,
+          16,
+          0.168
+        ],
+        [
+          1,
+          16,
+          0.188
+        ],
+        [
+          2,
+          16,
+          0.212
+        ],
+        [
+          3,
+          16,
+          0.238
+        ],
+        [
+          4,
+          16,
+          0.268
+        ],
+        [
+          5,
+          16,
+          0.298
+        ],
+        [
+          6,
+          16,
+          0.312
+        ],
+        [
+          7,
+          16,
+          0.338
+        ],
+        [
+          8,
+          16,
+          0.362
+        ],
+        [
+          0,
+          17,
+          0.145
+        ],
+        [
+          1,
+          17,
+          0.162
+        ],
+        [
+          2,
+          17,
+          0.182
+        ],
+        [
+          3,
+          17,
+          0.205
+        ],
+        [
+          4,
+          17,
+          0.232
+        ],
+        [
+          5,
+          17,
+          0.258
+        ],
+        [
+          6,
+          17,
+          0.275
+        ],
+        [
+          7,
+          17,
+          0.298
+        ],
+        [
+          8,
+          17,
+          0.322
+        ],
+        [
+          0,
+          18,
+          0.402
+        ],
+        [
+          1,
+          18,
+          0.428
+        ],
+        [
+          2,
+          18,
+          0.455
+        ],
+        [
+          3,
+          18,
+          0.485
+        ],
+        [
+          4,
+          18,
+          0.515
+        ],
+        [
+          5,
+          18,
+          0.542
+        ],
+        [
+          6,
+          18,
+          0.558
+        ],
+        [
+          7,
+          18,
+          0.582
+        ],
+        [
+          8,
+          18,
+          0.602
+        ],
+        [
+          0,
+          19,
+          0.102
+        ],
+        [
+          1,
+          19,
+          0.118
+        ],
+        [
+          2,
+          19,
+          0.138
+        ],
+        [
+          3,
+          19,
+          0.162
+        ],
+        [
+          4,
+          19,
+          0.188
+        ],
+        [
+          5,
+          19,
+          0.215
+        ],
+        [
+          6,
+          19,
+          0.232
+        ],
+        [
+          7,
+          19,
+          0.255
+        ],
+        [
+          8,
+          19,
+          0.278
+        ],
+        [
+          0,
+          20,
+          0.168
+        ],
+        [
+          1,
+          20,
+          0.185
+        ],
+        [
+          2,
+          20,
+          0.202
+        ],
+        [
+          3,
+          20,
+          0.222
+        ],
+        [
+          4,
+          20,
+          0.245
+        ],
+        [
+          5,
+          20,
+          0.268
+        ],
+        [
+          6,
+          20,
+          0.285
+        ],
+        [
+          7,
+          20,
+          0.305
+        ],
+        [
+          8,
+          20,
+          0.328
+        ],
+        [
+          0,
+          21,
+          0.168
+        ],
+        [
+          1,
+          21,
+          0.188
+        ],
+        [
+          2,
+          21,
+          0.212
+        ],
+        [
+          3,
+          21,
+          0.238
+        ],
+        [
+          4,
+          21,
+          0.265
+        ],
+        [
+          5,
+          21,
+          0.292
+        ],
+        [
+          6,
+          21,
+          0.308
+        ],
+        [
+          7,
+          21,
+          0.332
+        ],
+        [
+          8,
+          21,
+          0.355
+        ],
+        [
+          0,
+          22,
+          0.142
+        ],
+        [
+          1,
+          22,
+          0.158
+        ],
+        [
+          2,
+          22,
+          0.178
+        ],
+        [
+          3,
+          22,
+          0.202
+        ],
+        [
+          4,
+          22,
+          0.228
+        ],
+        [
+          5,
+          22,
+          0.255
+        ],
+        [
+          6,
+          22,
+          0.272
+        ],
+        [
+          7,
+          22,
+          0.295
+        ],
+        [
+          8,
+          22,
+          0.318
+        ],
+        [
+          0,
+          23,
+          0.072
+        ],
+        [
+          1,
+          23,
+          0.085
+        ],
+        [
+          2,
+          23,
+          0.102
+        ],
+        [
+          3,
+          23,
+          0.122
+        ],
+        [
+          4,
+          23,
+          0.145
+        ],
+        [
+          5,
+          23,
+          0.168
+        ],
+        [
+          6,
+          23,
+          0.185
+        ],
+        [
+          7,
+          23,
+          0.205
+        ],
+        [
+          8,
+          23,
+          0.228
+        ],
+        [
+          0,
+          24,
+          0.085
+        ],
+        [
+          1,
+          24,
+          0.098
+        ],
+        [
+          2,
+          24,
+          0.115
+        ],
+        [
+          3,
+          24,
+          0.135
+        ],
+        [
+          4,
+          24,
+          0.158
+        ],
+        [
+          5,
+          24,
+          0.182
+        ],
+        [
+          6,
+          24,
+          0.198
+        ],
+        [
+          7,
+          24,
+          0.218
+        ],
+        [
+          8,
+          24,
+          0.242
+        ],
+        [
+          0,
+          25,
+          0.128
+        ],
+        [
+          1,
+          25,
+          0.145
+        ],
+        [
+          2,
+          25,
+          0.165
+        ],
+        [
+          3,
+          25,
+          0.188
+        ],
+        [
+          4,
+          25,
+          0.212
+        ],
+        [
+          5,
+          25,
+          0.238
+        ],
+        [
+          6,
+          25,
+          0.255
+        ],
+        [
+          7,
+          25,
+          0.278
+        ],
+        [
+          8,
+          25,
+          0.302
+        ],
+        [
+          0,
+          26,
+          0.072
+        ],
+        [
+          1,
+          26,
+          0.085
+        ],
+        [
+          2,
+          26,
+          0.102
+        ],
+        [
+          3,
+          26,
+          0.122
+        ],
+        [
+          4,
+          26,
+          0.145
+        ],
+        [
+          5,
+          26,
+          0.168
+        ],
+        [
+          6,
+          26,
+          0.185
+        ],
+        [
+          7,
+          26,
+          0.205
+        ],
+        [
+          8,
+          26,
+          0.228
+        ],
+        [
+          0,
+          27,
+          0.068
+        ],
+        [
+          1,
+          27,
+          0.082
+        ],
+        [
+          2,
+          27,
+          0.098
+        ],
+        [
+          3,
+          27,
+          0.118
+        ],
+        [
+          4,
+          27,
+          0.142
+        ],
+        [
+          5,
+          27,
+          0.165
+        ],
+        [
+          6,
+          27,
+          0.182
+        ],
+        [
+          7,
+          27,
+          0.202
+        ],
+        [
+          8,
+          27,
+          0.225
+        ],
+        [
+          0,
+          28,
+          0.085
+        ],
+        [
+          1,
+          28,
+          0.102
+        ],
+        [
+          2,
+          28,
+          0.122
+        ],
+        [
+          3,
+          28,
+          0.145
+        ],
+        [
+          4,
+          28,
+          0.168
+        ],
+        [
+          5,
+          28,
+          0.192
+        ],
+        [
+          6,
+          28,
+          0.208
+        ],
+        [
+          7,
+          28,
+          0.228
+        ],
+        [
+          8,
+          28,
+          0.252
+        ],
+        [
+          0,
+          29,
+          0.098
+        ],
+        [
+          1,
+          29,
+          0.115
+        ],
+        [
+          2,
+          29,
+          0.135
+        ],
+        [
+          3,
+          29,
+          0.158
+        ],
+        [
+          4,
+          29,
+          0.182
+        ],
+        [
+          5,
+          29,
+          0.208
+        ],
+        [
+          6,
+          29,
+          0.225
+        ],
+        [
+          7,
+          29,
+          0.248
+        ],
+        [
+          8,
+          29,
+          0.272
+        ]
+      ],
+      "label": {
+        "show": false
+      },
+      "emphasis": {
+        "itemStyle": {
+          "shadowBlur": 10,
+          "shadowColor": "rgba(0,0,0,0.5)"
+        }
+      }
+    }
+  ],
+  "grid": {
+    "bottom": "15%",
+    "left": "12%",
+    "right": "5%",
+    "top": "10%"
+  }
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_pie"><h2>🥧 2022年各区域DEL占比饼图</h2>
+
+    <div class="chart-container" id="chart_90854">
+        <div class="chart-header">
+            <span class="chart-badge">饼图</span>
+            <span class="chart-query">"2022年四大区域DEL饼图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_90854_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "pie",
+  "metrics": ["DEL"],
+  "dimension": "region",
+  "year": 2022,
+  "confidence": 1.0
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_90854_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "2022年各区域DEL占比",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "item",
+    "formatter": "{b}: {c} ({d}%)"
+  },
+  "legend": {
+    "bottom": 0
+  },
+  "series": [
+    {
+      "type": "pie",
+      "radius": [
+        "40%",
+        "70%"
+      ],
+      "center": [
+        "50%",
+        "50%"
+      ],
+      "data": [
+        {
+          "name": "东部",
+          "value": 4.85
+        },
+        {
+          "name": "中部",
+          "value": 1.86
+        },
+        {
+          "name": "西部",
+          "value": 2.99
+        },
+        {
+          "name": "东北",
+          "value": 0.73
+        }
+      ],
+      "emphasis": {
+        "itemStyle": {
+          "shadowBlur": 10,
+          "shadowOffsetX": 0,
+          "shadowColor": "rgba(0,0,0,0.5)"
+        }
+      },
+      "label": {
+        "formatter": "{b}\n{d}%"
+      }
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_radar"><h2>🎯 浙江省2022年综合指标雷达图</h2>
+
+    <div class="chart-container" id="chart_86839">
+        <div class="chart-header">
+            <span class="chart-badge">雷达图</span>
+            <span class="chart-query">"浙江省DEL ES PGDP URBAN INDS TEIN雷达图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_86839_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "radar",
+  "metrics": ["DEL", "ES", "PGDP", "URBAN", "INDS", "TEIN"],
+  "dimension": "province",
+  "year": None,
+  "confidence": 0.8500000000000001
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_86839_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "浙江2022年综合指标",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {},
+  "legend": {
+    "data": [
+      "浙江"
+    ],
+    "bottom": 0
+  },
+  "radar": {
+    "indicator": [
+      {
+        "name": "DEL",
+        "max": 1.0
+      },
+      {
+        "name": "ES",
+        "max": 1.0
+      },
+      {
+        "name": "PGDP",
+        "max": 1.0
+      },
+      {
+        "name": "URBAN",
+        "max": 1.0
+      },
+      {
+        "name": "INDS",
+        "max": 1.0
+      },
+      {
+        "name": "TEIN",
+        "max": 1.0
+      }
+    ],
+    "center": [
+      "50%",
+      "50%"
+    ],
+    "radius": "65%"
+  },
+  "series": [
+    {
+      "type": "radar",
+      "data": [
+        {
+          "value": [
+            0.7025,
+            0.8775,
+            0.8028,
+            0.772,
+            0.5607,
+            0.8538
+          ],
+          "name": "浙江"
+        }
+      ],
+      "areaStyle": {
+        "opacity": 0.3
+      }
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_sankey"><h2>🌊 能源结构区域流向桑基图</h2>
+
+    <div class="chart-container" id="chart_94485">
+        <div class="chart-header">
+            <span class="chart-badge">桑基图</span>
+            <span class="chart-query">"能源结构从区域到类型的桑基图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_94485_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "sankey",
+  "metrics": ["ES"],
+  "dimension": "region",
+  "year": None,
+  "confidence": 0.9
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_94485_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "2022年能源结构区域流向",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "item",
+    "triggerOn": "mousemove"
+  },
+  "series": [
+    {
+      "type": "sankey",
+      "layout": "none",
+      "emphasis": {
+        "focus": "adjacency"
+      },
+      "nodeAlign": "left",
+      "data": [
+        {
+          "name": "东部"
+        },
+        {
+          "name": "中部"
+        },
+        {
+          "name": "西部"
+        },
+        {
+          "name": "东北"
+        },
+        {
+          "name": "煤炭"
+        },
+        {
+          "name": "石油"
+        },
+        {
+          "name": "天然气"
+        },
+        {
+          "name": "可再生能源"
+        },
+        {
+          "name": "电力"
+        }
+      ],
+      "links": [
+        {
+          "source": "东部",
+          "target": "煤炭",
+          "value": 12.7
+        },
+        {
+          "source": "东部",
+          "target": "石油",
+          "value": 3.6
+        },
+        {
+          "source": "东部",
+          "target": "天然气",
+          "value": 2.7
+        },
+        {
+          "source": "东部",
+          "target": "可再生能源",
+          "value": 2.5
+        },
+        {
+          "source": "东部",
+          "target": "电力",
+          "value": 1.3
+        },
+        {
+          "source": "中部",
+          "target": "煤炭",
+          "value": 15.8
+        },
+        {
+          "source": "中部",
+          "target": "石油",
+          "value": 4.4
+        },
+        {
+          "source": "中部",
+          "target": "天然气",
+          "value": 2.1
+        },
+        {
+          "source": "中部",
+          "target": "可再生能源",
+          "value": 1.6
+        },
+        {
+          "source": "中部",
+          "target": "电力",
+          "value": 0.9
+        },
+        {
+          "source": "西部",
+          "target": "煤炭",
+          "value": 16.5
+        },
+        {
+          "source": "西部",
+          "target": "石油",
+          "value": 4.5
+        },
+        {
+          "source": "西部",
+          "target": "天然气",
+          "value": 2.0
+        },
+        {
+          "source": "西部",
+          "target": "可再生能源",
+          "value": 1.4
+        },
+        {
+          "source": "西部",
+          "target": "电力",
+          "value": 0.8
+        },
+        {
+          "source": "东北",
+          "target": "煤炭",
+          "value": 17.0
+        },
+        {
+          "source": "东北",
+          "target": "石油",
+          "value": 4.4
+        },
+        {
+          "source": "东北",
+          "target": "天然气",
+          "value": 2.1
+        },
+        {
+          "source": "东北",
+          "target": "可再生能源",
+          "value": 1.3
+        },
+        {
+          "source": "东北",
+          "target": "电力",
+          "value": 0.7
+        }
+      ],
+      "lineStyle": {
+        "color": "gradient",
+        "curveness": 0.5
+      }
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_treemap"><h2>🗺️ 2022年各省DEL矩形树图</h2>
+
+    <div class="chart-container" id="chart_99073">
+        <div class="chart-header">
+            <span class="chart-badge">矩形树图</span>
+            <span class="chart-query">"各省DEL矩形树图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_99073_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "treemap",
+  "metrics": ["DEL"],
+  "dimension": "province",
+  "year": None,
+  "confidence": 0.8
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_99073_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "2022年各省DEL矩形树图",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "formatter": "function(p){{return p.name+'<br/>'+'{metric}: '+p.value.toFixed(4);}}"
+  },
+  "series": [
+    {
+      "type": "treemap",
+      "data": [
+        {
+          "name": "东部",
+          "children": [
+            {
+              "name": "北京",
+              "value": 0.589
+            },
+            {
+              "name": "天津",
+              "value": 0.482
+            },
+            {
+              "name": "河北",
+              "value": 0.278
+            },
+            {
+              "name": "上海",
+              "value": 0.578
+            },
+            {
+              "name": "江苏",
+              "value": 0.548
+            },
+            {
+              "name": "浙江",
+              "value": 0.562
+            },
+            {
+              "name": "福建",
+              "value": 0.418
+            },
+            {
+              "name": "山东",
+              "value": 0.462
+            },
+            {
+              "name": "广东",
+              "value": 0.602
+            },
+            {
+              "name": "海南",
+              "value": 0.328
+            }
+          ]
+        },
+        {
+          "name": "中部",
+          "children": [
+            {
+              "name": "山西",
+              "value": 0.248
+            },
+            {
+              "name": "安徽",
+              "value": 0.322
+            },
+            {
+              "name": "江西",
+              "value": 0.292
+            },
+            {
+              "name": "河南",
+              "value": 0.318
+            },
+            {
+              "name": "湖北",
+              "value": 0.362
+            },
+            {
+              "name": "湖南",
+              "value": 0.322
+            }
+          ]
+        },
+        {
+          "name": "西部",
+          "children": [
+            {
+              "name": "内蒙古",
+              "value": 0.288
+            },
+            {
+              "name": "广西",
+              "value": 0.278
+            },
+            {
+              "name": "重庆",
+              "value": 0.355
+            },
+            {
+              "name": "四川",
+              "value": 0.318
+            },
+            {
+              "name": "贵州",
+              "value": 0.228
+            },
+            {
+              "name": "云南",
+              "value": 0.242
+            },
+            {
+              "name": "陕西",
+              "value": 0.302
+            },
+            {
+              "name": "甘肃",
+              "value": 0.228
+            },
+            {
+              "name": "青海",
+              "value": 0.225
+            },
+            {
+              "name": "宁夏",
+              "value": 0.252
+            },
+            {
+              "name": "新疆",
+              "value": 0.272
+            }
+          ]
+        },
+        {
+          "name": "东北",
+          "children": [
+            {
+              "name": "辽宁",
+              "value": 0.288
+            },
+            {
+              "name": "吉林",
+              "value": 0.23
+            },
+            {
+              "name": "黑龙江",
+              "value": 0.208
+            }
+          ]
+        }
+      ],
+      "label": {
+        "show": true,
+        "formatter": "{b}"
+      },
+      "upperLabel": {
+        "show": true,
+        "height": 30
+      },
+      "levels": [
+        {
+          "itemStyle": {
+            "borderColor": "#555"
+          }
+        },
+        {
+          "colorMappingBy": "id",
+          "itemStyle": {
+            "gapWidth": 1
+          }
+        }
+      ]
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_boxplot"><h2>📦 各区域DEL分布箱线图（2014-2022）</h2>
+
+    <div class="chart-container" id="chart_58061">
+        <div class="chart-header">
+            <span class="chart-badge">箱线图</span>
+            <span class="chart-query">"各区域历年DEL箱线图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_58061_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "boxplot",
+  "metrics": ["DEL"],
+  "dimension": "region",
+  "year": None,
+  "confidence": 0.9
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_58061_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "各区域DEL分布（2014-2022）",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "item"
+  },
+  "xAxis": {
+    "type": "category",
+    "data": [
+      "东部",
+      "中部",
+      "西部",
+      "东北"
+    ]
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "DEL"
+  },
+  "series": [
+    {
+      "type": "boxplot",
+      "data": [
+        [
+          0.128,
+          0.3067,
+          0.402,
+          0.4842,
+          0.602
+        ],
+        [
+          0.098,
+          0.1658,
+          0.217,
+          0.268,
+          0.362
+        ],
+        [
+          0.068,
+          0.1335,
+          0.182,
+          0.228,
+          0.355
+        ],
+        [
+          0.095,
+          0.145,
+          0.182,
+          0.215,
+          0.288
+        ]
+      ],
+      "itemStyle": {
+        "color": "#5470c6"
+      }
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_gauge"><h2>⏱️ 2022年全国平均DEL仪表盘</h2>
+
+    <div class="chart-container" id="chart_73089">
+        <div class="chart-header">
+            <span class="chart-badge">仪表盘</span>
+            <span class="chart-query">"全国DEL均值仪表盘"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_73089_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "gauge",
+  "metrics": ["DEL"],
+  "dimension": "province",
+  "year": None,
+  "confidence": 0.8
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_73089_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "2022年全国平均DEL",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "series": [
+    {
+      "type": "gauge",
+      "startAngle": 210,
+      "endAngle": -30,
+      "center": [
+        "50%",
+        "55%"
+      ],
+      "radius": "80%",
+      "min": 0.0,
+      "max": 0.8,
+      "axisLine": {
+        "lineStyle": {
+          "width": 20,
+          "color": [
+            [
+              0.3,
+              "#ee6666"
+            ],
+            [
+              0.6,
+              "#fac858"
+            ],
+            [
+              1,
+              "#91cc75"
+            ]
+          ]
+        }
+      },
+      "pointer": {
+        "length": "60%",
+        "width": 8,
+        "itemStyle": {
+          "color": "auto"
+        }
+      },
+      "detail": {
+        "valueAnimation": true,
+        "fontSize": 24,
+        "formatter": "{value}"
+      },
+      "data": [
+        {
+          "value": 0.3475,
+          "name": "DEL"
+        }
+      ]
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+<section id="section_funnel"><h2>🔻 能源结构转化漏斗图</h2>
+
+    <div class="chart-container" id="chart_55122">
+        <div class="chart-header">
+            <span class="chart-badge">漏斗图</span>
+            <span class="chart-query">"能源结构各环节漏斗图"</span>
+            <span class="chart-svas">SVAS: 0.850</span>
+        </div>
+        <div class="chart-canvas" id="chart_55122_canvas" style="width:100%;height:500px;"></div>
+        <details class="chart-details">
+            <summary>CIF &amp; Spec</summary>
+            <pre class="cif-json">{
+  "chart_type": "funnel",
+  "metrics": ["ES"],
+  "dimension": "province",
+  "year": None,
+  "confidence": 0.8
+}</pre>
+        </details>
+    </div>
+    <script>
+    (function() {
+        var dom = document.getElementById('chart_55122_canvas');
+        if (!dom) return;
+        var chart = echarts.init(dom);
+        chart.setOption({
+  "title": {
+    "text": "能源结构转化漏斗",
+    "left": "center",
+    "textStyle": {
+      "fontSize": 16
+    }
+  },
+  "tooltip": {
+    "trigger": "item",
+    "formatter": "{b}: {c}%"
+  },
+  "series": [
+    {
+      "type": "funnel",
+      "left": "15%",
+      "right": "15%",
+      "top": 60,
+      "bottom": 60,
+      "min": 0,
+      "max": 100,
+      "sort": "descending",
+      "gap": 2,
+      "label": {
+        "show": true,
+        "position": "inside",
+        "fontSize": 14
+      },
+      "data": [
+        {
+          "name": "传统能源消费",
+          "value": 100
+        },
+        {
+          "name": "能源效率提升",
+          "value": 89.6
+        },
+        {
+          "name": "清洁能源替代",
+          "value": 56.1
+        },
+        {
+          "name": "碳排放达峰",
+          "value": 37.8
+        },
+        {
+          "name": "碳中和目标",
+          "value": 23.0
+        }
+      ],
+      "itemStyle": {
+        "borderColor": "#fff",
+        "borderWidth": 1
+      }
+    }
+  ]
+});
+        window.addEventListener('resize', function() { chart.resize(); });
+    })();
+    </script>
+    
+</section>
+
+    </main>
+</div>
+<footer>ChartForge © 2026 | 30 provinces × 9 years (2014–2022) panel data | ECharts rendering</footer>
+</body>
+</html>
