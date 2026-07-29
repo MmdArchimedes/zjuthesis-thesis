@@ -75,22 +75,22 @@ for p in PROVINCES:
                   for d in del_vals]
 
 # Region-level aggregated data
-def _yearly_avg(predicate):
-    """Compute yearly mean across provinces matching predicate."""
-    provs = [p for p in PROVINCES if predicate(p)]
-    return [round(np.mean([DEL_DATA[p][t] for p in provs]), 4) for t in range(N_YEARS)]
-
-REGION_DATA = {
-    "东部": {y: _yearly_avg_multi(y) for y in range(N_YEARS)},
-}
-
 def _yearly_avg_multi(yr_idx):
     """Return dict of region→DEL avg for a given year index."""
     result = {}
     for region in ["东部","中部","西部","东北"]:
         provs = [p for p in PROVINCES if REGION_MAP[p] == region]
-        result[region] = round(np.mean([DEL_DATA[p][yr_idx] for p in provs]), 4)
+        result[region] = round(float(np.mean([DEL_DATA[p][yr_idx] for p in provs])), 4)
     return result
+
+def _yearly_avg(predicate):
+    """Compute yearly mean across provinces matching predicate."""
+    provs = [p for p in PROVINCES if predicate(p)]
+    return [round(float(np.mean([DEL_DATA[p][t] for p in provs])), 4) for t in range(N_YEARS)]
+
+REGION_DATA = {
+    "东部": {y: _yearly_avg_multi(y) for y in range(N_YEARS)},
+}
 
 # Simple region-level yearly DEL
 REGION_DEL = {}
