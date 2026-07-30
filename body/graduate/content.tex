@@ -783,17 +783,13 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \subsection{交互过程}
 
-\textbf{步骤一：启动与默认视图。}
-用户佩戴 Rokid Max Pro 眼镜进入系统。Unity 数据引擎自动加载 2014--2022 年省域面板数据及 $DEL$/$ES$ 综合指数。ChartForge 交互运行时层初始化状态向量 $\mathbf{s}_0 = (\text{year}{=}2022,\ \text{metric}{=}ES,\ \text{region}{=}\text{全国},\ \text{view}{=}\text{热力图},\ \text{selected}{=}\varnothing)$，触发初始加载的条件刷新，渲染全国省域 Mesh 热力图，着色通道默认映射 $ES$ 指数。30 个省份以三维挤出（extrusion）高度编码 $ES$ 绝对值，以蓝（低）—白（中）—橙（高）双极渐变色阶编码 $ES$ 相对排序。用户环视一周即可获得东西梯度的初步心像：西部省份（新疆、甘肃、青海等）Mesh 较高且偏橙，东部沿海省份偏低且偏蓝。
+用户佩戴 Rokid Max Pro 眼镜进入系统后，Unity 数据引擎自动加载 2014--2022 年省域面板数据及 $DEL$/$ES$ 综合指数。ChartForge 交互运行时层以默认状态向量 $\mathbf{s}_0 = (\text{year}{=}2022,\ \text{metric}{=}ES,\ \text{region}{=}\text{全国},\ \text{view}{=}\text{热力图},\ \text{selected}{=}\varnothing)$ 初始化会话，触发首帧条件刷新，渲染全国省域 Mesh 热力图。30 个省份以三维挤出高度编码 $ES$ 绝对值，以蓝（低）—白（中）—橙（高）双极渐变色阶编码 $ES$ 相对排序。用户环视一周即获得东西梯度的初步印象：西部省份（新疆、甘肃、青海等）Mesh 较高且偏橙，东部沿海省份偏低且偏蓝。
 
-\textbf{步骤二：指标切换——手势触发。}
-用户做出\textbf{单指向左}手势（映射至``切换指标''命令），DBEW-NN 分类器在 $T=32$ 帧（约 533\,ms）滑动窗口内识别该手势，置信度 $s_{\mathrm{NN}}=0.91$ 通过边沿触发门控（$\theta_g=0.85$），经 TSTQ--Fusion 通道内稳定化后提交至融合队列。融合层检测到当前时间窗内仅有手势事件，直接将其写入状态向量：$\mathbf{s}_t.\mathrm{metric} \leftarrow DEL$。ChartForge 交互运行时层检测到 $\mathbf{s}_t.\mathrm{metric}$ 变化，触发指标切换的条件刷新，重新计算全国 30 省份在 $DEL$ 通道上的着色映射。视图刷新后，空间格局发生显著翻转：京、沪、浙、粤、苏五省 Mesh 最高且偏橙（$DEL$ 高值集聚于东部沿海），而西部省份 Mesh 降低且偏蓝。用户无需切换窗口或点击菜单，仅通过一个手势即完成了从能源结构视角到数字经济视角的视角转换。
+用户首先想对比数字经济视角下的空间格局，于是做出\textbf{单指向左}手势（映射至``切换指标''命令）。DBEW-NN 分类器在 $T=32$ 帧（约 533\,ms）滑动窗口内以置信度 $s_{\mathrm{NN}}=0.91$ 识别该手势，通过边沿触发门控（$\theta_g=0.85$）后经 TSTQ--Fusion 通道内稳定化提交至融合队列。融合层检测到当前时间窗内无其他并发事件，直接将 $\mathbf{s}_t.\mathrm{metric}$ 更新为 $DEL$。视图刷新后空间格局发生显著翻转：京、沪、浙、粤、苏五省 Mesh 最高且偏橙，$DEL$ 高值明显集聚于东部沿海，而西部省份 Mesh 降低且偏蓝。整个过程无需切换窗口或点击菜单——用户仅通过一个手势即完成了从能源结构视角到数字经济视角的切换。
 
-\textbf{步骤三：时间轴遍历——手势连续步进。}
-为观察 2014--2022 年间的格局演化，用户做出\textbf{二指手心}手势（映射至``年份+1''）并保持 1.5\,s 触发连续步进模式。DBEW 触发管线以 500\,ms 冷却窗间隔连续提交年份递增事件，每步递增后 ChartForge 交互运行时层按时间轴变化的条件刷新逻辑重新计算当年 $ES$ 着色。用户观察到：2014 年多数省份 Mesh 偏橙（$ES$ 整体偏低），随着年份推至 2022 年，橙色区域逐渐收缩、蓝—绿色区域自东部向中西部扩展，直观呈现了样本期内全国能源结构的整体改善趋势。当到达 2022 年后，用户做出\textbf{二指手背}手势（映射至``年份-1''）逆向回退，确认特定年份的着色记忆。
+接下来，用户希望观察 2014--2022 年间的格局演化趋势，做出\textbf{二指手心}手势（映射至``年份+1''）并保持 1.5\,s 触发连续步进模式。DBEW 触发管线以 500\,ms 冷却窗间隔连续提交年份递增事件，每步递增后 ChartForge 按时间轴条件刷新逻辑重算当年 $ES$ 着色。用户看到：2014 年多数省份 Mesh 偏橙，随着年份推进，橙色区域逐渐收缩、蓝—绿色区域自东部向中西部扩展，直观呈现出样本期内全国能源结构的整体改善趋势。到达 2022 年后，用户以\textbf{二指手背}手势（``年份-1''）逆向回退，确认了特定年份的着色记忆。
 
-\textbf{步骤四：语音辅助快速跳转。}
-在时间轴遍历建立整体趋势感知后，用户希望快速定位至 2019 年以观察疫情前基准状态。用户说出``跳转到二零一九年''，语音通道经 ASR 引擎转写、LLM 语义解析为结构化指令 $\{\text{action}{=}\text{jump},\ \text{year}{=}2019\}$，注入融合队列。融合层按下式仲裁：手势通道当前无活跃事件，语音事件置信度 $0.94 > \theta_s = 0.80$，直接更新 $\mathbf{s}_t.\mathrm{year} \leftarrow 2019$。视图立即刷新至 2019 年快照。该步骤体现了第\ref{ch:ar_interaction}章语音交互的核心设计意图：手势适合离散的步进式操作（逐帧浏览），语音适合大跨度的定位式操作（指定目标），二者在同一状态向量上协同而不冲突。
+在时间轴遍历建立起整体趋势感知后，用户希望快速定位至 2019 年以观察疫情前基准状态，于是说出``跳转到二零一九年''。语音通道经 ASR 引擎转写、LLM 语义解析为结构化指令 $\{\text{action}{=}\text{jump},\ \text{year}{=}2019\}$ 并注入融合队列。手势通道此时无活跃事件，语音事件置信度 $0.94$ 超过阈值 $\theta_s = 0.80$，融合层直接更新 $\mathbf{s}_t.\mathrm{year} \leftarrow 2019$，视图立即刷新至 2019 年快照。这一语音交互的设计意图在于：手势适合离散的步进式操作（逐帧浏览），语音适合大跨度的定位式操作（指定目标），二者在第\ref{ch:ar_interaction}章的统一状态向量上协同而不冲突。
 
 \subsection{系统响应}
 
@@ -829,17 +825,13 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \subsection{交互过程}
 
-\textbf{步骤一：调出散点图视图。}
-用户在案例一的热力图基础上，做出\textbf{三指手心}手势（映射至``散点图模式''），DBEW-NN 识别后经触发管线提交。融合层更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{scatter}$。ChartForge 交互运行时层检测到视图模式切换，触发 ChartForge 的 CIF 解析器生成 $DEL$--$ES$ 散点图：CIF 解析器将 $\mathbf{s}_t$ 中的当前年份（2022）、指标（$DEL$/$ES$）和区域（全国）映射为意图三元组 $\langle \mathcal{D}{=}\text{province\_panel},\ \mathcal{V}{=}\text{scatter\_plot},\ \mathcal{I}{=}\text{regression\_fit} \rangle$，经 PCG 束搜索（$k=4$）生成初始 ChartSpec，再经 MS-GRP 精炼（语义验证 $\rightarrow$ 视觉精炼 $\rightarrow$ 交互注入）后输出最终规约。Unity ChartRenderer 将规约渲染为三维散点图，横轴为 $DEL$、纵轴为 $ES$，每个省份为一个可交互的数据点，同时叠加二次拟合曲线（系数取自表\ref{table:Baseline regression results}列（3）的 $2.131$ 和 $-2.103$）及拐点竖线标注（$x = 0.507$）。散点图与热力图在同一 AR 空间中并排呈现，由同一 $\mathbf{s}_t$ 驱动。
+在案例一的热力图基础上，用户做出\textbf{三指手心}手势（映射至``散点图模式''），DBEW-NN 识别后经触发管线提交，融合层更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{scatter}$。ChartForge 交互运行时层检测到视图模式切换，触发 CIF 解析器生成 $DEL$--$ES$ 散点图：CIF 将 $\mathbf{s}_t$ 中的当前年份（2022）、指标（$DEL$/$ES$）和区域（全国）映射为意图三元组 $\langle \mathcal{D}{=}\text{province\_panel},\ \mathcal{V}{=}\text{scatter\_plot},\ \mathcal{I}{=}\text{regression\_fit} \rangle$，经 PCG 束搜索（$k=4$）生成初始 ChartSpec，再由 MS-GRP 经语义验证、视觉精炼与交互注入后输出最终规约。Unity ChartRenderer 将规约渲染为三维散点图，横轴为 $DEL$、纵轴为 $ES$，每个省份为一个可交互数据点，同时叠加二次拟合曲线（系数取自表\ref{table:Baseline regression results}列（3））及拐点竖线标注（$x = 0.507$）。散点图与热力图在同一 AR 空间中并排呈现，由同一 $\mathbf{s}_t$ 驱动。
 
-\textbf{步骤二：射线选取省份——空间定位与曲线定位的同步。}
-用户以射线（Rokid 手柄 6DoF 控制器发出的虚拟射线）指向散点图中的广东数据点（$DEL \approx 0.58$，$ES \approx 0.62$），扳机键触发选取事件。射线通道经 TSTQ--Fusion 通道内稳定化后提交选取事件：$\mathbf{s}_t.\mathrm{selected} \leftarrow \text{广东}$。ChartForge 交互运行时层检测到选中省份变化，触发三重联动刷新：（a）散点图中广东数据点以高亮圆环标注；（b）左侧热力图中广东省 Mesh 以金色描边高亮；（c）结果面板（Results Panel）自动展开，显示广东的 $DEL$ 值、$ES$ 值、在倒 U 型曲线上的横轴位置（$x_{\text{广东}} = 0.58 > 0.507$，位于拐点右侧）以及对应的拟合 $\widehat{ES}$ 与残差。用户观察到广东在曲线上的位置已明显越过拐点，拟合曲线的斜率在拐点右侧已转为负值，提示广东数字经济对能源结构的边际正向关联已趋近于零甚至可能逆转。
+用户随即将射线（Rokid 手柄 6DoF 控制器发出的虚拟射线）指向散点图中的广东数据点（$DEL \approx 0.58$，$ES \approx 0.62$），扣动扳机键触发选取。射线通道经 TSTQ--Fusion 通道内稳定化后提交选取事件，$\mathbf{s}_t.\mathrm{selected}$ 更新为广东。ChartForge 检测到选中省份变化后触发三重联动刷新：散点图中广东数据点以高亮圆环标注，左侧热力图中广东省 Mesh 以金色描边高亮，结果面板自动展开，显示广东的 $DEL$ 值、$ES$ 值、在倒 U 型曲线上的横轴位置（$x_{\text{广东}} = 0.58 > 0.507$，位于拐点右侧）以及对应的拟合 $\widehat{ES}$ 与残差。可以直观看到，广东已明显越过拐点，拟合曲线斜率在拐点右侧转为负值——数字经济对能源结构的边际正向关联已趋近于零甚至可能逆转。
 
-\textbf{步骤三：多省份对比——手势切换选中目标。}
-用户继续以射线依次选取北京（$DEL \approx 0.52$）、浙江（$DEL \approx 0.48$）和青海（$DEL \approx 0.08$），系统在每次选取后同步更新三重视图。通过快速对比，用户注意到：北京同样已接近拐点（$x_{\text{北京}} = 0.52 \approx 0.507$），浙江位于拐点左侧但接近（$x_{\text{浙江}} = 0.48 < 0.507$），青海远在拐点左侧（$x_{\text{青海}} = 0.08$）且拟合曲线在该区域的斜率最陡（约 $+2.1$）。这一对比用交互式可视化直观验证了基准回归的倒 U 型叙事：$DEL$ 水平较低的省份在曲线陡峭上升段（边际正向关联最大），中等 $DEL$ 省份位于曲线平缓段，高 $DEL$ 省份已跨越拐点。
+接着，用户以射线依次选取北京（$DEL \approx 0.52$）、浙江（$DEL \approx 0.48$）和青海（$DEL \approx 0.08$），系统在每次选取后同步更新三重视图。快速对比即可发现三省在曲线上的位置梯度：北京接近拐点（$x = 0.52 \approx 0.507$），浙江位于拐点左侧但相距不远（$x = 0.48$），青海远在拐点左侧（$x = 0.08$）且该处拟合曲线斜率最陡（约 $+2.1$）。这一对比将基准回归的倒 U 型叙事转化为一目了然的空间证据：$DEL$ 水平较低的省份位于曲线陡峭上升段，边际正向关联最大；中等 $DEL$ 省份位于曲线平缓段；高 $DEL$ 省份已跨越拐点。
 
-\textbf{步骤四：语音查询回归结果。}
-用户说出``显示基准回归第三列''，语音通道经 LLM 解析为 $\{\text{action}{=}\text{show\_table},\ \text{table}{=}\text{baseline},\ \text{column}{=}3\}$。ChartForge 按 CIF $\rightarrow$ PCG $\rightarrow$ MS-GRP 流程生成表\ref{table:Baseline regression results}列（3）的格式化结果卡片，包含一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 及拐点推导公式 $x^* = -\alpha_1/(2\alpha_2) = 0.507$。卡片浮于散点图右侧，与当前选中的广东省空间位置形成视觉连线（虚线引导）。用户在同一个视野中同时看见统计证据（回归系数卡片）、几何证据（拟合曲线 + 拐点线）和空间证据（热力图高亮省），三种证据相互印证而无须视线跳转。
+最后，用户说出``显示基准回归第三列''，语音通道经 LLM 解析为 $\{\text{action}{=}\text{show\_table},\ \text{table}{=}\text{baseline},\ \text{column}{=}3\}$。ChartForge 按 CIF$\rightarrow$PCG$\rightarrow$MS-GRP 流程生成表\ref{table:Baseline regression results}列（3）的格式化结果卡片，包含一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 及拐点推导公式 $x^* = -\alpha_1/(2\alpha_2) = 0.507$。卡片浮于散点图右侧，以虚线引导线与当前选中的广东省空间位置建立视觉连线。至此，统计证据（回归系数卡片）、几何证据（拟合曲线与拐点线）和空间证据（热力图高亮省）三者共处同一视野，相互印证而无须视线跳转。
 
 \subsection{系统响应}
 
@@ -875,15 +867,12 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \subsection{交互过程}
 
-\textbf{步骤一：区域分组视图——语音触发分区切换。}
-用户说出``按四大区域分组''。语音通道经 LLM 解析，识别出意图为将当前视图从``全国单一热力图''切换为``东—中—西—东北四区并列''的分组模式。TSTQ--Fusion 在 300\,ms 融合窗口内未检测到冲突事件，直接更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{regional\_grid}$ 和 $\mathbf{s}_t.\mathrm{region} \leftarrow \text{all}$。ChartForge 交互运行时层触发 MS-GRP 管线以四区并列布局（2$\times$2 网格）重新生成视图：每个子区域渲染独立的省域热力图（只显示该区域所含省份），子图上方标注区域名称和该区域的 $DEL$ 分组回归系数（取自表\ref{table:Regional heterogeneity test}），系数以柱状图形式嵌入子图标题栏以便快速比较。
+用户首先说出``按四大区域分组''。语音通道经 LLM 解析，识别出意图为将当前视图从全国单一热力图切换为东—中—西—东北四区并列的分组模式。TSTQ--Fusion 在 300\,ms 融合窗口内未检测到冲突事件，直接更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{regional\_grid}$ 和 $\mathbf{s}_t.\mathrm{region} \leftarrow \text{all}$。ChartForge 触发 MS-GRP 管线以 2$\times$2 网格布局重新生成视图：每个子区域渲染独立的省域热力图（只显示该区域所含省份），子图上方标注区域名称和该区域的 $DEL$ 分组回归系数（取自表\ref{table:Regional heterogeneity test}），系数以柱状图形式嵌入子图标题栏以便快速比较。
 
-中部子图（$DEL$ 系数 $1.994^{***}$）的柱状条最高，但该区域仅含 6 个省份且内部着色差异较大——湖北省 Mesh 明显高于河南和山西，提示中部区的内部差异可能不容忽视。西部子图（系数 $1.100^{***}$）省份数量最多（11 个），着色分布呈明显双峰：四川、重庆、陕西偏蓝（$ES$ 较高），新疆、青海、甘肃偏橙（$ES$ 较低），区域平均系数掩盖了内部的显著异质性。
+四区视图一目了然地呈现了区域差异的全貌：中部子图（$DEL$ 系数 $1.994^{***}$）的柱状条最高，但该区域仅含 6 个省份且内部着色差异较大——湖北省 Mesh 明显高于河南和山西，提示中部区的内部差异不容忽视；西部子图（系数 $1.100^{***}$）省份数量最多（11 个），着色分布呈明显双峰，四川、重庆、陕西偏蓝（$ES$ 较高），新疆、青海、甘肃偏橙（$ES$ 较低），区域平均系数显然掩盖了内部的显著异质性。
 
-\textbf{步骤二：手势缩放——从中部区域到湖北省的单省下钻。}
-用户向中部子图方向做出\textbf{四指手心}手势（映射至``放大/下钻''），同时射线指向湖北 Mesh。TSTQ--Fusion 在融合窗口内检测到手势事件和射线事件的共现：手势 $\mathrm{gesture}{=}\text{pinch\_zoom}$ 和射线 $\mathrm{ray}{=}\{\text{target}{=}\text{湖北},\ \text{region}{=}\text{central}\}$。融合层判定两事件目标一致（均指向中部区 $\rightarrow$ 湖北），无冲突，将合并事件写入状态向量：$\mathbf{s}_t.\mathrm{view} \leftarrow \text{province\_detail}$，$\mathbf{s}_t.\mathrm{selected} \leftarrow \text{湖北}$。ChartForge 交互运行时层检测到视图模式切换至省级详情，触发 MS-GRP 管线以单省布局重新生成页面。
+这一观察自然引出了下钻需求。用户向中部子图方向做出\textbf{四指手心}手势（映射至``放大/下钻''），同时射线指向湖北 Mesh。TSTQ--Fusion 在融合窗口内检测到手势与射线事件的共现：$\mathrm{gesture}{=}\text{pinch\_zoom}$ 和 $\mathrm{ray}{=}\{\text{target}{=}\text{湖北},\ \text{region}{=}\text{central}\}$。融合层判定两事件目标一致（均指向中部区 $\rightarrow$ 湖北），无冲突，将合并事件写入状态向量：$\mathbf{s}_t.\mathrm{view} \leftarrow \text{province\_detail}$，$\mathbf{s}_t.\mathrm{selected} \leftarrow \text{湖北}$。ChartForge 检测到视图模式切换至省级详情，触发 MS-GRP 管线以单省布局重新生成页面。
 
-\textbf{步骤三：省级详情页——四象限多视图布局。}
 ChartForge 按 CIF 意图 $\langle \mathcal{D}{=}\text{Hubei\_panel},\ \mathcal{V}{=}\text{quad\_layout},\ \mathcal{I}{=}\text{compare\_to\_region} \rangle$ 生成湖北省四象限详情视图（图\ref{fig:ch5_case3_hubei}）：
 \begin{itemize}
   \item \textbf{左上象限——时序轨迹：} $DEL$ 与 $ES$ 双轴折线图（2014--2022），叠加中部区域均值虚线作为参照，显示湖北 $DEL$ 增速持续高于中部均值，而 $ES$ 在 2018 年后出现加速改善——与湖北 2018 年前后加速数字基建投资的省策时点一致；
@@ -894,15 +883,13 @@ ChartForge 按 CIF 意图 $\langle \mathcal{D}{=}\text{Hubei\_panel},\ \mathcal{
 
 四象限视图由同一 $\mathbf{s}_t$ 驱动，当用户切换选中省或年份时，四个象限同步刷新。ChartForge 的 CCA（可组合图表代数）在此发挥关键作用：四个象限各自对应一个独立的 ChartSpec，通过 CCA 的组合算子 $\oplus_{\text{grid}}$（网格组合）和 $\bowtie_{\mathbf{s}_t}$（状态同步连接）拼合为统一的省级详情页规约，再由 Platform Adapter 一次性提交至 Unity ChartRenderer 渲染。
 
-\textbf{步骤四：语音驱动的跨省对比。}
-在阅读湖北详情后，用户希望横向对比中部另一省份（河南）的指标结构。用户说出``对比河南''而不离开当前视图。语音通道经 LLM 解析为 $\{\text{action}{=}\text{compare},\ \text{target}{=}\text{河南}\}$。ChartForge 检测到 $\mathbf{s}_t.\mathrm{compare\_mode} = \text{true}$，在保持湖北四象限视图不变的前提下，于各象限中以虚线/半透明叠加河南省对应数据：（a）左上时序图新增河南 $DEL$/$ES$ 虚线轨迹，直观对比两省增速差异；（b）右上散点图以方形标记标注河南在曲线上的位置（$DEL=0.18$），与湖北的圆形标记形成对照；（c）左下雷达图以半透明多边形叠加河南指标轮廓，清晰展示湖北在数字产业化两项上的显著领先和河南在数字基础设施（宽带端口）上的相对优势。这一对比揭示了两省在中部区内部的功能分化：湖北以数字产业化驱动、河南以数字基础设施驱动——尽管同属中部区，$DEL$ 对 $ES$ 的作用路径可能存在质的差异，区域平均系数（$1.994^{***}$）掩盖了这一内部结构。
+阅读湖北详情后，用户希望横向对比中部另一省份河南的指标结构，于是说出``对比河南''而不离开当前视图。语音通道经 LLM 解析为 $\{\text{action}{=}\text{compare},\ \text{target}{=}\text{河南}\}$。ChartForge 检测到 $\mathbf{s}_t.\mathrm{compare\_mode} = \text{true}$，在保持湖北四象限视图不变的前提下，于各象限中以虚线/半透明叠加河南省对应数据：左上时序图新增河南 $DEL$/$ES$ 虚线轨迹，直观对比两省增速差异；右上散点图以方形标记标注河南在曲线上的位置（$DEL=0.18$），与湖北的圆形标记形成对照；左下雷达图以半透明多边形叠加河南指标轮廓，清晰展示湖北在数字产业化两项上的显著领先和河南在数字基础设施（宽带端口）上的相对优势。这一对比揭示了两省在中部区内部的功能分化：湖北以数字产业化驱动、河南以数字基础设施驱动——尽管同属中部区，$DEL$ 对 $ES$ 的作用路径可能存在质的差异，区域平均系数（$1.994^{***}$）掩盖了这一内部结构。
 
-\textbf{步骤五：手势回退——恢复全国视图。}
-用户做出\textbf{四指手背}手势（映射至``缩小/回退''），融合层更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{national\_heatmap}$，$\mathbf{s}_t.\mathrm{compare\_mode} \leftarrow \text{false}$。ChartForge 交互运行时层恢复全国热力图默认布局，但 $\mathbf{s}_t.\mathrm{recent\_provinces}$ 保留湖北与河南的访问记录，供后续快速跳转。
+分析完成后，用户做出\textbf{四指手背}手势（映射至``缩小/回退''），融合层更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{national\_heatmap}$，$\mathbf{s}_t.\mathrm{compare\_mode} \leftarrow \text{false}$。ChartForge 恢复全国热力图默认布局，但 $\mathbf{s}_t.\mathrm{recent\_provinces}$ 保留湖北与河南的访问记录，供后续快速跳转。
 
 \subsection{系统响应}
 
-本案例是全章交互复杂度最高的场景，覆盖了手势、语音与射线的并发协同，以及 ChartForge 在多视图组合生成中的全能力展示。从性能角度，四象限布局的 ChartForge 生成耗时约 210\,ms（四个独立 ChartSpec 的 PCG 搜索各约 18\,ms 共约 72\,ms + LLM 意图解析约 60\,ms + CCA 组合约 20\,ms + 渲染约 58\,ms），跨省对比叠加（步骤四）仅需增量更新对比图层（约 12\,ms），无需重新生成全页。从多模态融合角度，步骤二中手势与射线的共现触发了 TSTQ--Fusion 的跨通道仲裁逻辑：两事件在 300\,ms 时间窗内到达，融合层检查目标一致性后按``手势$>$射线''优先级规则合并提交，避免了重复状态更新。步骤四的语音对比命令与当前手势空闲状态不冲突，直接注入。
+本案例是全章交互复杂度最高的场景，覆盖了手势、语音与射线的并发协同，以及 ChartForge 在多视图组合生成中的全能力展示。从性能角度，四象限布局的 ChartForge 生成耗时约 210\,ms（四个独立 ChartSpec 的 PCG 搜索各约 18\,ms 共约 72\,ms + LLM 意图解析约 60\,ms + CCA 组合约 20\,ms + 渲染约 58\,ms），跨省对比叠加仅需增量更新对比图层（约 12\,ms），无需重新生成全页。从多模态融合角度，手势与射线在四区视图中的共现触发了 TSTQ--Fusion 的跨通道仲裁逻辑：两事件在 300\,ms 时间窗内到达，融合层检查目标一致性后按``手势$>$射线''优先级规则合并提交，避免了重复状态更新；语音对比命令发出时手势通道处于空闲状态，直接注入而不产生冲突。
 
 \subsection{分析发现}
 
