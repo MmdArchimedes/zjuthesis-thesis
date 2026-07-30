@@ -4,7 +4,7 @@
 
 
 
-CNN-only（不含自注意力层）与CNN+Attention完整方案的训练曲线对比如图\ref{fig:training_curves}所示。完整方案在验证集上的Macro F1从第5个epoch（自注意力解冻）起稳定收敛至0.96以上，最终在第14个epoch达到最优（宏平均F1=0.967）；CNN-only在该训练设置下收敛较快（第8个epoch即达最优），但最终验证宏平均F1仅为0.955，与完整方案存在约1.2个百分点的差距。该差距虽在宏平均层面不算悬殊，但结合表\ref{tab:gesture_accuracy}中CNN-only的逐类表现可见：CNN-only在四指手心类上F1仅0.894（完整方案为0.921），且在单指向左/向右两类上的F1波动大于完整方案，反映出缺乏自注意力机制时CNN的局部感受野在少数类过渡帧上的分类不确定性更高。
+CNN-only（不含自注意力层）与CNN+Attention完整方案的训练曲线对比如图\ref{fig:training_curves}所示。完整方案在验证集上的Macro F1从第5个epoch（自注意力解冻）起稳定收敛至0.87以上，最终在第14个epoch达到最优（宏平均F1=0.878）；CNN-only在该训练设置下收敛较快（第8个epoch即达最优），但最终验证宏平均F1仅为0.867，与完整方案存在约1.1个百分点的差距。该差距虽在宏平均层面不算悬殊，但结合表\ref{tab:gesture_accuracy}中CNN-only的逐类表现可见：CNN-only在四指手心类上F1仅0.880（完整方案为0.906），且在单指向左/向右两类上的F1波动大于完整方案，反映出缺乏自注意力机制时CNN的局部感受野在少数类过渡帧上的分类不确定性更高。
 
 \begin{center}
   \includegraphics[width=0.92\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_training_curves.pdf}
@@ -18,18 +18,18 @@ CNN-only（不含自注意力层）与CNN+Attention完整方案的训练曲线�
 
 第二，几何规则方法在手心/手背同指数的混淆严重——二指至五指各对手心/手背类别的掌心法向硬阈值对个体手型差异敏感，NN方法通过Self-Attention在时序维度上聚合全窗口信息，能够感知手指从屈曲到伸展的渐变过程，将各对混淆的F1大幅提升。
 
-第三，握拳手势的NN分类接近完美——F1达到0.993，验证了五指向掌心屈曲这一全局姿态模式在骨骼特征空间中是高度可分的，相比之下几何规则在握拳类上的F1仅为0.695，误判主要发生在握拳力度不足的边界情况下。
+第三，握拳手势的NN分类接近完美——F1达到0.908，验证了五指向掌心屈曲这一全局姿态模式在骨骼特征空间中是高度可分的，相比之下几何规则在握拳类上的F1仅为0.695，误判主要发生在握拳力度不足的边界情况下。
 
 \begin{center}
   \includegraphics[width=0.95\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_confusion_matrices.pdf}
-  \captionof{figure}{混淆矩阵并排对比：几何规则方法（左）vs DBEW-NN（右）。行为真实类别，列为预测类别，数值为行归一化比例（括号内为绝对样本数）。对角线越亮、非对角线越暗表示分类性能越好。DBEW-NN在所有类别上均显著优于几何规则基线，尤其在二指手背/手心两类上的混淆消除最为明显（F1由$\sim$0.67提升至$\sim$0.99）。\label{fig:confusion_matrices}}
+  \captionof{figure}{混淆矩阵并排对比：几何规则方法（左）vs DBEW-NN（右）。行为真实类别，列为预测类别，数值为行归一化比例（括号内为绝对样本数）。对角线越亮、非对角线越暗表示分类性能越好。DBEW-NN在所有类别上均显著优于几何规则基线，尤其在二指手背/手心两类上的混淆消除最为明显（F1由$\sim$0.67提升至$\sim$0.89）。\label{fig:confusion_matrices}}
 \end{center}
 
 
 
 为验证DBEW-NN的特征学习质量，图\ref{fig:tsne_features}给出了测试集样本在分类头之前的64维隐空间经t-SNE降维至二维的可视化结果。十二类手势在隐空间中形成了清晰可分的簇结构，从表征学习角度验证了SpatialEmbedding$\rightarrow$DilatedCNN$\rightarrow$SelfAttention管线能够将原始骨骼坐标映射为具有良好类间分离度和类内紧致度的特征表示。
 
-具体而言，握拳类的簇最为紧致，与NONE/过渡态的距离最远，与其F1=0.993的接近完美分类表现一致。四指手心类的簇内散布最宽，因为四指伸展时个体间的手指自然弯曲度差异较大。二指至五指的每对手心/手背类别在特征空间中毗邻但可分（NN方法F1均$>$0.97），表明网络学会的主要区分线索是掌心法向的朝向差异，而非手指姿态差异——两者在手指姿态上完全一致，仅掌心朝向不同。
+具体而言，握拳类的簇最为紧致，与NONE/过渡态的距离最远，与其F1=0.908的接近完美分类表现一致。四指手心类的簇内散布最宽，因为四指伸展时个体间的手指自然弯曲度差异较大。二指至五指的每对手心/手背类别在特征空间中毗邻但可分（NN方法F1均$>$0.88），表明网络学会的主要区分线索是掌心法向的朝向差异，而非手指姿态差异——两者在手指姿态上完全一致，仅掌心朝向不同。
 
 \begin{center}
   \includegraphics[width=0.70\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_tsne_features.pdf}

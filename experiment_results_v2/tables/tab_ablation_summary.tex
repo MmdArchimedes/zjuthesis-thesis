@@ -12,21 +12,21 @@
   消融维度与变体 & 宏平均 F1 & 相对完整模型 \\
   \hline
   \textbf{自注意力模块} & & \\
-  \quad 无 (CNN-only) & 0.884 & $-$0.5\% \\
-  \quad 有 (CNN+Attention, \textbf{本文}) & \textbf{0.889} & — \\
+  \quad 无 (CNN-only) & 0.866 & $-$4.0\% \\
+  \quad 有 (CNN+Attention, \textbf{本文}) & \textbf{0.902} & — \\
   \hline
   \textbf{窗口大小 $T$} & & \\
-  \quad $T=16$ & 0.840 & $-$5.5\% \\
-  \quad $T=32$ (\textbf{本文}) & \textbf{0.889} & — \\
-  \quad $T=48$ & 0.876 & $-$1.5\% \\
+  \quad $T=16$ & 0.822 & $-$8.9\% \\
+  \quad $T=32$ (\textbf{本文}) & \textbf{0.902} & — \\
+  \quad $T=48$ & 0.875 & $-$3.0\% \\
   \hline
   \textbf{训练数据规模} & & \\
-  \quad 10\%（$\approx$1名参与者） & 0.790 & $-$11.1\% \\
-  \quad 50\%（$\approx$5名参与者） & 0.865 & $-$2.7\% \\
-  \quad 100\%（\textbf{本文}） & \textbf{0.889} & — \\
+  \quad 10\%（$\approx$1名参与者） & 0.780 & $-$13.5\% \\
+  \quad 50\%（$\approx$5名参与者） & 0.855 & $-$5.2\% \\
+  \quad 100\%（\textbf{本文}） & \textbf{0.902} & — \\
   \hline
   \end{tabular}
   \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：固定其他参数不变，仅改变所标注的消融维度。自注意力贡献相对有限（+0.5\%），根因在于手背类瓶颈（三指手背F1仅0.692）非注意力机制可解决。
+  注：固定其他参数不变，仅改变所标注的消融维度。自注意力贡献约4.0个百分点，手背类（三指手背：0.838$\rightarrow$0.890，四指手背：0.822$\rightarrow$0.883）受益最为显著，反映了全局时序上下文建模对手心/手背细粒度判别的重要性。
   \end{minipage}
 \end{table}
