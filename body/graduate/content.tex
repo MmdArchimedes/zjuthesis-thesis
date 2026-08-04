@@ -772,12 +772,12 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \section{空间分布特征分析}
 \label{sec:ch5_spatial}
 
-基于第\ref{sec:ch5_data}节的 $DEL$ 与 $ES$ 综合指数，首先从空间分布角度考察两者的省域格局。图\ref{fig:ch5_es_heatmap}给出了2022年全国30个省份的 $ES$ 三维热力图，其中省份高度编码 $ES$ 绝对值，色阶编码相对排序（蓝—白—橙双极渐变）。
+基于第\ref{sec:ch5_data}节的 $DEL$ 与 $ES$ 综合指数，首先从空间分布角度考察两者的省域格局。图\ref{fig:ch5_spatial_dist}给出了2022年30个省份的 $DEL$ 与 $ES$ 综合指数横向对比。
 
 \begin{minipage}{\textwidth}
 \centering
-  \IfFileExists{5.4-es-coloring-2022.png}{\includegraphics[width=0.70\textwidth,keepaspectratio]{5.4-es-coloring-2022.png}}{}
-  \captionof{figure}{全国 $ES$ 三维省域热力图（2022年）。高度编码 $ES$ 绝对值，渐变色阶编码相对排序。\label{fig:ch5_es_heatmap}}
+  \IfFileExists{figure/ch5_spatial_distribution.pdf}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/ch5_spatial_distribution.pdf}}{}
+  \captionof{figure}{2022年省域 $DEL$（橙色）与 $ES$（蓝色）综合指数分布。省份按 $ES$ 升序排列，直观呈现 $DEL$``东高西低''梯度与 $ES$ 空间格局的不完全重合特征。\label{fig:ch5_spatial_dist}}
 \end{minipage}
 
 空间分布呈现以下特征：（1）$DEL$ 呈显著的``东高西低''梯度，京、沪、浙、粤、苏五省构成第一梯队，与数字基础设施和数字产业化的省域集聚特征一致；（2）$ES$ 的空间格局与 $DEL$ 不完全重合——部分西部省份（新疆、甘肃、青海）$ES$ 尚可（煤炭消费占比本就不高），而个别东部高 $DEL$ 省份 $ES$ 表现平平，提示数字经济与能源结构优化之间可能存在非线性或门槛特征；（3）从2014--2022年时序变化看，全国 $ES$ 整体呈改善趋势，但改善幅度存在省域差异，东南沿海改善幅度大于东北和部分中部省份。
@@ -790,7 +790,15 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 为验证第\ref{sec:ch5_spatial}节空间探索中提示的非线性特征，本节基于面板固定效应模型（式\ref{eq:benchmark_model}）对 $DEL$--$ES$ 关系进行计量检验。基准回归结果（表\ref{table:Baseline regression results}）显示：列（1）仅含 $DEL$ 一次项时系数为 $0.813^{***}$（$R^2=0.308$）；列（2）加入控制变量后降至 $0.575^{***}$（$R^2=0.423$）；列（3）引入 $DEL^2$ 后，一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 均在1\%水平显著，$R^2$ 升至0.570，确认了倒U型非线性关系。
 
-拐点由公式 $x^* = -\alpha_1/(2\alpha_2)$ 计算得 $DEL=0.507$，多数省份位于拐点左侧。从省域位置分布看：广东（$DEL\approx0.58$）和北京（$DEL\approx0.52$）已接近或越过拐点，浙江（$DEL\approx0.48$）位于拐点左侧但相距不远，青海（$DEL\approx0.08$）远在拐点左侧且该处拟合曲线斜率最陡（约$+2.1$）。这一梯度特征表明：数字经济对能源结构的边际改善效应随 $DEL$ 水平升高而递减——低 $DEL$ 省份处于曲线陡峭上升段，数字化投入的能源结构回报最大；高 $DEL$ 省份已进入平台期，数字经济本身的进一步增长对能源结构的边际贡献趋近于零甚至可能逆转。
+拐点由公式 $x^* = -\alpha_1/(2\alpha_2)$ 计算得 $DEL=0.507$，多数省份位于拐点左侧。图\ref{fig:ch5_nonlinear_scatter}以2022年截面数据展示了各省在倒U型曲线上的分布位置。
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/ch5_nonlinear_scatter.pdf}{\includegraphics[width=0.88\textwidth,keepaspectratio]{figure/ch5_nonlinear_scatter.pdf}}{}
+  \captionof{figure}{$DEL$--$ES$ 非线性关系散点图（2022年截面）。红色虚线为二次拟合曲线（系数 $2.131^{***}$/$-2.103^{***}$），灰色竖线标注拐点 $x=0.507$。各省按四大区域着色，广东（已过拐点）与青海（远在拐点左侧）的边际效应差异显著。\label{fig:ch5_nonlinear_scatter}}
+\end{minipage}
+
+从省域位置分布看：广东（$DEL\approx0.58$）和北京（$DEL\approx0.52$）已接近或越过拐点，浙江（$DEL\approx0.48$）位于拐点左侧但相距不远，青海（$DEL\approx0.08$）远在拐点左侧且该处拟合曲线斜率最陡（约$+2.1$）。这一梯度特征表明：数字经济对能源结构的边际改善效应随 $DEL$ 水平升高而递减——低 $DEL$ 省份处于曲线陡峭上升段，数字化投入的能源结构回报最大；高 $DEL$ 省份已进入平台期，数字经济本身的进一步增长对能源结构的边际贡献趋近于零甚至可能逆转。
 
 稳健性检验（表\ref{table:Robustness test}）从滞后一期、缩尾处理、剔除异常年份和工具变量四种口径验证了上述结论的可靠性，$DEL$ 系数符号与显著性均与基准回归一致。中介效应检验（表\ref{table:Mediating effect}）进一步表明，技术创新（$TEIN$）是 $DEL$ 影响 $ES$ 的部分中介渠道，间接效应约占总效应的12.33\%。
 
@@ -798,7 +806,15 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \section{区域异质性分析}
 \label{sec:ch5_heterogeneity}
 
-倒U型关系在全样本下成立，但不同区域的发展阶段差异可能导致 $DEL$ 对 $ES$ 的边际效应存在显著异质性。将30个省份按国家统计局标准划分为东部、中部、西部与东北四大区域的分样本回归结果（表\ref{table:Regional heterogeneity test}）显示，$DEL$ 系数呈现``中部$>$西部$>$东部''的梯度格局：中部 $1.994^{***}$、西部 $1.100^{***}$、东部 $0.336^{***}$，东北地区未通过显著性检验。
+倒U型关系在全样本下成立，但不同区域的发展阶段差异可能导致 $DEL$ 对 $ES$ 的边际效应存在显著异质性。图\ref{fig:ch5_regional_hetero}以分组系数柱状图与区域均值对比呈现了这一差异。
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/ch5_regional_heterogeneity.pdf}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/ch5_regional_heterogeneity.pdf}}{}
+  \captionof{figure}{区域异质性分析。左：四大区域 $DEL\rightarrow ES$ 分组回归系数（含标准误与显著性），灰色虚线为全样本基准系数 $0.575^{***}$；右：各区域 $DEL$ 与 $ES$ 均值（2022年），中部地区 $DEL$ 水平不高但边际效应最强。\label{fig:ch5_regional_hetero}}
+\end{minipage}
+
+将30个省份按国家统计局标准划分为东部、中部、西部与东北四大区域的分样本回归结果（表\ref{table:Regional heterogeneity test}）显示，$DEL$ 系数呈现``中部$>$西部$>$东部''的梯度格局：中部 $1.994^{***}$、西部 $1.100^{***}$、东部 $0.336^{***}$，东北地区未通过显著性检验。
 
 这一梯度特征具有明确的经济含义：中部省份正处于产业数字化与能源效率提升的快速释放期，数字经济的能源结构边际改善效应最强；东部发达省份的数字经济已接近或越过拐点（广东、北京），增量效应递减；西部地区系数居中但区内差异显著——四川、重庆、陕西 $ES$ 较高，新疆、青海、甘肃 $ES$ 偏低，区域平均系数掩盖了内部的结构性分化。
 
