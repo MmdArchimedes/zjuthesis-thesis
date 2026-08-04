@@ -122,8 +122,6 @@ Radlak等\cite{radlak2025probabilistic_fusion}提出了基于概率框架的多�
 
 将手势识别嵌入完整的AR交互系统时，还需解决多通道协调问题。Wang等\cite{wang2026ar_io_survey}从输入输出双视角系统梳理了AR人机交互技术，将手势交互归为”显式控制型”输入模态，强调其在高频短指令场景下的独特价值。Shao等\cite{shao2024cv_gesture}进一步将3D手部骨骼与眼动追踪信号融合，提升了AR场景下意图理解的鲁棒性。多通道用户界面理论\cite{dong2022}为本文手势、射线与语音三通道的互补分工提供了理论框架。
 
-
-
 \section{AR沉浸式可视化技术综述}
 \label{sec:ch2_vis_survey}
 
@@ -468,7 +466,7 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times 
   \captionof{figure}{鲁棒性退化曲线：传感器噪声（左）与关节遮挡率（右）对几何规则和DBEW-NN方法精度的影响。噪声标注为mm级标准差，遮挡率为随机置零关节的比例。\label{fig:robustness_degradation}}
 \end{center}
 
-可以看出，几何规则方法在噪声超过3\,mm后精度急剧退化（F1从0.63降至$<$0.40），根本原因在于共线度、掌心法向和水平投影等几何判据直接依赖坐标值的精确性。相比之下，NN方法得益于训练时显式引入了$\sigma=2$\,mm的坐标噪声增强，在5\,mm噪声下仍保持约0.68的F1，较几何规则提升约300\%。在遮挡率超过40\%的极端条件下，NN方法的精度也开始显著下降（F1$<$0.5），但始终优于几何规则，这一现象提示未来可在合成数据中显式加入结构化遮挡增强以进一步提升极端条件下的鲁棒性。
+结果如图\ref{fig:robustness_degradation}所示，几何规则方法在噪声超过3\,mm后精度急剧退化（F1从0.63降至$<$0.40），根本原因在于共线度、掌心法向和水平投影等几何判据直接依赖坐标值的精确性。相比之下，NN方法得益于训练时显式引入了$\sigma=2$\,mm的坐标噪声增强，在5\,mm噪声下仍保持约0.68的F1，较几何规则提升约300\%。在遮挡率超过40\%的极端条件下，NN方法的精度也开始显著下降（F1$<$0.5），但始终优于几何规则，这一现象提示未来可在合成数据中显式加入结构化遮挡增强以进一步提升极端条件下的鲁棒性。
 
 \subsection{端侧推理性能基准}
 
@@ -512,7 +510,7 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times 
 
 \input{experiment_results_v2/tables/tab_cross_method.tex}
 
-需要强调的是，此对比仅供量级参考而非严格基准比较——各方法的评估数据集、类别数、硬件平台均不相同。本文方法的增量价值在于：（1）参数量在所有方法中最小（57K），且在AR头显端侧完成了完整的ONNX$\rightarrow$Barracuda部署验证；（2）包含系统性的鲁棒性评估（4种噪声/遮挡条件）和触发管线消融，而非仅报告单一精度指标；（3）与几何规则baseline的全面对比（逐类F1、混淆矩阵、退化曲线），为AR手势交互系统中``规则vs学习"的技术选型提供了可量化的决策依据。
+此对比供量级参考而非严格基准比较——各方法的评估数据集、类别数、硬件平台均不相同。本文方法的增量价值在于：（1）参数量在所有方法中最小（57K），且在AR头显端侧完成了完整的ONNX$\rightarrow$Barracuda部署验证；（2）包含系统性的鲁棒性评估（4种噪声/遮挡条件）和触发管线消融，而非仅报告单一精度指标；（3）与几何规则baseline的全面对比（逐类F1、混淆矩阵、退化曲线），为AR手势交互系统中``规则vs学习"的技术选型提供了可量化的决策依据。
 
 
 \section{多模态融合与冲突消解机制（TSTQ--Fusion）}
@@ -598,7 +596,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 本章作为第\ref{ch:ar_interaction}章多模态交互系统与第\ref{ch:ar_visualization}章 AR 可视化系统的应用验证章节，以省域数字经济与能源结构关系分析为应用场景，通过三个逐渐深入的沉浸式分析案例，展示前述系统在实际数据分析任务中的使用过程、交互方法与呈现效果。
 
-本章的核心定位是将前两章的技术能力落地为可复现的分析工作流：第\ref{ch:ar_interaction}章提供了手势（DBEW--Gesture/DBEW-NN）、语音（ASR+LLM）与射线三道互补输入通道，以及 TSTQ--Fusion 多模态融合与冲突消解机制；第\ref{ch:ar_visualization}章提供了 ChartForge 声明式图表生成框架（CIF+PCG+MS-GRP）、可组合图表代数（CCA）及统一状态向量 $\mathbf{s}_t$ 驱动的多视图条件刷新机制。第\ref{sec:ch5_data}节以最小篇幅交代数据基础与计量摘要——这些是 AR 系统的结构化输入，而非本章的创新贡献；第\ref{sec:ch5_case1}至\ref{sec:ch5_case3}节以三个依次递进的分析案例为主体，每个案例对应一个完整的分析任务，从用户意图出发，经由多模态交互输入、状态向量更新、条件刷新驱动视图变换，最终落地为可陈述的分析结论；第\ref{sec:ch5_perf}节报告原型性能与可用性评估；第\ref{sec:ch5_summary}节总结全章。
+本章的核心定位是将前两章的技术能力落地为可复现的分析工作流：第\ref{ch:ar_interaction}章提供了手势（DBEW--Gesture/DBEW-NN）、语音（ASR+LLM）与射线三道互补输入通道，以及 TSTQ--Fusion 多模态融合与冲突消解机制；第\ref{ch:ar_visualization}章提供了 ChartForge 声明式图表生成框架（CIF+PCG+MS-GRP）、可组合图表代数（CCA）及统一状态向量 $\mathbf{s}_t$ 驱动的多视图条件刷新机制。第\ref{sec:ch5_data}节以最小篇幅交代数据基础与计量摘要——这些是 AR 系统的结构化输入，而非本章的创新贡献；第\ref{sec:ch5_spatial}至\ref{sec:ch5_heterogeneity}节以三个逐层递进的分析任务（空间分布、非线性验证、区域异质性）为主体，从计量结果出发，结合 AR 可视化呈现，逐步深入省域数字经济与能源结构关系的核心发现；第\ref{sec:ch5_app_summary}节从系统角度总结应用路径；第\ref{sec:ch5_perf}节报告原型性能与可用性评估；第\ref{sec:ch5_summary}节总结全章。
 
 
 \section{数据基础与实证摘要}
@@ -609,8 +607,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 数字经济发展水平综合指数 $DEL$ 从数字基础设施、产业数字化与数字产业化三个维度选取 7 项二级指标，经熵值法客观赋权；能源结构优化综合指数 $ES$ 从能源消费结构与能源效率两个维度选取 4 项二级指标，以熵值法独立合成。完整指标体系与各指标权值分配见表\ref{table:Evaluation index system}。$DEL$ 指标中信息技术服务业收入与软件产品收入权值最高（分别为 0.31 与 0.28），反映数字产业化是省域数字经济差异的主要来源；$ES$ 指标中能源效率权值高达 0.57，表明单位 GDP 能耗是区分各省能源结构水平的核心维度。
 \begin{minipage}{\textwidth}
 \centering
-    \captionof{table}{\label{table:Evaluation index system}数字经济发展水平和能源结构评价指标体系}
     \small
+    \captionof{table}{\label{table:Evaluation index system}数字经济发展水平和能源结构评价指标体系}
     \begin{tabular}{p{2.2cm}p{2.2cm}p{4.2cm}p{1.8cm}p{1.2cm}p{1.2cm}}
     \hline
         一级指标 & 二级指标 & 变量 & 单位 & 属性 & 权值  \\ \hline
@@ -732,7 +730,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \centering
     \captionof{table}{\label{table:Robustness test}稳健性检验}
     \small
-    \begin{adjustbox}{max width=\linewidth,center}
+    \setlength{\tabcolsep}{6pt}
     \begin{tabular}{cccccccc}
     \hline
   变量 & \multicolumn{2}{c}{滞后一期} & \multicolumn{2}{c}{缩尾处理} & \multicolumn{2}{c}{剔除异常年份2020} & \multicolumn{1}{c}{内生性检验} \\
@@ -749,7 +747,6 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
   $R^2$        & 0.319    & 0.387    & 0.308    & 0.420    & 0.293    & 0.407    & 0.241 0.305 \\
     \hline
   \end{tabular}
-  \end{adjustbox}
 \end{minipage}
 \medskip
 \noindent\textbf{区域异质性。}
@@ -772,261 +769,107 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     \end{tabular}
 \end{minipage}
 \medskip
-上述计量结果均以键值对格式注入 Unity 数据引擎，由状态向量 $\mathbf{s}_t$ 的各维度变化触发对应视图的条件刷新。本章以下三个案例均基于同一套数据资产与计量结果，但各自聚焦不同的分析任务和分析阶段，演示用户如何通过手势、语音与射线的自然组合，在不依赖键鼠的 AR 穿戴场景中完成从宏观概览到微观验证的完整分析闭环。每个案例按``任务设定—交互过程—系统响应—分析发现—技术支撑''五段组织，其中``技术支撑''段显式标注本案例所依赖的第\ref{ch:ar_interaction}、\ref{ch:ar_visualization}章具体方法与模块。
+\section{空间分布特征分析}
+\label{sec:ch5_spatial}
 
-\section{空间分布特征的沉浸式探索}
-\label{sec:ch5_case1}
+基于第\ref{sec:ch5_data}节的 $DEL$ 与 $ES$ 综合指数，首先从空间分布角度考察两者的省域格局。图\ref{fig:ch5_es_heatmap}给出了2022年全国30个省份的 $ES$ 三维热力图，其中省份高度编码 $ES$ 绝对值，色阶编码相对排序（蓝—白—橙双极渐变）。
 
-\subsection{任务设定}
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{5.4-es-coloring-2022.png}{\includegraphics[width=0.70\textwidth,keepaspectratio]{5.4-es-coloring-2022.png}}{}
+  \captionof{figure}{全国 $ES$ 三维省域热力图（2022年）。高度编码 $ES$ 绝对值，渐变色阶编码相对排序。\label{fig:ch5_es_heatmap}}
+\end{minipage}
 
-某政策研究人员首次接触 2022 年省域数字经济与能源结构数据，希望快速回答以下问题：（1）数字经济发展水平（$DEL$）和能源结构优化水平（$ES$）在全国范围内呈现怎样的空间分布格局？（2）是否存在明显的区域梯度或集聚特征？（3）2014--2022 年间，上述空间格局是否发生了显著变化？在传统桌面分析范式中，回答这些问题需要反复切换地图图层、手动调整色阶并逐省读取数值，分析者的大脑在``看图—记数—比较''之间频繁切换，容易出现``看地图形成直觉、看表格产生怀疑、来回比对放弃深究''的认知断链。本案例展示如何通过 AR 沉浸式系统以自然交互完成同样的空间探索任务，全程保持空间感知与数据阅读在同一个视野中连续进行。
+空间分布呈现以下特征：（1）$DEL$ 呈显著的``东高西低''梯度，京、沪、浙、粤、苏五省构成第一梯队，与数字基础设施和数字产业化的省域集聚特征一致；（2）$ES$ 的空间格局与 $DEL$ 不完全重合——部分西部省份（新疆、甘肃、青海）$ES$ 尚可（煤炭消费占比本就不高），而个别东部高 $DEL$ 省份 $ES$ 表现平平，提示数字经济与能源结构优化之间可能存在非线性或门槛特征；（3）从2014--2022年时序变化看，全国 $ES$ 整体呈改善趋势，但改善幅度存在省域差异，东南沿海改善幅度大于东北和部分中部省份。
 
-\subsection{交互过程}
-
-用户佩戴 Rokid Max Pro 眼镜进入系统后，Unity 数据引擎自动加载 2014--2022 年省域面板数据及 $DEL$/$ES$ 综合指数。ChartForge 交互运行时层以默认状态向量 $\mathbf{s}_0 = (\text{year}{=}2022,\ \text{metric}{=}ES,\ \text{region}{=}\text{全国},\ \text{view}{=}\text{热力图},\ \text{selected}{=}\varnothing)$ 初始化会话，触发首帧条件刷新，渲染全国省域 Mesh 热力图。30 个省份以三维挤出高度编码 $ES$ 绝对值，以蓝（低）—白（中）—橙（高）双极渐变色阶编码 $ES$ 相对排序。用户环视一周即获得东西梯度的初步印象：西部省份（新疆、甘肃、青海等）Mesh 较高且偏橙，东部沿海省份偏低且偏蓝。
-
-用户首先想对比数字经济视角下的空间格局，于是做出\textbf{单指向左}手势（映射至``切换指标''命令）。DBEW-NN 分类器在 $T=32$ 帧（约 533\,ms）滑动窗口内以置信度 $s_{\mathrm{NN}}=0.91$ 识别该手势，通过边沿触发门控（$\theta_g=0.85$）后经 TSTQ--Fusion 通道内稳定化提交至融合队列。融合层检测到当前时间窗内无其他并发事件，直接将 $\mathbf{s}_t.\mathrm{metric}$ 更新为 $DEL$。视图刷新后空间格局发生显著翻转：京、沪、浙、粤、苏五省 Mesh 最高且偏橙，$DEL$ 高值明显集聚于东部沿海，而西部省份 Mesh 降低且偏蓝。整个过程无需切换窗口或点击菜单——用户仅通过一个手势即完成了从能源结构视角到数字经济视角的切换。
-
-接下来，用户希望观察 2014--2022 年间的格局演化趋势，做出\textbf{二指手心}手势（映射至``年份+1''）并保持 1.5\,s 触发连续步进模式。DBEW 触发管线以 500\,ms 冷却窗间隔连续提交年份递增事件，每步递增后 ChartForge 按时间轴条件刷新逻辑重算当年 $ES$ 着色。用户看到：2014 年多数省份 Mesh 偏橙，随着年份推进，橙色区域逐渐收缩、蓝—绿色区域自东部向中西部扩展，直观呈现出样本期内全国能源结构的整体改善趋势。到达 2022 年后，用户以\textbf{二指手背}手势（``年份-1''）逆向回退，确认了特定年份的着色记忆。
-
-在时间轴遍历建立起整体趋势感知后，用户希望快速定位至 2019 年以观察疫情前基准状态，于是说出``跳转到二零一九年''。语音通道经 ASR 引擎转写、LLM 语义解析为结构化指令 $\{\text{action}{=}\text{jump},\ \text{year}{=}2019\}$ 并注入融合队列。手势通道此时无活跃事件，语音事件置信度 $0.94$ 超过阈值 $\theta_s = 0.80$，融合层直接更新 $\mathbf{s}_t.\mathrm{year} \leftarrow 2019$，视图立即刷新至 2019 年快照。这一语音交互的设计意图在于：手势适合离散的步进式操作（逐帧浏览），语音适合大跨度的定位式操作（指定目标），二者在第\ref{ch:ar_interaction}章的统一状态向量上协同而不冲突。
-
-\subsection{系统响应}
-
-从 ChartForge 状态驱动管线角度，上述四步交互共触发 5 次条件刷新（初始加载 + 指标切换 + 3 次年份变化），每次刷新仅重算着色映射与 Mesh 挤出高度，不重建 3D 场景或几何体。Unity Profiler 记录显示单次刷新耗时 1.8--3.2\,ms（含数据查询 + 色阶映射 + Mesh 顶点更新），在 60\,FPS 帧预算（16.7\,ms）中占比约 11--19\%，用户感知为即时切换。ChartForge 在本案例中未被调用——热力图属于 Unity 渲染层的内置高频视图类型，由 ColorMapper 直接处理，不经由 CIF$\rightarrow$PCG$\rightarrow$MS-GRP 生成管线。
-
-从多模态交互角度，本案例使用了手势通道的离散命令（指标切换、年份步进）和语音通道的目标定位（年份跳转），两种模态在时间上交替而非并发，TSTQ--Fusion 以默认优先级（手势$>$语音）和 300\,ms 融合窗口处理，未发生冲突事件。射线通道在本案例中未被使用——全国热力图浏览阶段不需要精确的省域点选。
-
-\subsection{分析发现}
-
-通过上述沉浸式探索，研究人员在 3--5 分钟内获得了以下初步判断：（1）$DEL$ 呈显著的``东高西低''梯度，京沪浙粤苏为第一梯队，与数字基础设施和数字产业化的省域集聚特征一致；（2）$ES$ 的空间格局与 $DEL$ 不完全重合——部分西部省份 $ES$ 尚可（能源结构中煤炭占比本就不高），而个别东部高 $DEL$ 省份 $ES$ 表现平平，提示数字经济与能源结构优化之间可能存在非线性或门槛特征；（3）2014--2022 年间 $ES$ 整体改善，但改善幅度存在省域差异，东南沿海改善幅度大于东北和部分中部省份。上述初步判断为案例二的计量验证提供了具体的问题锚点。
-
-\subsection{技术支撑}
-
-本案例的功能由以下前文模块共同支撑：（1）DBEW-NN 手势分类器（第\ref{sec:ch3_gesture_nn}节）识别单指、二指等离散手势命令，$T=32$ 滑动窗口 + 边沿触发 + 冷却窗门控保证操作稳定性；（2）语音通道 ASR+LLM 语义解析（第\ref{ch:ar_interaction}章）将自然语言年份短语映射为结构化状态更新指令；（3）TSTQ--Fusion 时间窗仲裁（第\ref{sec:ch3_fusion}节）协调手势与语音事件的串行提交，避免重复写入；（4）ChartForge 交互运行时层的状态驱动条件刷新机制（第\ref{ch:ar_visualization}章）确保仅当 $\mathbf{s}_t$ 发生实质性变化时才触发着色重算，避免无效渲染；（5）统一状态向量 $\mathbf{s}_t$（第\ref{sec:ch4_motivation}节式\ref{eq:ch4_declarative}）作为手势、语音输出与视图刷新之间的唯一数据契约。
-
-\begin{center}
-  \IfFileExists{ch5-case1-heatmap-toggle.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{ch5-case1-heatmap-toggle.png}}{}
-  \captionof{figure}{案例一指标切换对比：$ES$ 热力图（左）与 $DEL$ 热力图（右），手势触发指标切换后视图即时刷新。省份 Mesh 高度编码绝对值，渐变色阶编码相对排序。\label{fig:ch5_case1_heatmap}}
-\end{center}
-
-\begin{center}
-  \IfFileExists{ch5-case1-timeline.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{ch5-case1-timeline.png}}{}
-  \captionof{figure}{案例一时间轴遍历：2014（左上）、2017（右上）、2019（左下）、2022（右下）四年的 $ES$ 热力图快照。自 2014 至 2022 年，偏橙区域（低 $ES$）向偏蓝区域（高 $ES$）渐进过渡，直观呈现全国能源结构整体改善趋势。\label{fig:ch5_case1_timeline}}
-\end{center}
+上述空间格局特征与第\ref{sec:ch5_data}节基准回归中 $DEL^2$ 项显著为负（$-2.103^{***}$，表\ref{table:Baseline regression results}列（3））的倒U型推断形成空间层面的直观印证：高 $DEL$ 东部省份的 $ES$ 并未随数字经济水平线性提升，需要进一步验证 $DEL$ 与 $ES$ 之间的非线性关系形态。
 
 
-\section{非线性关系的可视化验证}
-\label{sec:ch5_case2}
+\section{非线性关系验证}
+\label{sec:ch5_nonlinear}
 
-\subsection{任务设定}
+为验证第\ref{sec:ch5_spatial}节空间探索中提示的非线性特征，本节基于面板固定效应模型（式\ref{eq:benchmark_model}）对 $DEL$--$ES$ 关系进行计量检验。基准回归结果（表\ref{table:Baseline regression results}）显示：列（1）仅含 $DEL$ 一次项时系数为 $0.813^{***}$（$R^2=0.308$）；列（2）加入控制变量后降至 $0.575^{***}$（$R^2=0.423$）；列（3）引入 $DEL^2$ 后，一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 均在1\%水平显著，$R^2$ 升至0.570，确认了倒U型非线性关系。
 
-案例一的空间探索初步提示了 $DEL$ 与 $ES$ 之间可能并非简单的线性关系——高 $DEL$ 东部省份的 $ES$ 并未全部对应更高水平。研究人员希望进一步验证：（1）全样本下 $DEL$--$ES$ 关系是否呈倒 U 型？（2）各省份在倒 U 型曲线上的分布位置如何？（3）接近或已过拐点的省份具有哪些共同特征？在传统分析流程中，检验非线性需要翻阅多列回归表、在脑海中想象曲线形状并手动对照散点图与系数符号，存在``看系数想象曲线、看散点忘记拐点、看拐点找不到对应省份''的认知碎片化问题。本案例展示如何通过 AR 系统将回归表、散点图、拟合曲线与省域地图四者绑定在同一状态向量下，实现``点选即定位、切换即对照''的沉浸式验证体验。
+拐点由公式 $x^* = -\alpha_1/(2\alpha_2)$ 计算得 $DEL=0.507$，多数省份位于拐点左侧。从省域位置分布看：广东（$DEL\approx0.58$）和北京（$DEL\approx0.52$）已接近或越过拐点，浙江（$DEL\approx0.48$）位于拐点左侧但相距不远，青海（$DEL\approx0.08$）远在拐点左侧且该处拟合曲线斜率最陡（约$+2.1$）。这一梯度特征表明：数字经济对能源结构的边际改善效应随 $DEL$ 水平升高而递减——低 $DEL$ 省份处于曲线陡峭上升段，数字化投入的能源结构回报最大；高 $DEL$ 省份已进入平台期，数字经济本身的进一步增长对能源结构的边际贡献趋近于零甚至可能逆转。
 
-\subsection{交互过程}
-
-在案例一的热力图基础上，用户做出\textbf{三指手心}手势（映射至``散点图模式''），DBEW-NN 识别后经触发管线提交，融合层更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{scatter}$。ChartForge 交互运行时层检测到视图模式切换，触发 CIF 解析器生成 $DEL$--$ES$ 散点图：CIF 将 $\mathbf{s}_t$ 中的当前年份（2022）、指标（$DEL$/$ES$）和区域（全国）映射为意图三元组 $\langle \mathcal{D}{=}\text{province\_panel},\ \mathcal{V}{=}\text{scatter\_plot},\ \mathcal{I}{=}\text{regression\_fit} \rangle$，经 PCG 束搜索（$k=4$）生成初始 ChartSpec，再由 MS-GRP 经语义验证、视觉精炼与交互注入后输出最终规约。Unity ChartRenderer 将规约渲染为三维散点图，横轴为 $DEL$、纵轴为 $ES$，每个省份为一个可交互数据点，同时叠加二次拟合曲线（系数取自表\ref{table:Baseline regression results}列（3））及拐点竖线标注（$x = 0.507$）。散点图与热力图在同一 AR 空间中并排呈现，由同一 $\mathbf{s}_t$ 驱动。
-
-用户随即将射线（Rokid 手柄 6DoF 控制器发出的虚拟射线）指向散点图中的广东数据点（$DEL \approx 0.58$，$ES \approx 0.62$），扣动扳机键触发选取。射线通道经 TSTQ--Fusion 通道内稳定化后提交选取事件，$\mathbf{s}_t.\mathrm{selected}$ 更新为广东。ChartForge 检测到选中省份变化后触发三重联动刷新：散点图中广东数据点以高亮圆环标注，左侧热力图中广东省 Mesh 以金色描边高亮，结果面板自动展开，显示广东的 $DEL$ 值、$ES$ 值、在倒 U 型曲线上的横轴位置（$x_{\text{广东}} = 0.58 > 0.507$，位于拐点右侧）以及对应的拟合 $\widehat{ES}$ 与残差。可以直观看到，广东已明显越过拐点，拟合曲线斜率在拐点右侧转为负值——数字经济对能源结构的边际正向关联已趋近于零甚至可能逆转。
-
-接着，用户以射线依次选取北京（$DEL \approx 0.52$）、浙江（$DEL \approx 0.48$）和青海（$DEL \approx 0.08$），系统在每次选取后同步更新三重视图。快速对比即可发现三省在曲线上的位置梯度：北京接近拐点（$x = 0.52 \approx 0.507$），浙江位于拐点左侧但相距不远（$x = 0.48$），青海远在拐点左侧（$x = 0.08$）且该处拟合曲线斜率最陡（约 $+2.1$）。这一对比将基准回归的倒 U 型叙事转化为一目了然的空间证据：$DEL$ 水平较低的省份位于曲线陡峭上升段，边际正向关联最大；中等 $DEL$ 省份位于曲线平缓段；高 $DEL$ 省份已跨越拐点。
-
-最后，用户说出``显示基准回归第三列''，语音通道经 LLM 解析为 $\{\text{action}{=}\text{show\_table},\ \text{table}{=}\text{baseline},\ \text{column}{=}3\}$。ChartForge 按 CIF$\rightarrow$PCG$\rightarrow$MS-GRP 流程生成表\ref{table:Baseline regression results}列（3）的格式化结果卡片，包含一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 及拐点推导公式 $x^* = -\alpha_1/(2\alpha_2) = 0.507$。卡片浮于散点图右侧，以虚线引导线与当前选中的广东省空间位置建立视觉连线。至此，统计证据（回归系数卡片）、几何证据（拟合曲线与拐点线）和空间证据（热力图高亮省）三者共处同一视野，相互印证而无须视线跳转。
-
-\subsection{系统响应}
-
-本案例的核心技术路径是 ChartForge 的声明式图表生成与状态驱动的多视图联动。散点图并非预置的静态资源，而是由 ChartForge 在运行时根据 $\mathbf{s}_t$ 中的 $\mathrm{metric}$、$\mathrm{year}$ 和 $\mathrm{view}$ 参数动态生成：CIF 解析器将当前状态映射为图表意图，PCG 以 $k=4$ 的束宽搜索最优 ChartSpec 候选，MS-GRP 的语义验证阶段检查数据—视觉通道映射的正确性（如 $DEL$ 连续变量映射至横轴、$ES$ 连续变量映射至纵轴、省份名映射至点标注），视觉精炼阶段优化点大小、透明度与拟合曲线样式，交互注入阶段在 ChartSpec 中嵌入各省数据点的悬停高亮与选取响应行为。整个 ChartForge 管线耗时约 85\,ms（含 LLM 推理约 60\,ms + PCG 搜索约 18\,ms + 渲染约 7\,ms），生成结果对用户感知为``即时响应''。
-
-射线选取—多视图联动是本案例的另一关键技术展示。当 $\mathbf{s}_t.\mathrm{selected}$ 变化时，ChartForge 交互运行时层的条件刷新机制同时触发 ChartRenderer（散点图高亮）、MapRenderer（热力图高亮描边）和 PanelRenderer（结果面板内容更新）三个渲染器的并发刷新——每个渲染器读取同一状态向量中各自关心的维度，互不依赖，从而避免了传统命令式架构中``先更新地图、再通知面板、最后刷新图表''的串行耦合。
-
-\subsection{分析发现}
-
-通过上述交互核对，研究人员获得了三个层次的确证：（1）倒 U 型关系在全样本下确实存在，二次项系数 $-2.103^{***}$ 在统计上和视觉上均得到支持——散点分布呈现明显的先升后平趋势；（2）各省份在曲线上的位置与其 $DEL$ 水平高度对应，拐点右侧的省份（广东、北京）恰好是全国 $DEL$ 前两位，提示数字经济的能源结构优化效应可能存在``天花板''——当数字化达到极高水平后，进一步增长对能源结构的边际改善递减；（3）拐点左侧的省份之间存在显著的边际效应差异：青海的拟合斜率远大于浙江，意味着对 $DEL$ 尚低的西部省份而言，数字经济的能源结构优化潜力最大——这一发现直接引出了案例三的区域异质性分析需求。
-
-\subsection{技术支撑}
-
-本案例的功能由以下前文模块共同支撑：（1）DBEW-NN（第\ref{sec:ch3_gesture_nn}节）识别三指手心手势以触发视图模式切换；（2）射线交互通道（第\ref{sec:ch3_arch_overview}节）提供精确的省域点选能力，6DoF 手柄的指向精度约 $\pm 1.5^\circ$ 足以区分 30 省份的散点分布；（3）ChartForge MS-GRP 管线（第\ref{ch:ar_visualization}章）实现散点图与回归结果卡片的声明式生成——CIF 将自然语言意图映射为图表规约，PCG 束搜索在图表生成空间中寻优，SVAS 定量评估生成质量；（4）ChartForge 交互运行时层的状态驱动条件刷新机制（第\ref{ch:ar_visualization}章）驱动散点图—热力图—面板的三重联动刷新；（5）统一状态向量 $\mathbf{s}_t$ 的 $\mathrm{selected}$ 维度作为三重视图的唯一同步锚点。
-
-\begin{center}
-  \IfFileExists{ch5-case2-scatter.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{ch5-case2-scatter.png}}{}
-  \captionof{figure}{案例二散点图与拟合曲线：横轴为 $DEL$，纵轴为 $ES$，蓝色虚线为二次拟合曲线（系数取自基准回归列（3）），红色竖线标注拐点 $x=0.507$，金色圆环高亮当前射线选取的广东省数据点。左侧热力图同步高亮广东省 Mesh。\label{fig:ch5_case2_scatter}}
-\end{center}
-
-\begin{center}
-  \IfFileExists{ch5-case2-panel.png}{\includegraphics[width=0.85\textwidth,keepaspectratio]{ch5-case2-panel.png}}{}
-  \captionof{figure}{案例二结果面板联动：射线选取广东后自动展开的省份信息卡片，同步显示 $DEL$ 值、$ES$ 值、在倒 U 型曲线上的位置及基准回归系数卡片。面板内容由 $\mathbf{s}_t.\mathrm{selected}$ 变化触发刷新。\label{fig:ch5_case2_panel}}
-\end{center}
+稳健性检验（表\ref{table:Robustness test}）从滞后一期、缩尾处理、剔除异常年份和工具变量四种口径验证了上述结论的可靠性，$DEL$ 系数符号与显著性均与基准回归一致。中介效应检验（表\ref{table:Mediating effect}）进一步表明，技术创新（$TEIN$）是 $DEL$ 影响 $ES$ 的部分中介渠道，间接效应约占总效应的12.33\%。
 
 
-\section{异质性的多尺度交互分析}
-\label{sec:ch5_case3}
+\section{区域异质性分析}
+\label{sec:ch5_heterogeneity}
 
-\subsection{任务设定}
+倒U型关系在全样本下成立，但不同区域的发展阶段差异可能导致 $DEL$ 对 $ES$ 的边际效应存在显著异质性。将30个省份按国家统计局标准划分为东部、中部、西部与东北四大区域的分样本回归结果（表\ref{table:Regional heterogeneity test}）显示，$DEL$ 系数呈现``中部$>$西部$>$东部''的梯度格局：中部 $1.994^{***}$、西部 $1.100^{***}$、东部 $0.336^{***}$，东北地区未通过显著性检验。
 
-案例二的全样本核对确认了倒 U 型非线性关系的存在，但无法回答以下区域层面的追问：（1）基准回归的区域异质性检验（表\ref{table:Regional heterogeneity test}）显示``中部$>$西部$>$东部''的系数梯度——这三个区域内部各省份的个体表现是否与分区平均一致，还是存在区内分化？（2）中部地区 $DEL$ 系数最高（$1.994^{***}$）——是区内所有省份的数字化红利均等，还是个别省份拉高了均值？（3）东部地区 $DEL$ 系数最低（$0.336^{***}$）但恰包含已过拐点的广东和北京——如果剔除这两个拐点右侧省份，东部剩余省份的边际效应是否回升？这些问题的回答需要跨越多层分析粒度（全国$\rightarrow$区域$\rightarrow$省份$\rightarrow$指标），在传统分析环境中意味着至少 3--5 次独立的图表生成与大量的手动对照。本案例展示 AR 系统如何通过自然交互实现分析粒度的无缝缩放，以及多模态融合（手势+语音+射线）在复杂分析任务中的协同价值。
+这一梯度特征具有明确的经济含义：中部省份正处于产业数字化与能源效率提升的快速释放期，数字经济的能源结构边际改善效应最强；东部发达省份的数字经济已接近或越过拐点（广东、北京），增量效应递减；西部地区系数居中但区内差异显著——四川、重庆、陕西 $ES$ 较高，新疆、青海、甘肃 $ES$ 偏低，区域平均系数掩盖了内部的结构性分化。
 
-\subsection{交互过程}
+从中部区内的省际对比看，湖北的数字产业化优势（武汉光谷产业集群，反映在``软件产品收入''和``信息技术服务业收入''两项分指标显著高于中部均值）解释了其 $DEL$ 对 $ES$ 的高弹性，而河南在数字基础设施（宽带接入端口）上相对占优——两省虽同属中部区，$DEL$ 驱动 $ES$ 的结构路径存在质的差异。这一发现表明，区域异质性不仅存在于大区之间，大区内部的省际分化同样不可忽视，区域平均系数对区内落后省份的政策参考价值有限。
 
-用户首先说出``按四大区域分组''。语音通道经 LLM 解析，识别出意图为将当前视图从全国单一热力图切换为东—中—西—东北四区并列的分组模式。TSTQ--Fusion 在 300\,ms 融合窗口内未检测到冲突事件，直接更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{regional\_grid}$ 和 $\mathbf{s}_t.\mathrm{region} \leftarrow \text{all}$。ChartForge 触发 MS-GRP 管线以 2$\times$2 网格布局重新生成视图：每个子区域渲染独立的省域热力图（只显示该区域所含省份），子图上方标注区域名称和该区域的 $DEL$ 分组回归系数（取自表\ref{table:Regional heterogeneity test}），系数以柱状图形式嵌入子图标题栏以便快速比较。
 
-四区视图一目了然地呈现了区域差异的全貌：中部子图（$DEL$ 系数 $1.994^{***}$）的柱状条最高，但该区域仅含 6 个省份且内部着色差异较大——湖北省 Mesh 明显高于河南和山西，提示中部区的内部差异不容忽视；西部子图（系数 $1.100^{***}$）省份数量最多（11 个），着色分布呈明显双峰，四川、重庆、陕西偏蓝（$ES$ 较高），新疆、青海、甘肃偏橙（$ES$ 较低），区域平均系数显然掩盖了内部的显著异质性。
+\section{系统应用小结}
+\label{sec:ch5_app_summary}
 
-这一观察自然引出了下钻需求。用户向中部子图方向做出\textbf{四指手心}手势（映射至``放大/下钻''），同时射线指向湖北 Mesh。TSTQ--Fusion 在融合窗口内检测到手势与射线事件的共现：$\mathrm{gesture}{=}\text{pinch\_zoom}$ 和 $\mathrm{ray}{=}\{\text{target}{=}\text{湖北},\ \text{region}{=}\text{central}\}$。融合层判定两事件目标一致（均指向中部区 $\rightarrow$ 湖北），无冲突，将合并事件写入状态向量：$\mathbf{s}_t.\mathrm{view} \leftarrow \text{province\_detail}$，$\mathbf{s}_t.\mathrm{selected} \leftarrow \text{湖北}$。ChartForge 检测到视图模式切换至省级详情，触发 MS-GRP 管线以单省布局重新生成页面。
-
-ChartForge 按 CIF 意图 $\langle \mathcal{D}{=}\text{Hubei\_panel},\ \mathcal{V}{=}\text{quad\_layout},\ \mathcal{I}{=}\text{compare\_to\_region} \rangle$ 生成湖北省四象限详情视图（图\ref{fig:ch5_case3_hubei}）：
-\begin{itemize}
-  \item \textbf{左上象限——时序轨迹：} $DEL$ 与 $ES$ 双轴折线图（2014--2022），叠加中部区域均值虚线作为参照，显示湖北 $DEL$ 增速持续高于中部均值，而 $ES$ 在 2018 年后出现加速改善——与湖北 2018 年前后加速数字基建投资的省策时点一致；
-  \item \textbf{右上象限——散点定位：} 湖北在倒 U 型曲线上的位置（$DEL=0.32$，$ES=0.73$），标注与拐点的距离和当前斜率，同时以灰色小点叠加中部其他 5 省作为参照，直观显示湖北在中部区的相对位置；
-  \item \textbf{左下象限——指标分解：} $DEL$ 七项分指标的雷达图，叠加以熵权—决策树优化权重 $\mathbf{w}^{(1)}$ 为半径的参考多边形，显示湖北在``软件产品收入''和``信息技术服务业收入''两项上显著高于中部均值，反映武汉光谷等数字产业集群的结构性优势——这为湖北 $DEL$ 对 $ES$ 的高边际效应提供了指标层面的微观注解；
-  \item \textbf{右下象限——计量摘要：} 中部区域分组回归系数卡片（$1.994^{***}$）与全样本基准系数（$0.575^{***}$）并排对照，附中介效应路径图（$DEL \rightarrow TEIN \rightarrow ES$）及湖北的 $TEIN$ 水平标注（高于中部均值 0.8 个标准差）。
-\end{itemize}
-
-四象限视图由同一 $\mathbf{s}_t$ 驱动，当用户切换选中省或年份时，四个象限同步刷新。ChartForge 的 CCA（可组合图表代数）在此发挥关键作用：四个象限各自对应一个独立的 ChartSpec，通过 CCA 的组合算子 $\oplus_{\text{grid}}$（网格组合）和 $\bowtie_{\mathbf{s}_t}$（状态同步连接）拼合为统一的省级详情页规约，再由 Platform Adapter 一次性提交至 Unity ChartRenderer 渲染。
-
-阅读湖北详情后，用户希望横向对比中部另一省份河南的指标结构，于是说出``对比河南''而不离开当前视图。语音通道经 LLM 解析为 $\{\text{action}{=}\text{compare},\ \text{target}{=}\text{河南}\}$。ChartForge 检测到 $\mathbf{s}_t.\mathrm{compare\_mode} = \text{true}$，在保持湖北四象限视图不变的前提下，于各象限中以虚线/半透明叠加河南省对应数据：左上时序图新增河南 $DEL$/$ES$ 虚线轨迹，直观对比两省增速差异；右上散点图以方形标记标注河南在曲线上的位置（$DEL=0.18$），与湖北的圆形标记形成对照；左下雷达图以半透明多边形叠加河南指标轮廓，清晰展示湖北在数字产业化两项上的显著领先和河南在数字基础设施（宽带端口）上的相对优势。这一对比揭示了两省在中部区内部的功能分化：湖北以数字产业化驱动、河南以数字基础设施驱动——尽管同属中部区，$DEL$ 对 $ES$ 的作用路径可能存在质的差异，区域平均系数（$1.994^{***}$）掩盖了这一内部结构。
-
-分析完成后，用户做出\textbf{四指手背}手势（映射至``缩小/回退''），融合层更新 $\mathbf{s}_t.\mathrm{view} \leftarrow \text{national\_heatmap}$，$\mathbf{s}_t.\mathrm{compare\_mode} \leftarrow \text{false}$。ChartForge 恢复全国热力图默认布局，但 $\mathbf{s}_t.\mathrm{recent\_provinces}$ 保留湖北与河南的访问记录，供后续快速跳转。
-
-\subsection{系统响应}
-
-本案例是全章交互复杂度最高的场景，覆盖了手势、语音与射线的并发协同，以及 ChartForge 在多视图组合生成中的全能力展示。从性能角度，四象限布局的 ChartForge 生成耗时约 210\,ms（四个独立 ChartSpec 的 PCG 搜索各约 18\,ms 共约 72\,ms + LLM 意图解析约 60\,ms + CCA 组合约 20\,ms + 渲染约 58\,ms），跨省对比叠加仅需增量更新对比图层（约 12\,ms），无需重新生成全页。从多模态融合角度，手势与射线在四区视图中的共现触发了 TSTQ--Fusion 的跨通道仲裁逻辑：两事件在 300\,ms 时间窗内到达，融合层检查目标一致性后按``手势$>$射线''优先级规则合并提交，避免了重复状态更新；语音对比命令发出时手势通道处于空闲状态，直接注入而不产生冲突。
-
-\subsection{分析发现}
-
-通过从全国到区域到单省再到跨省对比的多尺度下钻，研究人员获得了以下增量发现：（1）区域异质性不仅存在于东—中—西—东北四大分区之间，分区内部的省际差异同样显著——中部区的湖北与河南呈现截然不同的 $DEL$--$ES$ 驱动模式，区域平均系数对区内落后省份的参考价值有限；（2）湖北的数字产业化优势（光谷产业集群）解释了其 $DEL$ 对 $ES$ 的高弹性——$DEL$ 分指标的结构差异可能比总量差异更为关键；（3）东部区整体系数低（$0.336^{***}$）主要由广东、北京的拐点效应拉低——两省数字经济已进入高水平平台期，边际能源结构改善来自其他渠道（如直接的环保规制与产业退出），数字经济本身的进一步增长贡献有限。上述发现若仅依赖桌面统计软件，需要至少 5--6 轮独立的图表生成和大量跨窗口对照，而 AR 系统通过状态向量的统一驱动和多模态自然交互，将分析流程压缩为约 8--10 分钟的连续沉浸会话。
-
-\subsection{技术支撑}
-
-本案例的功能由以下前文模块共同支撑：（1）DBEW-NN（第\ref{sec:ch3_gesture_nn}节）识别四指手心/手背手势，区分``下钻''与``回退''两种缩放语义；（2）TSTQ--Fusion 跨通道仲裁（第\ref{sec:ch3_fusion}节）处理手势—射线共现事件的目标一致性检查与合并提交，避免并发冲突；（3）语音通道 ASR+LLM（第\ref{ch:ar_interaction}章）解析``按四大区域分组''和``对比河南''两类不同复杂度的自然语言指令；（4）ChartForge CIF+PCG+MS-GRP（第\ref{ch:ar_visualization}章）驱动四象限详情页的动态生成与跨省对比图层叠加；（5）ChartForge CCA 可组合图表代数（第\ref{ch:ar_visualization}章）以 $\oplus_{\text{grid}}$ 和 $\bowtie_{\mathbf{s}_t}$ 算子组合四个独立 ChartSpec 为统一页面规约；（6）ChartForge 交互运行时层的状态驱动条件刷新机制协调四个象限渲染器在同一 $\mathbf{s}_t$ 周期内的并发刷新。
-
-\begin{center}
-  \IfFileExists{ch5-case3-regional-grid.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{ch5-case3-regional-grid.png}}{}
-  \captionof{figure}{案例三四区并列热力图（2$\times$2 网格）。每个子区域独立着色，子图标题栏嵌入该区域的 $DEL$ 分组回归系数柱状图。中部区系数最高（$1.994^{***}$）但区内着色差异显著。\label{fig:ch5_case3_regional}}
-\end{center}
-
-\begin{center}
-  \IfFileExists{ch5-case3-hubei-detail.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{ch5-case3-hubei-detail.png}}{}
-  \captionof{figure}{案例三湖北省四象限详情视图。左上：$DEL$/$ES$ 双轴时序（虚线为中部均值）；右上：倒 U 型曲线定位（灰点为中部其他省参照）；左下：$DEL$ 七项分指标雷达图（虚线为河南对比）；右下：中部区域回归系数卡与中介路径。\label{fig:ch5_case3_hubei}}
-\end{center}
-
-\begin{center}
-  \IfFileExists{ch5-case3-hubei-henan-compare.png}{\includegraphics[width=0.85\textwidth,keepaspectratio]{ch5-case3-hubei-henan-compare.png}}{}
-  \captionof{figure}{案例三湖北—河南跨省对比：雷达图中湖北（实线）在数字产业化指标上领先，河南（虚线）在数字基础设施指标上占优，揭示中部区内两省 $DEL$ 对 $ES$ 驱动模式的质的差异。\label{fig:ch5_case3_compare}}
-\end{center}
+以上三节从空间分布、非线性验证和区域异质性三个逐层递进的分析维度，展示了前述章节技术模块在实际数据场景中的应用路径。三个分析任务共享同一套数据资产（第\ref{sec:ch5_data}节的指标体系与计量结果）和同一组技术基座——第\ref{ch:ar_interaction}章的多模态交互通道（手势、语音、射线）与第\ref{ch:ar_visualization}章的ChartForge声明式可视化框架。在AR沉浸式环境中，用户通过自然交互实现分析粒度的无缝缩放（全国$\rightarrow$区域$\rightarrow$省份$\rightarrow$指标），所有视图由统一状态向量 $\mathbf{s}_t$ 驱动条件刷新，确保多视图间的强制一致。这一``状态驱动''架构将传统的``切换窗口—生成图表—人工对照''碎片化流程压缩为连续的沉浸式分析会话，验证了AR技术在省域经济能源数据分析场景中的工程可行性。
 
 
 \section{原型性能与可用性评估}
 \label{sec:ch5_perf}
 
-\subsection{端侧性能基准}
+\noindent\textbf{端侧性能基准。}
+在 Rokid Station Pro（骁龙 XR2 平台，Unity 2022.3 LTS + Barracuda 推理后端）上对系统的完整交互链路进行性能基准测试，结果汇总于表\ref{tab:ch5_performance}。
 
-在 Rokid Station Pro（骁龙 XR2 平台，Unity 2022.3 LTS + Barracuda 推理后端）上对三个案例的完整交互链路进行性能基准测试，结果汇总于表\ref{tab:ch5_performance}。
-
-\begin{center}
-  \captionof{table}{\label{tab:ch5_performance}三个案例的端侧性能基准（Rokid Station Pro，骁龙XR2）}
+\begin{minipage}{\textwidth}
+\centering
   \small
+  \captionof{table}{\label{tab:ch5_performance}系统端侧性能基准（Rokid Station Pro，骁龙XR2）}
   \setlength{\tabcolsep}{10pt}
-  \begin{tabular}{lcccc}
+  \begin{tabular}{lccc}
   \hline
-  指标 & 案例一 & 案例二 & 案例三 & 帧预算占比 \\
+  指标 & 测试值 & 帧预算占比 & 备注 \\
   \hline
-  ChartForge 状态驱动刷新时延 & 1.8--3.2\,ms & 2.1--4.5\,ms & 2.5--5.8\,ms & 11--35\% \\
-  ChartForge 图表生成时延 & — & 78--95\,ms & 185--235\,ms & 仅首次生成 \\
-  DBEW-NN 单次推理时延 & 1.49\,ms & 1.49\,ms & 1.49\,ms & 8.9\% \\
-  ASR+LLM 语义解析时延 & 320--480\,ms & 310--450\,ms & 340--520\,ms & 异步，不计入帧 \\
-  TSTQ--Fusion 仲裁时延 & $<$0.05\,ms & $<$0.05\,ms & $<$0.08\,ms & $<$0.5\% \\
-  稳态渲染 FPS & 42--48 & 38--45 & 30--38 & — \\
+  ChartForge 状态驱动刷新时延 & 1.8--5.8\,ms & 11--35\% & 随视图复杂度变化 \\
+  ChartForge 图表生成时延 & 78--235\,ms & — & 仅首次生成 \\
+  DBEW-NN 单次推理时延 & 1.49\,ms & 8.9\% & 含预处理与后处理 \\
+  ASR+LLM 语义解析时延 & 310--520\,ms & — & 异步管线 \\
+  TSTQ--Fusion 仲裁时延 & $<$0.08\,ms & $<$0.5\% & 内存查找 \\
+  稳态渲染 FPS & 30--48 & — & 视场景复杂度 \\
   \hline
   \end{tabular}
-  \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：ChartForge 图表生成为首次生成时延，增量更新（如跨省对比叠加）为 8--18\,ms（案例三步骤四）。ASR+LLM 为异步管线，不阻塞渲染主线程。帧预算占比以 60\,FPS 目标（16.7\,ms/帧）为分母。案例三四象限布局为最重负载场景，仍可维持 30+ FPS。
-  \end{minipage}
-\end{center}
+  \\[4pt]
+  {\footnotesize 注：ChartForge 图表生成为首次生成时延，增量更新为 8--18\,ms。ASR+LLM 为异步管线，不阻塞渲染主线程。帧预算占比以 60\,FPS 目标（16.7\,ms/帧）为分母。}
+\end{minipage}
 
-三个案例的稳态渲染帧率均维持在 30\,FPS 以上，满足 AR 头显的舒适交互阈值。案例三的四象限布局为全章性能瓶颈——四个 ChartSpec 的同步渲染需约 5.8\,ms 的 GPU 时间——但仍在 60\,FPS 帧预算的 35\% 以内，不影响 SLAM 追踪与手势推理等更高优先级的系统管线。ChartForge 的首次生成时延（78--235\,ms）对用户体验表现为``短暂加载''，增量更新路径（案例三的跨省对比叠加仅 8--18\,ms）使得同一会话内的后续操作几乎无等待感知。
+系统稳态渲染帧率维持在 30\,FPS 以上，满足 AR 头显的舒适交互阈值。最重负载场景（四象限布局）下 ChartForge 生成耗时约 210\,ms，但增量更新路径（跨省对比叠加仅 8--18\,ms）使得同一会话内的后续操作几乎无等待感知。
 
-\subsection{可用性走查}
+\noindent\textbf{可用性走查。}
+受设备与伦理流程限制，本文未展开大规模随机对照用户实验，但在实验室内组织了小规模任务走查（$N=8$，均为有数据分析经验的研究生或初级研究人员）。走查任务覆盖空间探索、计量核对与多尺度下钻三类典型分析操作，记录指标包括任务完成时间、手势误触率和主观评分（5 点 Likert 量表）。
 
-受设备与伦理流程限制，本文未展开大规模随机对照用户实验，但在实验室内组织了小规模任务走查（$N=8$，均为有数据分析经验的研究生或初级研究人员）。走查任务覆盖三个案例的核心交互步骤：案例一完成指标切换与时间轴遍历，案例二完成散点图射线选省与回归结果朗读，案例三完成区域分组切换与单省下钻。记录指标包括任务完成时间、误触次数（手势被错误分类或未被识别）和单次交互后的主观评分（5 点 Likert 量表，1=非常困难，5=非常容易）。
+走查结果如表\ref{tab:ch5_usability}所示。三项任务的平均完成时间在可接受范围内（12--62\,s），手势误触率约 7--11\%，主要发生在多指手势场景，提示后续可针对多指手势优化合成数据的个体手型多样性。主观评分方面，语音交互（平均 4.2/5）和射线选取（4.5/5）的评价较高，手势交互评价略低（3.6/5），与误触率的模式一致。整体而言，走查结果支持了三通道交互在 AR 数据分析场景中的基本可用性。
 
-走查结果如表\ref{tab:ch5_usability}所示。三项任务的平均完成时间在可接受范围内（12--62\,s），手势误触率约 7--11\%——主要发生在四指手势（案例三），可能因四指伸展在部分参与者手型上的骨骼跟踪不够稳定，提示后续可针对多指手势优化合成数据的个体手型多样性。主观评分方面，语音交互（平均 4.2/5）和射线选取（4.5/5）的评价最高，手势交互评价略低（3.6/5），与误触率的模式一致。整体而言，走查结果支持了三通道交互在 AR 数据分析场景中的基本可用性，但也指出手势识别的个体适应性是需要持续改进的方向。
-
-\begin{center}
-  \captionof{table}{\label{tab:ch5_usability}任务走查可用性评估（$N=8$）}
+\begin{minipage}{\textwidth}
+\centering
   \small
+  \captionof{table}{\label{tab:ch5_usability}任务走查可用性评估（$N=8$）}
   \setlength{\tabcolsep}{10pt}
   \begin{tabular}{lcccc}
   \hline
   任务 & 平均完成时间 (s) & 手势误触率 & 主观评分 (1--5) & 主要交互通道 \\
   \hline
-  案例一：指标切换+时间轴遍历 & 12.3 $\pm$ 3.1 & 7.2\% & 3.8 $\pm$ 0.7 & 手势+语音 \\
-  案例二：散点图选省+结果阅读 & 28.5 $\pm$ 6.4 & 5.8\% & 4.3 $\pm$ 0.5 & 射线+语音 \\
-  案例三：区域切换+单省下钻 & 61.8 $\pm$ 14.2 & 10.6\% & 3.6 $\pm$ 0.9 & 手势+语音+射线 \\
+  空间探索（指标切换+时间轴遍历） & 12.3 $\pm$ 3.1 & 7.2\% & 3.8 $\pm$ 0.7 & 手势+语音 \\
+  计量核对（散点图选省+结果阅读） & 28.5 $\pm$ 6.4 & 5.8\% & 4.3 $\pm$ 0.5 & 射线+语音 \\
+  多尺度下钻（区域切换+单省对比） & 61.8 $\pm$ 14.2 & 10.6\% & 3.6 $\pm$ 0.9 & 手势+语音+射线 \\
   \hline
   \end{tabular}
-  \noindent\begin{minipage}{\linewidth}\footnotesize
-  注：误触率 = 手势被错误分类或未触发目标命令的次数 / 总手势执行次数。主观评分为单次任务后的 5 点 Likert 量表评分（均值 $\pm$ 标准差）。案例三因涉及多步操作与跨通道协同，完成时间与误触率均高于前两个案例。
-  \end{minipage}
-\end{center}
-
-
-\section{三个案例的横向对照}
-\label{sec:ch5_cross_case}
-
-为便于读者从系统架构视角理解三个案例的递进关系，表\ref{tab:ch5_case_comparison}从任务类型、交互通道、系统模块和新增分析发现四个维度进行横向对照。
-
-\begin{center}
-  \captionof{table}{\label{tab:ch5_case_comparison}三个案例的横向对照}
-  \small
-  \setlength{\tabcolsep}{8pt}
-  \begin{tabularx}{\linewidth}{lXXX}
-  \hline
-  维度 & 案例一：空间探索 & 案例二：计量核对 & 案例三：多尺度下钻 \\
-  \hline
-  任务类型 & 描述性探索 & 验证性核对 & 解释性深挖 \\
-  分析粒度 & 全国/年份 & 全国/省份/曲线 & 区域/省份/指标 \\
-  主要手势 & 单指、二指 & 三指 & 四指 \\
-  语音使用 & 年份跳转 & 回归表查询 & 区域切换、跨省对比 \\
-  射线使用 & 无 & 散点选省 & 热力图选省 \\
-  状态驱动条件刷新 & 初始加载/指标/时间轴 & 指标/选中省 & 指标/选中省/视图模式 \\
-  ChartForge 调用 & 无（预置热力图） & 散点图+结果卡片 & 四象限+雷达图+对比叠层 \\
-  TSTQ--Fusion 并发场景 & 无冲突 & 无冲突 & 手势—射线共现（合并） \\
-  核心发现 & 东西梯度+时序改善 & 倒U型确证+拐点定位 & 区内异质+指标结构分化 \\
-  \hline
-  \end{tabularx}
-\end{center}
-
-三个案例的递进关系可概括为：案例一建立空间感知（``看全局''），案例二转入假设验证（``对证据''），案例三完成多尺度解释（``挖机制''）——这种``概览$\rightarrow$验证$\rightarrow$解释''的分析节奏正是沉浸式分析相较于桌面分析的差异化优势所在：用户不需要在统计软件、地图工具和文档之间切换，所有分析动作通过同一状态向量连续驱动，形成从``看到现象''到``找到原因''的完整叙事弧。
-
-\begin{center}
-  \IfFileExists{ch5-gesture-demo.png}{\includegraphics[width=0.88\textwidth,keepaspectratio]{ch5-gesture-demo.png}}{}
-  \captionof{figure}{三案例使用的手势类型示意：单指向左（切换指标）、二指手心（年份+1）、三指手心（散点图模式）、四指手心（下钻）。各手势经 DBEW-NN 分类后映射为离散状态更新命令，由 TSTQ--Fusion 统一提交至 $\mathbf{s}_t$。\label{fig:ch5_gesture_demo}}
-\end{center}
-
-\begin{center}
-  \IfFileExists{ch5-multiview-layout.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{ch5-multiview-layout.png}}{}
-  \captionof{figure}{案例二多视图协同布局示意：热力图（左上）、散点图+拟合曲线（右上）、结果面板（下），三者在同一 AR 视野中由 $\mathbf{s}_t$ 同步驱动。射线选取广东后三视图同时刷新。\label{fig:ch5_multiview}}
-\end{center}
-
-\begin{center}
-  \includegraphics[width=0.70\textwidth,keepaspectratio]{5.4-es-coloring-2022.png}
-  \captionof{figure}{全国 $ES$ 热力图——AR 视野中的三维省域挤出视图（2022 年）。高度编码绝对值，色阶编码相对排序。\label{fig:4-es-coloring-2022}}
-\end{center}
-
-\begin{center}
-  \includegraphics[width=0.50\linewidth,keepaspectratio]{user.jpg}
-  \captionof{figure}{Rokid AR 眼镜实际使用场景：用户佩戴 Rokid Max Pro 眼镜 + Station Pro 主机，通过手势与射线完成数据分析交互。\label{fig:ver_2figs_1cap}}
-\end{center}
+  \\[4pt]
+  {\footnotesize 注：误触率 = 手势被错误分类或未触发目标命令的次数 / 总手势执行次数。主观评分为单次任务后的 5 点 Likert 量表评分（均值 $\pm$ 标准差）。}
+\end{minipage}
 
 
 \section{本章小结}
 \label{sec:ch5_summary}
 
-本章作为第\ref{ch:ar_interaction}章与第\ref{ch:ar_visualization}章的应用验证，以省域数字经济（$DEL$）与能源结构优化（$ES$）的面板数据分析为场景，通过三个逐层递进的 AR 沉浸式分析案例，展示了``多模态交互输入 $\rightarrow$ 统一状态向量驱动 $\rightarrow$ 多视图协同刷新 $\rightarrow$ 分析结论输出''的完整闭环。
+本章作为第\ref{ch:ar_interaction}章与第\ref{ch:ar_visualization}章的应用验证，以省域数字经济（$DEL$）与能源结构优化（$ES$）的面板数据分析为场景，通过空间分布、非线性验证和区域异质性三个逐层递进的分析任务，展示了``数据基础 $\rightarrow$ 计量分析 $\rightarrow$ AR可视化呈现 $\rightarrow$ 分析结论输出''的完整闭环。
 
-在数据层面，第\ref{sec:ch5_data}节以最小篇幅完成了指数构建（熵值法 + 熵权—决策树融合）与计量分析摘要（基准回归、非线性检验、中介效应、区域异质性），所有结果均以结构化格式注入 Unity 数据引擎，为 AR 可视化会话提供可核验的数据基础。在应用层面，案例一（第\ref{sec:ch5_case1}节）以手势指标切换与时间轴遍历完成全国空间格局的快速把握，验证了 DBEW-NN 离散手势命令与 ChartForge 状态驱动条件刷新在描述性探索场景中的工程可行性；案例二（第\ref{sec:ch5_case2}节）以射线精确选省与 ChartForge 动态散点图生成完成倒 U 型非线性关系的交互核对，验证了声明式图表生成管线（CIF+PCG+MS-GRP）在验证性分析场景中的技术有效性；案例三（第\ref{sec:ch5_case3}节）以手势—射线—语音三通道协同与 ChartForge CCA 多视图组合完成从区域到单省到跨省对比的多尺度下钻，验证了 TSTQ--Fusion 并发仲裁与可组合图表代数在复杂分析场景中的集成能力。
-
-三个案例的技术共性在于：所有交互动作（手势、语音、射线）均先转化为对统一状态向量 $\mathbf{s}_t$ 的维度更新，再由 ChartForge 交互运行时层的状态驱动条件刷新机制选择性地触发受影响视图的重算——这一``状态驱动''架构确保了三通道的松耦合与视图间的强制一致。第\ref{sec:ch5_perf}节的端侧性能基准（30--48\,FPS）和小规模可用性走查（$N=8$）初步验证了系统在实际 AR 硬件上的工程可用性。就复现性而言，计量部分可由公开统计年鉴口径复算，AR 原型依赖 Unity 工程版本、Rokid UXR SDK 与随包结构化数据，跨机型帧率差异属工程边界而非方法结论部分。
+在数据层面，第\ref{sec:ch5_data}节以最小篇幅完成了指数构建（熵值法 + 熵权—决策树融合）与计量分析摘要（基准回归、非线性检验、中介效应、区域异质性），所有结果均以结构化格式注入 Unity 数据引擎，为 AR 可视化会话提供可核验的数据基础。在应用层面，第\ref{sec:ch5_spatial}节从全国空间分布格局入手，揭示了 $DEL$ 的``东高西低''梯度与 $ES$ 的不完全重合特征，为非线性关系假设提供了空间层面的直观证据；第\ref{sec:ch5_nonlinear}节基于面板固定效应模型确认了倒U型非线性关系（拐点 $DEL=0.507$），并结合省域位置分布讨论了边际效应递减的经济含义；第\ref{sec:ch5_heterogeneity}节通过分区域回归揭示了``中部$>$西部$>$东部''的效应梯度与区内省际分化，指出区域平均系数对政策制定的参考局限性。第\ref{sec:ch5_perf}节的端侧性能基准（30--48\,FPS）和小规模可用性走查（$N=8$）初步验证了系统在实际 AR 硬件上的工程可用性。就复现性而言，计量部分可由公开统计年鉴口径复算，AR 原型依赖 Unity 工程版本、Rokid UXR SDK 与随包结构化数据，跨机型帧率差异属工程边界而非方法结论部分。
 
 总体来看，本章不从经济学理论或计量方法角度做出独立创新贡献，而是在已有实证框架之上，完成了从``统计表中的系数''到``可交互的空间化证据''的转化，为 AR 沉浸式分析在省域经济能源研究中的应用提供了一个端到端的可复现范例。
 
@@ -1036,7 +879,7 @@ ChartForge 按 CIF 意图 $\langle \mathcal{D}{=}\text{Hubei\_panel},\ \mathcal{
 \section{贡献与创新点}
 \label{sec:summary_contribution}
 
-全文以``省域数字经济—能源结构优化''为主线，在理论、实证与沉浸式工程三个层面形成闭环：一方面回答影响方向、非线性形态、机制路径与区域差异等经济学问题；另一方面将可复核的计量证据转化为可在 AR 空间中阅读、操作与讨论的分析载体，并在头显场景完成可部署的原型验证。前文已系统梳理核心概念与机制框架，并完成第三章多模态交互（第\ref{sec:ch3_arch_overview}节—第\ref{sec:ch3_summary}节，含手势骨骼约束、边沿触发与时间窗抑制及第\ref{sec:ch3_fusion}节跨通道仲裁与队列提交）、第四章沉浸式可视化（第\ref{sec:ch4_motivation}节—第\ref{sec:ch4_summary}节，含ChartForge声明式图表生成与Unity--Rokid实现），以及第五章面板计量与熵权—决策树指数构建（第\ref{ch:empirical_de_es}章、第\ref{sec:ch5_data}节）、第\ref{sec:ch5_case1}--\ref{sec:ch5_case3}节三案例的 AR 沉浸式分析及第\ref{sec:ch5_summary}节本章小结；以下从学术结论、工程与方法创新与数据治理取向三方面归纳贡献。
+全文以``省域数字经济—能源结构优化''为主线，在理论、实证与沉浸式工程三个层面形成闭环：一方面回答影响方向、非线性形态、机制路径与区域差异等经济学问题；另一方面将可复核的计量证据转化为可在 AR 空间中阅读、操作与讨论的分析载体，并在头显场景完成可部署的原型验证。前文已系统梳理核心概念与机制框架，并完成第三章多模态交互（第\ref{sec:ch3_arch_overview}节—第\ref{sec:ch3_summary}节，含手势骨骼约束、边沿触发与时间窗抑制及第\ref{sec:ch3_fusion}节跨通道仲裁与队列提交）、第四章沉浸式可视化（第\ref{sec:ch4_motivation}节—第\ref{sec:ch4_summary}节，含ChartForge声明式图表生成与Unity--Rokid实现），以及第五章面板计量与熵权—决策树指数构建（第\ref{ch:empirical_de_es}章、第\ref{sec:ch5_data}节）、第\ref{sec:ch5_spatial}--\ref{sec:ch5_heterogeneity}节三组分析任务及第\ref{sec:ch5_summary}节本章小结；以下从学术结论、工程与方法创新与数据治理取向三方面归纳贡献。
 
 在学术结论上，基于 2014---2022 年 30 省份样本，在控制变量与省份固定效应设定下，$DEL$ 对 $ES$ 显著为正，平方项设定下呈现倒 U 型非线性，拐点与分省讨论支持``总量仍具提升空间、高水平地区边际趋缓''的差异化含义；东、中、西分组系数显著为正且呈``中部 $>$ 西部 $>$ 东部''梯度，东北不显著，提示数字化红利与产业结构、要素禀赋相关；技术创新通过中介路径部分传导；滞后、缩尾、剔除异常年份与工具变量等检验支持结论稳健。上述结果与第\ref{sec:ch5_data}节数据体系相衔接，为省域``数字化—绿色转型''提供量化证据。
 
