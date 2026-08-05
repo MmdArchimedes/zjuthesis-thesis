@@ -602,8 +602,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \section{数据基础与实证摘要}
 \label{sec:ch5_data}
 本文采用 2014--2022 年 30 个省份（不含西藏及港澳台地区）面板数据，原始数据来源于《中国统计年鉴》《中国能源统计年鉴》《中国电子信息产业统计年鉴》及国家统计局公开数据库。以下依次报告指标体系构建、方法对比、描述性统计与计量结果摘要——这些结构化数据均以 CSV/JSON 格式导出至 Unity 数据引擎，构成 AR 可视化会话的统一数据底座。
-\medskip
-\noindent\textbf{指标体系与权值分配。}
+
 数字经济发展水平综合指数 $DEL$ 从数字基础设施、产业数字化与数字产业化三个维度选取 7 项二级指标，经熵值法客观赋权；能源结构优化综合指数 $ES$ 从能源消费结构与能源效率两个维度选取 4 项二级指标，以熵值法独立合成。完整指标体系与各指标权值分配见表\ref{table:Evaluation index system}。$DEL$ 指标中信息技术服务业收入与软件产品收入权值最高（分别为 0.31 与 0.28），反映数字产业化是省域数字经济差异的主要来源；$ES$ 指标中能源效率权值高达 0.57，表明单位 GDP 能耗是区分各省能源结构水平的核心维度。
 \begin{minipage}{\textwidth}
 \centering
@@ -625,9 +624,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
         ~ & ~ & 氮氧化物排放 & 万吨 & 负向 & 0.09  \\ \hline
     \end{tabular}
 \end{minipage}
-\medskip
-\noindent\textbf{熵权—决策树融合校准。}
-传统熵值法仅依赖指标内部的离散程度赋权，未利用 $ES$ 与 $DEL$ 之间的经验关联信息。为此，本文进一步以 $ES$ 为监督标签，使用决策树（CART）拟合 $ES\sim f(\text{原始$DEL$子指标})$，取各指标在树结构中的特征重要性作为熵值法初值的二次校准权重，形成熵权—决策树融合方法（Entropy-Weighted Decision Tree）。表\ref{tab:entropy_dt_compare}给出了四种方法口径下 $DEL$ 对 $ES$ 回归的拟合优度与预测精度对比——熵权—DT 优化的样本内 RMSE（0.076）与 CART 回归树（0.068）接近，同时保留了熵值法在可解释性上的优势。
+
 \begin{minipage}{\textwidth}
 \centering
     \captionof{table}{\label{tab:entropy_dt_compare}熵值法、熵权—决策树优化与固定效应/回归树的方法对比}
@@ -647,13 +644,14 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     \noindent\footnotesize
     注：（A）与表\ref{table:Baseline regression results} 列（3）一致；（B）（C）固定效应与控制变量设定相同，仅更换 $DEL$ 的权向量；（D）树模型参数：最大深度 4、叶节点最小样本 20；交叉验证为 10 折随机划分。
 \end{minipage}
-\medskip
-\noindent\textbf{变量描述。}
+
+传统熵值法仅依赖指标内部的离散程度赋权，未利用 $ES$ 与 $DEL$ 之间的经验关联信息。为此，本文进一步以 $ES$ 为监督标签，使用决策树（CART）拟合 $ES\sim f(\text{原始$DEL$子指标})$，取各指标在树结构中的特征重要性作为熵值法初值的二次校准权重，形成熵权—决策树融合方法（Entropy-Weighted Decision Tree）。表\ref{tab:entropy_dt_compare}给出了四种方法口径下 $DEL$ 对 $ES$ 回归的拟合优度与预测精度对比——熵权—DT 优化的样本内 RMSE（0.076）与 CART 回归树（0.068）接近，同时保留了熵值法在可解释性上的优势。
+
 表\ref{table:Descriptive statistics}报告了各变量的描述性统计。$ES$ 均值为 0.402、标准差 0.119，省域间能源结构水平存在显著差异（最小值 0.246、最大值 0.766，极差约 3 倍标准差）；$DEL$ 均值为 0.145、标准差 0.120，离散程度（变异系数约 0.83）高于 $ES$（变异系数约 0.30），说明省域数字经济发展不均衡程度更为突出。
-\begin{minipage}{\textwidth}
-\centering
-    \captionof{table}{\label{table:Descriptive statistics}各变量的描述性统计}
-    \begin{tabular}{lllrrrrr}
+\begin{table}[h!]
+  \begin{center}
+  \caption{\label{table:Descriptive statistics}各变量的描述性统计}
+  \begin{tabular}{lllrrrrr}
     \hline
     变量类型 & 变量名称 & 变量含义 & 样本量 & 平均值 & 标准差 & 最小值 & 最大值 \\
     \hline
@@ -667,10 +665,9 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     ~ & FDE & 财政分权 & 270 & 0.479 & 0.184 & 0.151 & 0.931 \\
     中介变量 & TEIN & 技术创新 & 270 & 4.581 & 0.588 & 2.792 & 5.941 \\
     \hline
-    \end{tabular}
-\end{minipage}
-\medskip
-\noindent\textbf{模型设定与基准回归。}
+  \end{tabular}
+  \end{center}
+\end{table}
 基准模型采用省份固定效应面板回归：
 \begin{equation}
     ES_{it} = \alpha_0 + \alpha_1 DEL_{it} + \alpha_2 DEL_{it}^2 + {\alpha}^\top \mathbf{X}_{it} + \mu_i + \varepsilon_{it}
@@ -679,8 +676,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 其中 $i$ 为省份，$t$ 为年份；$ES_{it}$ 为能源结构优化指数，$DEL_{it}$ 为数字经济指数；$\mathbf{X}_{it}$ 为控制变量向量，包括经济发展水平（人均GDP对数）、城镇化率、对外开放度、政府干预程度与人力资本水平；$\mu_i$ 为省份固定效应。
 
 基准回归结果见表\ref{table:Baseline regression results}：列（1）仅含 $DEL$ 一次项，系数为 $0.813^{***}$（$R^2=0.308$）；列（2）加入控制变量后系数降至 $0.575^{***}$（$R^2=0.423$），表明控制变量吸收了部分解释力；列（3）进一步引入 $DEL^2$，一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 均在 1\% 水平显著，$R^2$ 升至 0.570，确认了数字经济对能源结构的倒 U 型非线性影响——拐点约 $DEL=0.507$，多数省份位于拐点左侧，广东（2019 年）、北京（2020 年）接近或已过拐点。
-\begin{minipage}{\textwidth}
-\centering
+\clearpage
+\begin{center}
     \captionof{table}{\label{table:Baseline regression results}基准回归结果}
     \begin{tabular}{llll}
     \hline
@@ -699,13 +696,14 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     $R^{2}$ & 0.308 & 0.423 & 0.570 \\
     \hline
     \end{tabular}
-\end{minipage}
-\medskip
-\noindent\textbf{中介效应检验。}
+\end{center}
+
 为考察 $DEL\rightarrow ES$ 影响路径中技术创新是否充当中介变量，采用逐步回归法进行中介效应检验，结果见表\ref{table:Mediating effect}。列（1）显示 $DEL$ 对 $ES$ 的总效应为 $0.219^{***}$（含控制变量后，不同于基准回归中仅含核心变量的设定）；列（2）显示 $DEL$ 对中介变量 $TEIN$ 的效应为 $-0.487^{***}$；列（3）同时纳入 $DEL$ 与 $TEIN$ 后，$DEL$ 系数降至 $0.192^{***}$，$TEIN$ 系数为 $-0.0539^{*}$。经 Sobel 检验，间接效应约占总效应的 12.33\%，表明技术创新是数字经济影响能源结构的部分中介渠道。
-\begin{minipage}{\textwidth}
-\centering
-    \captionof{table}{\label{table:Mediating effect}中介效应验证结果}
+
+为验证基准结论的可靠性，依次进行以下四项检验（表\ref{table:Robustness test}）：（1）将 $DEL$ 替换为其一阶滞后项 $L.DEL$，以缓解同期内生性担忧（列（1）--（2））；（2）对连续变量进行 1\% 双侧缩尾处理以排除极端值干扰（列（3）--（4））；（3）剔除 2020 年样本以规避疫情冲击的异常观测（列（5）--（6））；（4）以 $DEL$ 一阶滞后作为工具变量进行内生性检验（列（7）--（8））。四种口径下 $DEL$ 系数符号与显著性均与基准回归一致，结论稳健。
+
+\begin{center}
+  \captionof{table}{\label{table:Mediating effect}中介效应验证结果}
     \begin{tabular}{llll}
     \hline
     变量 & （1） & （2） & （3） \\
@@ -722,12 +720,9 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     $R^{2}$ & 0.964 & 0.987 & 0.964 \\
     \hline
     \end{tabular}
-\end{minipage}
-\medskip
-\noindent\textbf{稳健性检验。}
-为验证基准结论的可靠性，依次进行以下四项检验（表\ref{table:Robustness test}）：（1）将 $DEL$ 替换为其一阶滞后项 $L.DEL$，以缓解同期内生性担忧（列（1）--（2））；（2）对连续变量进行 1\% 双侧缩尾处理以排除极端值干扰（列（3）--（4））；（3）剔除 2020 年样本以规避疫情冲击的异常观测（列（5）--（6））；（4）以 $DEL$ 一阶滞后作为工具变量进行内生性检验（列（7）--（8））。四种口径下 $DEL$ 系数符号与显著性均与基准回归一致，结论稳健。
-\begin{minipage}{\textwidth}
-\centering
+\end{center}
+
+\begin{center}
     \captionof{table}{\label{table:Robustness test}稳健性检验}
     \small
     \setlength{\tabcolsep}{6pt}
@@ -747,12 +742,11 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
   $R^2$        & 0.319    & 0.387    & 0.308    & 0.420    & 0.293    & 0.407    & 0.241 0.305 \\
     \hline
   \end{tabular}
-\end{minipage}
-\medskip
-\noindent\textbf{区域异质性。}
+\end{center}
+
 将 30 个省份按国家统计局标准划分为东部、中部、西部与东北四大区域，分样本回归结果见表\ref{table:Regional heterogeneity test}。$DEL$ 对 $ES$ 的效应呈现``中部$>$西部$>$东部''梯度：中部系数 $1.994^{***}$、西部 $1.100^{***}$、东部 $0.336^{***}$，东北地区未通过显著性检验。这一梯度特征表明，数字经济对能源结构的边际改善效应在中等发展水平地区最为突出——中部省份正处于产业数字化与能源效率提升的快速释放期，而东部发达省份的数字经济已接近拐点、增量效应递减。
-\begin{minipage}{\textwidth}
-\centering
+
+\begin{center}
     \captionof{table}{\label{table:Regional heterogeneity test}区域异质性检验}
     \begin{tabular}{lllll}
     \hline
@@ -767,7 +761,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     样本量 & 90 & 54 & 99 & 27 \\
     \hline
     \end{tabular}
-\end{minipage}
+\end{center}
+
 \medskip
 \section{空间分布特征分析}
 \label{sec:ch5_spatial}
@@ -833,8 +828,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \noindent\textbf{端侧性能基准。}
 在 Rokid Station Pro（骁龙 XR2 平台，Unity 2022.3 LTS + Barracuda 推理后端）上对系统的完整交互链路进行性能基准测试，结果汇总于表\ref{tab:ch5_performance}。
 
-\begin{minipage}{\textwidth}
-\centering
+
+\begin{center}
   \small
   \captionof{table}{\label{tab:ch5_performance}系统端侧性能基准（Rokid Station Pro，骁龙XR2）}
   \setlength{\tabcolsep}{10pt}
@@ -852,7 +847,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
   \end{tabular}
   \\[4pt]
   {\footnotesize 注：ChartForge 图表生成为首次生成时延，增量更新为 8--18\,ms。ASR+LLM 为异步管线，不阻塞渲染主线程。帧预算占比以 60\,FPS 目标（16.7\,ms/帧）为分母。}
-\end{minipage}
+\end{center}
 
 系统稳态渲染帧率维持在 30\,FPS 以上，满足 AR 头显的舒适交互阈值。最重负载场景（四象限布局）下 ChartForge 生成耗时约 210\,ms，但增量更新路径（跨省对比叠加仅 8--18\,ms）使得同一会话内的后续操作几乎无等待感知。
 
@@ -861,8 +856,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 走查结果如表\ref{tab:ch5_usability}所示。三项任务的平均完成时间在可接受范围内（12--62\,s），手势误触率约 7--11\%，主要发生在多指手势场景，提示后续可针对多指手势优化合成数据的个体手型多样性。主观评分方面，语音交互（平均 4.2/5）和射线选取（4.5/5）的评价较高，手势交互评价略低（3.6/5），与误触率的模式一致。整体而言，走查结果支持了三通道交互在 AR 数据分析场景中的基本可用性。
 
-\begin{minipage}{\textwidth}
-\centering
+
+\begin{center}
   \small
   \captionof{table}{\label{tab:ch5_usability}任务走查可用性评估（$N=8$）}
   \setlength{\tabcolsep}{10pt}
@@ -877,7 +872,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
   \end{tabular}
   \\[4pt]
   {\footnotesize 注：误触率 = 手势被错误分类或未触发目标命令的次数 / 总手势执行次数。主观评分为单次任务后的 5 点 Likert 量表评分（均值 $\pm$ 标准差）。}
-\end{minipage}
+\end{center}
 
 
 \section{本章小结}
