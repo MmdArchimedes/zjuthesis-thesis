@@ -792,9 +792,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
   \IfFileExists{figure/5.1-es.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/5.1-es.png}}{}
   \captionof{figure}{2022年全国30省份 $ES$ 综合指数空间分布热力图及各省关联指标概要。\label{fig:ch5_es}}
 \end{minipage}
-\vspace{-0.4\baselineskip}
-
-在全国空间分布格局的基础上，图\ref{fig:ch5_zhejiang}以浙江省为例展示了单省尺度下的 $DEL$ 与 $ES$ 综合指数空间分布、关键二级指标分解及关联计量结果面板。浙江省作为数字经济发展第一梯队省份（$DEL\approx0.48$，全国第四），其 $ES$ 综合指数处于中等偏上水平但尚未与 $DEL$ 水平完全匹配——这与第\ref{sec:ch5_data}节基准回归中浙江位于拐点左侧（$DEL=0.48<0.507$）的结论一致，提示数字经济对能源结构的改善效应在浙江仍处于上升通道。该视图在实际AR眼镜中由第\ref{ch:ar_visualization}章 SDCR--Vis 的 $\mathbf{s}_t.\mathrm{province}=\text{`Zhejiang'}$ 状态驱动：ChartForge 以 CCA 声明式图表代数同时编译省域地图热力图、$DEL$ 与 $ES$ 双轴柱状图及二级指标分解面板，三项子视图经 MS-GRP 合成为单省分析仪表板。用户可通过第\ref{ch:ar_interaction}章 DBEW--Gesture 的``拇指双击''手势从全国视图下钻至任意目标省份，状态向量 $\mathbf{s}_t.\mathrm{viewLevel}$ 从 ``national'' 切换至 ``province''，$\Delta\mathbf{s}_t\neq\mathbf{0}$ 触发条件刷新——整个过程在 ChartForge 增量更新路径（8--18\,ms）内完成，实现了从宏观格局到微观证据的无缝过渡。
+\vspace{\baselineskip}
 
 \begin{minipage}{\textwidth}
 \centering
@@ -802,6 +800,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
   \captionof{figure}{浙江省 $DEL$ 与 $ES$ 综合指数空间分布及关键二级指标分解。左上：省域地图热力图（$DEL$ 着色）；右上：$DEL$--$ES$ 双轴柱状图与全国均值对比；下方：二级指标分解面板及基准回归中浙江残差与杠杆值。\label{fig:ch5_zhejiang}}
 \end{minipage}
 \vspace{-0.4\baselineskip}
+
+在全国空间分布格局的基础上，图\ref{fig:ch5_zhejiang}以浙江省为例展示了单省尺度下的 $DEL$ 与 $ES$ 综合指数空间分布、关键二级指标分解及关联计量结果面板。浙江省作为数字经济发展第一梯队省份（$DEL\approx0.48$，全国第四），其 $ES$ 综合指数处于中等偏上水平但尚未与 $DEL$ 水平完全匹配——这与第\ref{sec:ch5_data}节基准回归中浙江位于拐点左侧（$DEL=0.48<0.507$）的结论一致，提示数字经济对能源结构的改善效应在浙江仍处于上升通道。该视图在实际AR眼镜中由第\ref{ch:ar_visualization}章 SDCR--Vis 的 $\mathbf{s}_t.\mathrm{province}=\text{`Zhejiang'}$ 状态驱动：ChartForge 以 CCA 声明式图表代数同时编译省域地图热力图、$DEL$ 与 $ES$ 双轴柱状图及二级指标分解面板，三项子视图经 MS-GRP 合成为单省分析仪表板。用户可通过第\ref{ch:ar_interaction}章 DBEW--Gesture 的``拇指双击''手势从全国视图下钻至任意目标省份，状态向量 $\mathbf{s}_t.\mathrm{viewLevel}$ 从 ``national'' 切换至 ``province''，$\Delta\mathbf{s}_t\neq\mathbf{0}$ 触发条件刷新——整个过程在 ChartForge 增量更新路径（8--18\,ms）内完成，实现了从宏观格局到微观证据的无缝过渡。
 
 \section{非线性关系验证}
 \label{sec:ch5_nonlinear}
