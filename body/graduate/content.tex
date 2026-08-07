@@ -794,6 +794,15 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \end{minipage}
 \vspace{-0.4\baselineskip}
 
+在全国空间分布格局的基础上，图\ref{fig:ch5_zhejiang}以浙江省为例展示了单省尺度下的 $DEL$ 与 $ES$ 综合指数空间分布、关键二级指标分解及关联计量结果面板。浙江省作为数字经济发展第一梯队省份（$DEL\approx0.48$，全国第四），其 $ES$ 综合指数处于中等偏上水平但尚未与 $DEL$ 水平完全匹配——这与第\ref{sec:ch5_data}节基准回归中浙江位于拐点左侧（$DEL=0.48<0.507$）的结论一致，提示数字经济对能源结构的改善效应在浙江仍处于上升通道。该视图在实际AR眼镜中由第\ref{ch:ar_visualization}章 SDCR--Vis 的 $\mathbf{s}_t.\mathrm{province}=\text{`Zhejiang'}$ 状态驱动：ChartForge 以 CCA 声明式图表代数同时编译省域地图热力图、$DEL$ 与 $ES$ 双轴柱状图及二级指标分解面板，三项子视图经 MS-GRP 合成为单省分析仪表板。用户可通过第\ref{ch:ar_interaction}章 DBEW--Gesture 的``拇指双击''手势从全国视图下钻至任意目标省份，状态向量 $\mathbf{s}_t.\mathrm{viewLevel}$ 从 ``national'' 切换至 ``province''，$\Delta\mathbf{s}_t\neq\mathbf{0}$ 触发条件刷新——整个过程在 ChartForge 增量更新路径（8--18\,ms）内完成，实现了从宏观格局到微观证据的无缝过渡。
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/zhejiang.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/zhejiang.png}}{}
+  \captionof{figure}{浙江省 $DEL$ 与 $ES$ 综合指数空间分布及关键二级指标分解。左上：省域地图热力图（$DEL$ 着色）；右上：$DEL$--$ES$ 双轴柱状图与全国均值对比；下方：二级指标分解面板及基准回归中浙江残差与杠杆值。\label{fig:ch5_zhejiang}}
+\end{minipage}
+\vspace{-0.4\baselineskip}
+
 \section{非线性关系验证}
 \label{sec:ch5_nonlinear}
 
@@ -806,6 +815,15 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 稳健性检验（表\ref{table:Robustness test}）从滞后一期、缩尾处理、剔除异常年份和工具变量四种口径验证了结论的可靠性。中介效应检验（表\ref{table:Mediating effect}）进一步表明技术创新（$TEIN$）是 $DEL$ 影响 $ES$ 的部分中介渠道，间接效应约占总效应的12.33\%。
 
 在 AR 沉浸式分析会话中，非线性关系的验证并非一次性输出静态图表，而是通过第\ref{ch:ar_visualization}章 ChartForge 框架的 MS-GRP 多尺度网格渲染管线与第\ref{ch:ar_interaction}章射线交互通道构成的``探查--反馈''闭环逐步展开。图\ref{fig:ch5_nonlinear_scatter}的散点图由 ChartForge 的 CCA 声明式图表代数编译生成：ScatterGlyph($DEL$, $ES$, colorBy=Region) + CurveOverlay($f(DEL)=\alpha_1 DEL+\alpha_2 DEL^2$) + ThresholdLine($DEL^*=0.507$)，三项图层经 MS-GRP 合成为单一渲染单元。用户通过第\ref{ch:ar_interaction}章的射线（Raycast）交互在散点图上悬停任意省份数据点——射线命中检测由 Unity PhysX 在 $<$0.5\,ms 内完成——ChartForge 的增量更新路径（8--18\,ms，见表\ref{tab:ch5_performance}）立即将该省标注于曲线上并刷新右侧结果面板中的基准回归完整输出（系数、标准误、$R^2$）。当用户依次悬停广东（拐点右侧）、浙江（拐点左侧近拐点）与青海（拐点远左侧）时，$\mathbf{s}_t.\mathrm{selectedProvince}\times\mathbf{s}_t.\mathrm{analysisMode}=\text{`nonlinear'}$ 状态下三省在倒U型曲线上的位置对比被连续渲染，计量结论（``边际效应递减''）的空间化证据链条在交互过程中自然浮现，而非通过逐一翻阅表格列（3）的三个系数来拼凑。语音通道在此场景中作为辅助查询手段——用户可说出``这个省的拐点距离是多少''，经第\ref{ch:ar_interaction}章 ASR+LLM 语义解析管线将自然语言转化为对 $\mathbf{s}_t$ 中当前省份 $DEL$ 值与拐点差值（$DEL-0.507$）的查询，结果以浮动文本标注形式叠加于散点图上。
+
+除散点图外，变量间相关性的全局视图为非线性关系验证提供了重要的辅助证据。图\ref{fig:ch5_corr_heatmap}展示了在AR眼镜中 $DEL$、$ES$ 及全部控制变量（$DEN$、$PGDP$、$URBAN$、$INDS$、$LEOP$、$FDE$）的相关性热力图。该热力图由 ChartForge 的 CCA 声明式图表代数以 CorrHeatmapGlyph 组件编译生成：矩阵单元格颜色由 Pearson 相关系数 $r$ 映射至双极色彩通道（蓝--白--红），$|r|>0.5$ 且 $p<0.05$ 的显著相关对以星号标注。从图中可见：$DEL$ 与 $ES$ 呈中等正相关（$r\approx0.38$），但远弱于 $DEL$ 与 $PGDP$ 的强正相关（$r\approx0.82$），表明数字经济与能源结构之间并非简单的共线性驱动关系，而是存在非线性转换机制——这一相关性模式为第\ref{sec:ch5_data}节基准回归中引入 $DEL^2$ 项的必要性提供了变量关联层面的间接支撑。$ES$ 与 $URBAN$（城镇化率）呈正相关（$r\approx0.45$），与 $INDS$（产业结构）呈负相关（$r\approx-0.31$），符合预期：城镇化水平越高，能源结构越优化；重工业占比越高，能源结构压力越大。
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/corr_inAR.png}{\includegraphics[width=0.88\textwidth,keepaspectratio]{figure/corr_inAR.png}}{}
+  \captionof{figure}{AR眼镜中 $DEL$、$ES$ 与控制变量相关性热力图。矩阵单元格着色基于 Pearson 相关系数 $r$（蓝--白--红双极映射），$|r|>0.5$ 且 $p<0.05$ 的显著相关对以星号标注。$DEL$ 与 $ES$ 的中等相关（$r\approx0.38$）远弱于 $DEL$--$PGDP$ 的强相关（$r\approx0.82$），为倒U型非线性假设提供了变量关联层面的辅助证据。\label{fig:ch5_corr_heatmap}}
+\end{minipage}
+\vspace{-0.4\baselineskip}
 
 \begin{minipage}{\textwidth}
 \centering
@@ -875,6 +893,15 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \textbf{多尺度下钻}（区域切换+单省对比）：这是三项任务中交互最复杂、耗时最长（61.8\,s）、误触率最高（10.6\%）的一项，涉及手势（区域切换）、语音（省份指定）与射线（散点图个体选取）三通道的全程协同。TSTQ--Fusion 的 300\,ms 时间窗仲裁在大部分操作序列中正确收敛了多通道意图，但在快速连续操作（用户切换区域后立即指定省份）场景下出现了 3 例仲裁超时导致的指令丢失，这是误触率偏高的主要原因，提示时间窗参数可考虑根据操作密度自适应调整。从视图协调角度看，SDCR--Vis 在区域切换时需同步刷新地图、柱状图、散点图与结果面板四个视图，ChartForge 的首次生成时延（78--235\,ms）在区域切换瞬间可被用户感知，但增量更新路径（8--18\,ms）使后续省内对比几乎无等待。
 
 整体来看，三项任务的完成时间与主观评分模式证实了``手势导航+射线选取+语音查询''三通道分工策略在 AR 数据分析场景中的合理性，也揭示了多指手势和快速序列操作的进一步优化空间。
+
+图\ref{fig:ch5_user_experience}展示了用户在实际AR眼镜（Rokid Max Pro）中体验系统的场景。用户在穿戴设备后，通过第\ref{ch:ar_interaction}章所述的手势与语音多模态交互直接操作悬浮于视野中的省域地图、散点图与计量结果面板，无需依赖键盘鼠标或触屏。AR头显的透视显示特性使用户在观察数据视图的同时保持对周围环境的感知，支持走动式讲解与协作讨论——这一能力是传统桌面分析工具和VR头盔所不具备的。
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/user.jpg}{\includegraphics[width=0.75\textwidth,keepaspectratio]{figure/user.jpg}}{}
+  \captionof{figure}{用户实际佩戴 Rokid Max Pro AR 眼镜体验系统场景。视野中悬浮显示省域数字经济与能源结构分析仪表板，用户通过手势与语音多模态交互进行操作，透视显示特性支持走动式讲解与协作讨论。\label{fig:ch5_user_experience}}
+\end{minipage}
+\vspace{-0.4\baselineskip}
 
 
 \begin{center}
