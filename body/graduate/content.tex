@@ -771,12 +771,26 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 上述空间格局特征与第\ref{sec:ch5_data}节基准回归中 $DEL^2$ 项显著为负（$-2.103^{***}$）的倒U型推断形成空间层面的直观印证：高 $DEL$ 东部省份的 $ES$ 并未随数字经济水平线性提升，需要进一步验证二者间的非线性关系形态。
 
-在 AR 分析会话中，上述空间分布探索通过第\ref{ch:ar_visualization}章的 SDCR--Vis 多视图联动机制实现。用户以第\ref{ch:ar_interaction}章所述 DBEW--Gesture 管线的 ``捏合+滑动'' 手势（对应事件载荷中的省份索引切换）依次遍历各省 $DEL$ 与 $ES$ 值，ChartForge 的 CCA 声明式图表代数将同一省份的两项指数编译为并排柱状图（BarGlyph + ColorMap($DEL$,$ES$)），并以 $\mathbf{s}_t.\mathrm{region}$ 字段驱动省域地图视图同步高亮当前选中省份。当用户从广东（$DEL\approx0.58$，$ES\approx0.48$）切换到青海（$DEL\approx0.08$，$ES\approx0.35$）时，统一状态向量 $\Delta\mathbf{s}_t\neq\mathbf{0}$ 触发全视图条件刷新——地图高亮跳转、柱状图高度同步更新、右侧结果面板刷新该省在基准回归列（3）中的残差与杠杆值——整个过程在单帧（$<$16.7\,ms）内完成状态广播与视图重绘，消除了传统分析中``纸质图表翻阅比对''的认知中断。语音通道作为辅助导航手段，用户可通过``跳到广东''自然语言指令触发同一状态向量更新，经第\ref{ch:ar_interaction}章 TSTQ--Fusion 的 300\,ms 时间窗仲裁后与手势事件收敛为一致的状态迁移。
-
 \begin{minipage}{\textwidth}
 \centering
   \IfFileExists{figure/ch5_spatial_distribution.pdf}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/ch5_spatial_distribution.pdf}}{}
   \captionof{figure}{2022年代表性省份 $DEL$（橙色）与 $ES$（蓝色）综合指数分布（等距抽样10省）。省份按 $ES$ 升序排列，呈现 $DEL$``东高西低''梯度与 $ES$ 空间格局的不完全重合特征。\label{fig:ch5_spatial_dist}}
+\end{minipage}
+\vspace{-0.4\baselineskip}
+
+为进一步直观展示 $DEL$ 与 $ES$ 在全国范围内的空间分布格局，图\ref{fig:ch5_del}与图\ref{fig:ch5_es}分别给出了2022年全国30个省份 $DEL$ 综合指数与 $ES$ 综合指数的空间分布热力图及关联系数概要。该视图在实际AR眼镜中叠加于省域地图之上，由第\ref{ch:ar_visualization}章 ChartForge 的 MS-GRP 管线以 ColorMap($DEL$) 与 ColorMap($ES$) 声明式编译生成，用户可通过第\ref{ch:ar_interaction}章 DBEW--Gesture 的射线悬停手势逐省查看具体指数值。
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/5.1-del.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/5.1-del.png}}{}
+  \captionof{figure}{2022年全国30省份 $DEL$ 综合指数空间分布热力图及各省关联指标概要。\label{fig:ch5_del}}
+\end{minipage}
+\vspace{-0.4\baselineskip}
+
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/5.1-es.png}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/5.1-es.png}}{}
+  \captionof{figure}{2022年全国30省份 $ES$ 综合指数空间分布热力图及各省关联指标概要。\label{fig:ch5_es}}
 \end{minipage}
 \vspace{-0.4\baselineskip}
 
