@@ -23,7 +23,7 @@ from sklearn.linear_model import LinearRegression
 # ═══════════════════════════════════════════════════════
 plt.rcParams.update({
     'font.family': 'sans-serif',
-    'font.sans-serif': ['DejaVu Sans', 'Arial', 'Helvetica'],
+    'font.sans-serif': ['Microsoft YaHei', 'SimHei', 'DejaVu Sans', 'Arial', 'Helvetica'],
     'axes.unicode_minus': False,
     'figure.dpi': 150,
     'savefig.dpi': 300,
@@ -78,38 +78,31 @@ def fig_spatial_distribution(df):
     d2022 = df[df['year'] == 2022].copy()
     d2022 = d2022.sort_values('ES', ascending=True)
 
-    fig, ax = plt.subplots(figsize=(10, 7))
+    # Select ~10 representative provinces (every 3rd from sorted list)
+    idxs = list(range(0, len(d2022), 3))
+    d10 = d2022.iloc[idxs].copy()
 
-    provinces = d2022['province_name'].tolist()
+    fig, ax = plt.subplots(figsize=(8, 5))
+    provinces = d10['province_name'].tolist()
     y = np.arange(len(provinces))
+    es_vals = d10['ES'].values
+    del_vals = d10['DEL'].values
 
-    es_vals = d2022['ES'].values
-    del_vals = d2022['DEL'].values
-
-    # Horizontal bars
-    bar_h = 0.35
-    bars_es = ax.barh(y - bar_h/2, es_vals, bar_h,
-                       color=PALETTE['blue'], alpha=0.85, label='ES (Energy Structure)',
-                       edgecolor='white', linewidth=0.3)
-    bars_del = ax.barh(y + bar_h/2, del_vals, bar_h,
-                       color=PALETTE['orange'], alpha=0.85, label='DEL (Digital Economy)',
-                       edgecolor='white', linewidth=0.3)
+    bar_h = 0.32
+    ax.barh(y - bar_h/2, es_vals, bar_h,
+            color=PALETTE['blue'], alpha=0.82, label='ES 能源结构',
+            edgecolor='white', linewidth=0.3, zorder=3)
+    ax.barh(y + bar_h/2, del_vals, bar_h,
+            color=PALETTE['orange'], alpha=0.82, label='DEL 数字经济',
+            edgecolor='white', linewidth=0.3, zorder=3)
 
     ax.set_yticks(y)
-    ax.set_yticklabels(provinces, fontsize=7)
-    ax.set_xlabel('Index Value (2022)', fontsize=10)
-    ax.set_title('Provincial DEL and ES Composite Index (2022)', fontsize=12, fontweight='bold')
-    ax.legend(loc='lower right', fontsize=9)
-    ax.set_xlim(0, 0.85)
-    ax.grid(axis='x', alpha=0.3, linewidth=0.4)
-
-    # Annotations
-    ax.annotate('East-high, West-low DEL gradient', xy=(0.62, 27), fontsize=8,
-                color=PALETTE['orange'], style='italic',
-                xytext=(0.45, 25), arrowprops=dict(arrowstyle='->', color=PALETTE['grey'], lw=0.8))
-    ax.annotate('ES not fully aligned\nwith DEL', xy=(0.45, 8), fontsize=8,
-                color=PALETTE['blue'], style='italic',
-                xytext=(0.25, 4), arrowprops=dict(arrowstyle='->', color=PALETTE['grey'], lw=0.8))
+    ax.set_yticklabels(provinces, fontsize=10)
+    ax.set_xlabel('综合指数值（2022）', fontsize=11)
+    ax.set_title('省域 DEL 与 ES 综合指数分布（2022）', fontsize=12, fontweight='bold')
+    ax.legend(loc='lower right', fontsize=10, framealpha=0.85)
+    ax.set_xlim(0, 0.78)
+    ax.grid(axis='x', alpha=0.22, linewidth=0.4)
 
     plt.tight_layout()
     out = OUTPUT_DIR / 'ch5_spatial_distribution'
@@ -125,70 +118,88 @@ def fig_spatial_distribution(df):
 def fig_nonlinear_verification(df):
     d2022 = df[df['year'] == 2022].copy()
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 7.2))
 
-    del_vals = d2022['DEL'].values.reshape(-1, 1)
+    del_vals = d2022['DEL'].values
     es_vals = d2022['ES'].values
-
-    # Quadratic fit using thesis coefficients (from Table baseline col 3)
-    alpha1, alpha2 = 2.131, -2.103
-    x_fit = np.linspace(0, 0.65, 200)
-    y_fit = 1.283 + alpha1 * x_fit + alpha2 * x_fit**2  # constant from thesis
-
-    # Also fit from data for comparison
-    poly = np.polynomial.Polynomial.fit(del_vals.flatten(), es_vals, 2)
-    x_poly = np.linspace(0, 0.65, 200)
-    y_poly = poly(x_poly)
-
-    # Inflection point
-    x_infl = -alpha1 / (2 * alpha2)  # = 0.507
-
-    # Scatter
     regions = d2022['region_tag'].values
-    for region, color in REGION_COLORS.items():
+    provinces = d2022['province_name'].values
+
+    # ── Panel FE regression coefficients (Table 5.5 col 3) ──
+    # ES_it = mu_i + 2.131*DEL_it - 2.103*DEL_it^2 + controls + e_it
+    panel_alpha1, panel_alpha2 = 2.131, -2.103
+    # Intercept calibrated to 2022 cross-section mean (for visualization only)
+    mean_es = np.mean(es_vals)
+    mean_del = np.mean(del_vals)
+    mean_del2 = np.mean(del_vals**2)
+    intercept = mean_es - panel_alpha1 * mean_del - panel_alpha2 * mean_del2
+
+    # Generate predicted curve from panel coefficients
+    x_curve = np.linspace(0.02, 0.66, 300)
+    y_curve = intercept + panel_alpha1 * x_curve + panel_alpha2 * x_curve**2
+
+    # Turning point from panel coefficients
+    x_turn = -panel_alpha1 / (2 * panel_alpha2)  # = 0.507
+    y_turn = intercept + panel_alpha1 * x_turn + panel_alpha2 * x_turn**2
+
+    # ── Scatter: colored by region ──
+    region_order = ['东部', '中部', '西部', '东北']
+    marker_styles = {'东部': 'o', '中部': 's', '西部': '^', '东北': 'D'}
+    for region in region_order:
         mask = regions == region
-        ax.scatter(del_vals[mask], es_vals[mask], c=color, label=region,
-                   s=50, edgecolors='white', linewidth=0.4, zorder=5, alpha=0.85)
+        if mask.sum() == 0:
+            continue
+        ax.scatter(del_vals[mask], es_vals[mask],
+                   c=REGION_COLORS[region], label=region,
+                   s=64, edgecolors='white', linewidth=0.6,
+                   zorder=5, alpha=0.88,
+                   marker=marker_styles.get(region, 'o'))
 
-    # Quadratic fit line
-    ax.plot(x_fit, y_fit, '--', color=PALETTE['red'], linewidth=1.8,
-            label='Quadratic fit (DEL$^2$: −2.103***)', zorder=4)
+    # ── Quadratic fit curve from PANEL coefficients (dashed red) ──
+    ax.plot(x_curve, y_curve, '--', color=PALETTE['red'], linewidth=2.2,
+            label='面板FE二次拟合', zorder=4)
 
-    # Inflection line
-    y_infl_line = np.linspace(0.25, 0.80, 100)
-    ax.plot([x_infl, x_infl], [0.25, 0.80], '-', color=PALETTE['grey'],
-            linewidth=1.2, alpha=0.7, zorder=3)
-    ax.annotate(f'Inflection\nDEL={x_infl:.3f}', xy=(x_infl, 0.76), fontsize=8,
-                color=PALETTE['grey'], ha='center',
-                bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor=PALETTE['grey']))
+    # ── Turning point vertical line ──
+    ax.axvline(x=x_turn, color=PALETTE['grey'], linewidth=1.2,
+               linestyle='-', alpha=0.50, zorder=3)
+    # Light shade for post-inflection zone
+    ax.axvspan(x_turn, 0.68, alpha=0.04, color=PALETTE['red'], zorder=2)
 
-    # Label key provinces
-    key_provinces = {
-        '广东': (0.58, 0.62, 'Guangdong'),
-        '北京': (0.52, 0.64, 'Beijing'),
-        '浙江': (0.48, 0.55, 'Zhejiang'),
-        '青海': (0.08, 0.48, 'Qinghai'),
-    }
-    for name, (dx, dy, _) in key_provinces.items():
-        row = d2022[d2022['province_name'] == name]
-        if len(row) > 0:
-            ax.annotate(name, (row['DEL'].values[0], row['ES'].values[0]),
-                        textcoords="offset points", xytext=(6, 6), fontsize=8,
-                        fontweight='bold', color=PALETTE['grey'],
-                        bbox=dict(boxstyle='round,pad=0.2', facecolor='white', alpha=0.75))
+    # ── Annotate turning point ──
+    ax.annotate(f'拐点 DEL* = {x_turn:.3f}',
+                xy=(x_turn, y_turn), xytext=(x_turn + 0.10, y_turn + 0.04),
+                fontsize=9, fontweight='bold', color=PALETTE['grey'],
+                arrowprops=dict(arrowstyle='->', color=PALETTE['grey'],
+                               lw=1.0, connectionstyle='arc3,rad=-0.2'),
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
+                         alpha=0.85, edgecolor=PALETTE['grey']))
 
-    ax.set_xlabel('DEL (Digital Economy Level)', fontsize=11)
-    ax.set_ylabel('ES (Energy Structure)', fontsize=11)
-    ax.set_title('DEL–ES Nonlinear Relationship: Inverted U-Shape (2022)', fontsize=12, fontweight='bold')
-    ax.legend(loc='lower left', fontsize=8, ncol=2)
-    ax.set_xlim(-0.01, 0.68)
-    ax.set_ylim(0.22, 0.82)
-    ax.grid(alpha=0.25, linewidth=0.4)
+    # ── Label key provinces (name only) ──
+    for prov_name in ['广东', '北京', '浙江', '青海']:
+        row = d2022[d2022['province_name'] == prov_name]
+        if len(row) == 0:
+            continue
+        ox, oy = {'广东': (-50, 10), '北京': (12, 15), '浙江': (10, -12), '青海': (-50, 8)}.get(prov_name, (10, 10))
+        ax.annotate(prov_name,
+                    (row['DEL'].values[0], row['ES'].values[0]),
+                    textcoords="offset points", xytext=(ox, oy),
+                    fontsize=9, fontweight='bold', color='#333',
+                    bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
+                              alpha=0.82, edgecolor=PALETTE['grey'], linewidth=0.5),
+                    arrowprops=dict(arrowstyle='->', color=PALETTE['grey'],
+                                    lw=0.7))
 
-    # R² annotation
-    ax.text(0.97, 0.06, 'Panel FE (col 3):\nDEL 2.131***, DEL² −2.103***\nR² = 0.570, N = 270',
-            transform=ax.transAxes, fontsize=8, ha='right', va='bottom',
-            bbox=dict(boxstyle='round,pad=0.4', facecolor='white', alpha=0.85, edgecolor=PALETTE['grey']))
+    # ── Axis labels & title ──
+    ax.set_xlabel('DEL 数字经济水平', fontsize=12)
+    ax.set_ylabel('ES 能源结构优化指数', fontsize=12)
+    ax.set_title('DEL–ES 非线性关系：倒U型验证（2022年截面）', fontsize=13, fontweight='bold', pad=10)
+    ax.set_xlim(0.02, 0.66)
+    ax.set_ylim(0.32, 0.78)
+    ax.grid(alpha=0.20, linewidth=0.4)
+
+    # ── Legend ──
+    ax.legend(loc='lower right', fontsize=9, ncol=1,
+              framealpha=0.88, edgecolor='#ccc')
 
     plt.tight_layout()
     out = OUTPUT_DIR / 'ch5_nonlinear_scatter'
@@ -196,79 +207,65 @@ def fig_nonlinear_verification(df):
     fig.savefig(str(out) + '.png', dpi=300)
     plt.close(fig)
     print(f'  [OK] {out}.pdf + .png')
+    print(f'      Panel-based curve: ES = {intercept:.4f} + {panel_alpha1}*DEL + {panel_alpha2}*DEL^2')
+    print(f'      Turning point DEL* = {x_turn:.3f}, ES* = {y_turn:.3f}')
 
 
 # ═══════════════════════════════════════════════════════
 # Figure 3: Regional Heterogeneity — Coefficient Bar Chart
 # ═══════════════════════════════════════════════════════
 def fig_regional_heterogeneity(df):
-    # Coefficients from thesis Table: Regional heterogeneity test
-    region_coefs = {
-        'Eastern (东部)':    (0.336, 0.0862, '***'),
-        'Central (中部)':    (1.994, 0.340,  '***'),
-        'Western (西部)':    (1.100, 0.218,  '***'),
-        'Northeast (东北)':  (0.255, 0.776,  'ns'),
-    }
+    region_coefs_zh = ['东部', '中部', '西部', '东北']
+    coefs  = [0.336, 1.994, 1.100, 0.255]
+    errors = [0.0862, 0.340, 0.218, 0.776]
+    sigs   = ['***', '***', '***', 'n.s.']
 
-    # Also compute from actual data for verification
     region_del_means = df[df['year'] == 2022].groupby('region_tag')['DEL'].mean()
     region_es_means = df[df['year'] == 2022].groupby('region_tag')['ES'].mean()
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.8))
 
     # --- Left: Coefficient bar chart ---
-    names = list(region_coefs.keys())
-    coefs = [v[0] for v in region_coefs.values()]
-    errors = [v[1] for v in region_coefs.values()]
-    sigs = [v[2] for v in region_coefs.values()]
-    colors = [REGION_CODES['东部'], REGION_CODES['中部'], REGION_CODES['西部'], REGION_CODES['东北']]
+    colors = [REGION_CODES[r] for r in region_coefs_zh]
+    bars = ax1.bar(region_coefs_zh, coefs, color=colors, alpha=0.85, edgecolor='white', linewidth=0.5,
+                   yerr=errors, capsize=5, error_kw={'linewidth': 1.3, 'color': PALETTE['grey']})
 
-    bars = ax1.bar(names, coefs, color=colors, alpha=0.85, edgecolor='white', linewidth=0.5,
-                   yerr=errors, capsize=4, error_kw={'linewidth': 1.2, 'color': PALETTE['grey']})
-
-    # Significance stars
-    for i, (bar, sig) in enumerate(zip(bars, sigs)):
+    for bar, sig, err in zip(bars, sigs, errors):
         if sig == '***':
-            ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + errors[i] + 0.08,
-                     '***', ha='center', fontsize=12, fontweight='bold', color=PALETTE['red'])
-        elif sig == 'ns':
-            ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + errors[i] + 0.08,
+            ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + err + 0.06,
+                     '***', ha='center', fontsize=13, fontweight='bold', color=PALETTE['red'])
+        elif sig == 'n.s.':
+            ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + err + 0.06,
                      'n.s.', ha='center', fontsize=9, color=PALETTE['grey'], style='italic')
 
-    # National baseline line
-    ax1.axhline(y=0.575, color=PALETTE['grey'], linestyle='--', linewidth=1.0, alpha=0.7)
-    ax1.text(3.5, 0.575 + 0.03, 'National baseline\nDEL=0.575***', fontsize=7,
+    # National baseline
+    ax1.axhline(y=0.575, color=PALETTE['grey'], linestyle='--', linewidth=1.0, alpha=0.6)
+    ax1.text(3.3, 0.575 + 0.05, '全国基准 0.575***', fontsize=8,
              color=PALETTE['grey'], ha='left', va='bottom')
 
-    ax1.set_ylabel('DEL Coefficient on ES', fontsize=10)
-    ax1.set_title('Regional Heterogeneity: DEL→ES Coefficients', fontsize=11, fontweight='bold')
-    ax1.set_ylim(0, 2.8)
-    ax1.grid(axis='y', alpha=0.25, linewidth=0.4)
+    ax1.set_ylabel('DEL 对 ES 的回归系数', fontsize=11)
+    ax1.set_title('区域异质性：DEL→ES 分组回归系数', fontsize=12, fontweight='bold')
+    ax1.set_ylim(0, 2.7)
+    ax1.grid(axis='y', alpha=0.20, linewidth=0.4)
 
     # --- Right: DEL vs ES by region (2022 means) ---
-    region_order = ['东部', '东北', '中部', '西部']
-    x_pos = np.arange(len(region_order))
-    bar_w = 0.3
+    x_pos = np.arange(len(region_coefs_zh))
+    bar_w = 0.32
 
-    del_by_region = [region_del_means.get(r, 0) for r in region_order]
-    es_by_region = [region_es_means.get(r, 0) for r in region_order]
+    del_by_region = [region_del_means.get(r, 0) for r in region_coefs_zh]
+    es_by_region = [region_es_means.get(r, 0) for r in region_coefs_zh]
 
-    ax2.bar(x_pos - bar_w/2, del_by_region, bar_w, color=PALETTE['orange'], alpha=0.85,
-            label='DEL (mean)', edgecolor='white', linewidth=0.3)
-    ax2.bar(x_pos + bar_w/2, es_by_region, bar_w, color=PALETTE['blue'], alpha=0.85,
-            label='ES (mean)', edgecolor='white', linewidth=0.3)
+    bars_del = ax2.bar(x_pos - bar_w/2, del_by_region, bar_w, color=PALETTE['orange'], alpha=0.85,
+                       label='DEL 均值', edgecolor='white', linewidth=0.3)
+    bars_es  = ax2.bar(x_pos + bar_w/2, es_by_region, bar_w, color=PALETTE['blue'], alpha=0.85,
+                       label='ES 均值', edgecolor='white', linewidth=0.3)
 
     ax2.set_xticks(x_pos)
-    ax2.set_xticklabels(region_order, fontsize=10)
-    ax2.set_ylabel('Mean Index Value (2022)', fontsize=10)
-    ax2.set_title('Regional Mean DEL & ES (2022)', fontsize=11, fontweight='bold')
-    ax2.legend(fontsize=9)
-    ax2.grid(axis='y', alpha=0.25, linewidth=0.4)
-
-    # Annotation
-    ax2.annotate('Central: high DEL→ES elasticity\nbut moderate DEL level',
-                 xy=(1, 0.25), fontsize=7.5, color=PALETTE['orange'], style='italic',
-                 xytext=(0.5, 0.12), arrowprops=dict(arrowstyle='->', color=PALETTE['grey'], lw=0.7))
+    ax2.set_xticklabels(region_coefs_zh, fontsize=11)
+    ax2.set_ylabel('综合指数均值（2022）', fontsize=11)
+    ax2.set_title('各区域 DEL 与 ES 均值（2022）', fontsize=12, fontweight='bold')
+    ax2.legend(fontsize=10, framealpha=0.85)
+    ax2.grid(axis='y', alpha=0.20, linewidth=0.4)
 
     plt.tight_layout()
     out = OUTPUT_DIR / 'ch5_regional_heterogeneity'

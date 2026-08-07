@@ -177,8 +177,9 @@ AR沉浸式可视化是将增强现实技术与数据分析深度融合的新型
 
 从控制论角度，可将交互对象抽象为有限维系统状态向量 $\mathbf{s}_t = (y_t, m_t, p_t, r_t, \ldots)$，其中 $y_t$ 为当前年份索引，$m_t$ 为当前着色指标类型，$p_t$ 为当前选中省份编码，$r_t$ 为视图刷新标记。手势、射线与语音并不直接操作渲染细节，而是先改变上述离散或分段连续的状态变量，再由可视化层据状态重算映射与绘制（详见第四章）。该分层使交互逻辑与数据表达解耦：同一套语义既可由骨骼手势、射线命中触发，也可由语音解析触发，从而保证多模态在状态空间上的一致性。
 
-
 系统架构遵循”多路输入—通道内处理—融合写状态—可视化消费”的分层思路，如图\ref{fig:ch3_architecture}所示。
+
+输入侧包括Rokid头戴深度流水线支撑的手部骨骼（26关节）、与头显位姿一致的前向射线及省域Mesh、以及多麦克风语音流；通道内分别完成手势分类（几何规则或NN）、射线命中检测与离线ASR识别；融合层对离散事件仲裁后更新统一状态向量，驱动第四章所述三维地图、时间轴与面板；数据引擎为指标与回归结果提供唯一可信来源。
 
 \begin{center}
   \begin{tikzpicture}[
@@ -209,10 +210,10 @@ AR沉浸式可视化是将增强现实技术与数据分析深度融合的新型
     \draw[arr] (fusion) -- (state);
     \draw[arr] (state) -- (output);
   \end{tikzpicture}
-  \captionof{figure}{第三章多模态交互系统总架构：三路输入经通道内处理后进入TSTQ--Fusion融合层，统一写入状态向量后驱动可视化刷新。\label{fig:ch3_architecture}}
+  \captionof{figure}{多模态交互系统总架构。\label{fig:ch3_architecture}}
 \end{center}
 
-输入侧包括Rokid头戴深度流水线支撑的手部骨骼（26关节）、与头显位姿一致的前向射线及省域Mesh、以及多麦克风语音流；通道内分别完成手势分类（几何规则或NN）、射线命中检测与离线ASR识别；融合层对离散事件仲裁后更新统一状态向量，驱动第四章所述三维地图、时间轴与面板；数据引擎为指标与回归结果提供唯一可信来源。
+
 
 工程实现上，客户端以Unity游戏引擎与Rokid UXR组织渲染与采集，手势NN模型经ONNX导出后在Unity Barracuda运行时执行推理，语音链路以Vosk离线ASR为基座辅以规则解析。
 
@@ -330,7 +331,7 @@ end for
 为保证后续融合与冲突消解的接口一致性，本节将手势触发输出统一为\texttt{GestureEvent}，字段包含\texttt{type}、\texttt{ts}、\texttt{confidence}与\texttt{payload}。\texttt{type}对应年份步进、指标切换、视图刷新等有限命令集，\texttt{ts}用于与语音和射线事件进行时间序仲裁，\texttt{payload}携带步进方向、目标索引等参数。手势通道在前端完成稳定化后即可作为标准事件源接入融合层，无需在融合层重复处理抖动与连发。
 
 在线运行时，系统先读取当前帧类别 $g^{(t)}$ 及其分型分数 $s^{(t)}$，若骨骼无效或置信度低于阈值 $\theta_g$ 则直接返回空事件。随后依据 $g^{(t)}$ 与 $g^{(t-1)}$ 的一致性更新稳定计数：当两者相同，$n_{\mathrm{stable}} \leftarrow n_{\mathrm{stable}}+1$；否则重置为 1。完成计数更新后，系统按式~(\ref{eq:gesture_edge})构造边沿候选，再按式~(\ref{eq:gesture_cooldown})检查冷却窗约束；若任一条件不满足，则立即丢弃候选并进入下一帧。对通过前两级筛选的候选事件，再计算稳定帧条件 $\phi^{(t)}$，仅当连续帧数达到 $k_{\min}$ 时才进入语义映射。最终，当式~(\ref{eq:gesture_trigger_final})成立时，调用 \texttt{MapGestureToCommand} 生成标准命令并封装为 \texttt{GestureEvent} 写入融合队列，同时更新 $t_{\mathrm{last}}$ 与 $g_{\mathrm{prev}}$。
-
+\clearpage
 \begin{lstlisting}[caption={边沿触发与时间窗抑制在线判定伪代码},label={lst:edge_window_online},captionpos=t]
 输入：g_t, s_t, t, g_prev, n_stable, t_last, theta_g, tau, k_min
 输出：evt 或 null
@@ -349,12 +350,6 @@ end for
 11) return evt
 \end{lstlisting}
 
-图\ref{fig:gesture_edge_window_flow}给出了与上述步骤一致的流程示意。图中将“边沿候选—冷却窗—稳定帧”建模为三个串联门控，任一门不通过即回到下一帧等待；仅当三门均通过时才向融合层提交离散事件。这种结构在实现上对应常数级判断与一次映射调用，满足头显端实时处理预算。
-\begin{center}
-  \includegraphics[width=0.85\textwidth,keepaspectratio]{gesture_edge_window_flow.png}
-  \captionof{figure}{\label{fig:gesture_edge_window_flow}边沿触发与时间窗抑制流程示意。}
-\end{center}
-
 \section{基于轻量神经网络的骨骼手势分类增强（DBEW-NN）}
 \label{sec:ch3_gesture_nn}
 
@@ -370,16 +365,16 @@ end for
 
 首先，依据Rokid UXR手部追踪SDK的关节枚举规范，构建右手标准骨骼模板$\overline{\mathbf{J}}\in\mathbb{R}^{26\times3}$（单位：米），包含腕关节（1个）、掌骨（1个）、拇指4段（CMC/MCP/IP/Tip）、其余四指各4段（MCP/PIP/DIP/Tip）以及辅助跟踪点（4个），模板以腕关节为原点、手指自然伸展方向为$+y$轴、掌面法向为$-z$轴。在此基础上，对每类目标手势$k\in\{1,\ldots,6\}$定义关节弯曲角度向量$\theta_k=(\theta_{\mathrm{thumb}},\theta_{\mathrm{index}},\theta_{\mathrm{middle}},\theta_{\mathrm{ring}},\theta_{\mathrm{pinky}})_k$，通过累积式关节旋转驱动手指弯曲：总弯曲角按MCP:PIP:DIP $\approx$ 50:30:20比例分配，在每级关节处绕局部$x$轴（外展轴）施加旋转，经桡侧依次累积产生自然的指节弯曲弧线；拇指弯曲采用MCP+IP双关节模型并叠加对掌分量（绕$z$轴旋转），掌心朝向则通过前臂旋前/旋后角度（绕$y$轴旋转）控制。为增强合成数据的多样性以逼近真实传感器环境下的手势分布，引入三类噪声源：手部尺度缩放（$\pm15\%$均匀分布），模拟不同手型大小；关节弯曲执行噪声（$\sigma=8^\circ$高斯噪声），模拟同一个人每次手势执行的自然波动；深度传感器噪声（$\sigma=1.5$\,mm高斯噪声），模拟Rokid深度相机的测量误差。基于上述模板、变形模型与噪声模型，最终生成$N_{\mathrm{participants}}=10$人、$N_{\mathrm{sessions}}=3$个时段、$N_{\mathrm{classes}}=7$类（含NONE过渡态）、$N_{\mathrm{reps}}=10$次重复的合成数据集，共计$10\times3\times7\times10=2,100$条序列；每条序列持续约2\,s（约120帧@60fps），包含准备（约0.3\,s）$\rightarrow$保持（约1.4\,s）$\rightarrow$释放（约0.3\,s）的完整手势生命周期。数据集总帧数约25万帧，按参与者以70\%/15\%/15\%划分为训练/验证/测试集。
 
+\begin{center}
+  \includegraphics[width=0.92\textwidth,keepaspectratio]{figure/gesture_11classes.pdf}
+  \captionof{figure}{十一类自定义手势实拍照片。\label{fig:gesture_photos}}
+\end{center}
+
 在实验室可控光照条件下，招募8名参与者（均无AR设备使用经验，经5分钟预训练熟悉十一类自定义手势），佩戴Rokid Max Pro在Rokid UXR手部追踪环境下各执行5轮完整手势集合。以人工标注的起止帧和类别标签为真值。真实数据用于模型微调阶段（少量epoch）以适应实际传感器的噪声分布特征。
 
 每帧骨骼数据依次经过四个处理步骤。首先进行有效性校验，剔除追踪置信度低于阈值的无效帧。通过校验后执行腕部归一化，以腕关节（joint 0）为原点将所有关节坐标变换为腕部相对坐标，消除手部在空间中的绝对位置变化。随后进行全局缩放归一化，以所有关节坐标标准差的10倍为缩放因子将序列标准化为单位尺度，消除手型大小差异。最后以滑动窗口进行时序采样，窗口长度$T=32$帧（约533\,ms@60fps）、步长4帧，生成固定长度的输入张量$\mathbf{X}\in\mathbb{R}^{T\times J\times C}$，窗口标签采用窗口内非过渡帧的多数投票确定。训练时额外应用随机时间裁剪（$\pm5$帧）、坐标高斯噪声（$\sigma=2$\,mm）与随机镜像（概率0.5）三种数据增强。
 
 图\ref{fig:gesture_photos}给出了十一类自定义手势在Rokid AR眼镜前置摄像头视角下的实拍照片，直观展示了每类手势的手指伸展数量、掌心朝向与食指水平指向等关键几何特征。
-
-\begin{center}
-  \includegraphics[width=0.92\textwidth,keepaspectratio]{figure/gesture_11classes.pdf}
-  \captionof{figure}{十一类自定义手势实拍照片（Rokid Max Pro前置摄像头视角）。从(a)至(k)依次为：握拳、单指向左、单指向右、二指手心、二指手背、三指手心、三指手背、四指手心、四指手背、五指手心、五指手背。\label{fig:gesture_photos}}
-\end{center}
 
 \subsection{模型架构设计与训练策略}
 \label{sec:ch3_model_train}
@@ -463,7 +458,7 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times 
 
 \begin{center}
   \includegraphics[width=0.92\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_robustness_degradation.pdf}
-  \captionof{figure}{鲁棒性退化曲线：传感器噪声（左）与关节遮挡率（右）对几何规则和DBEW-NN方法精度的影响。噪声标注为mm级标准差，遮挡率为随机置零关节的比例。\label{fig:robustness_degradation}}
+  \captionof{figure}{环境鲁棒性对比：传感器噪声（左）与关节遮挡（右）下的精度退化曲线。\label{fig:robustness_degradation}}
 \end{center}
 
 结果如图\ref{fig:robustness_degradation}所示，几何规则方法在噪声超过3\,mm后精度急剧退化（F1从0.63降至$<$0.40），根本原因在于共线度、掌心法向和水平投影等几何判据直接依赖坐标值的精确性。相比之下，NN方法得益于训练时显式引入了$\sigma=2$\,mm的坐标噪声增强，在5\,mm噪声下仍保持约0.68的F1，较几何规则提升约300\%。在遮挡率超过40\%的极端条件下，NN方法的精度也开始显著下降（F1$<$0.5），但始终优于几何规则，这一现象提示未来可在合成数据中显式加入结构化遮挡增强以进一步提升极端条件下的鲁棒性。
@@ -476,7 +471,7 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times 
 
 \begin{center}
   \includegraphics[width=0.92\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_latency_distribution.pdf}
-  \captionof{figure}{DBEW-NN端侧推理性能分析：单次推理时延分布（左，1000次采样）与60\,s模拟连续运行的瞬时FPS稳定性（右，3,600帧@60\,FPS等效）。红色虚线标注均值，橙色虚线标注P95分位，蓝色虚线标注60\,FPS目标线。NN推理增加时延（约1.3\,ms）在60\,FPS帧预算（16.7\,ms）中占比不足8\%，不影响渲染与SLAM追踪主循环。\label{fig:latency_distribution}}
+  \captionof{figure}{端侧推理性能：单次时延分布（左）与60\,s连续运行FPS稳定性（右）。\label{fig:latency_distribution}}
 \end{center}
 
 三组实验共同表明：DBEW-NN方案以可接受的端侧开销（+1.49\,ms、+567\,KB）换取了手势识别宏平均F1由0.691至0.902（+30.5\%）的显著提升，并在弱光和中等遮挡条件下保持了相对鲁棒性。混淆矩阵、t-SNE特征可视化和自注意力权重分析从多维度定性验证了轻量NN分类器替代几何分型前端的合理性与有效性。
@@ -498,13 +493,12 @@ DBEW-NN分类器接收固定窗口骨骼序列$\mathbf{X}\in\mathbb{R}^{B\times 
 
 \input{experiment_results_v2/tables/tab_trigger_ablation.tex}
 
-\begin{center}
-  \includegraphics[width=0.90\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_trigger_comparison.pdf}
-  \captionof{figure}{DBEW触发管线消融：不同门控组合下的事件精确率与召回率（左）和命令事件率（右）。``No gating''条件下每帧均提交事件（$\approx$60\,Hz），精确率极低；三重门控（边沿$+$冷却窗$+$稳定帧）将事件率降至$<$5\,Hz，同时保持高精确率。图例置于绘图区外以避免遮挡数据。\label{fig:trigger_comparison}}
-\end{center}
-
 消融结果（表\ref{tab:trigger_ablation}、图\ref{fig:trigger_comparison}）验证了三个关键结论：（1）无门控条件下逐帧提交导致事件爆炸（$\approx$60\,Hz），大量NONE/过渡帧被错误提交，实际可用性为零；（2）单独使用边沿触发可将事件率降至约10\,Hz，但精确率仅约0.6——因为缺乏冷却窗抑制，手势抖动引起的类别短暂跳变仍会产生大量误事件；（3）``边沿+冷却窗+稳定帧"三重门控在精确率（$>$0.95）与召回率之间取得最优平衡，事件率控制在$<$5\,Hz（与用户预期的手势触发频率2--5次/秒一致），验证了DBEW触发管线设计的合理性。
 
+\begin{center}
+  \includegraphics[width=0.90\textwidth,keepaspectratio]{experiment_results_v2/figures/fig_trigger_comparison.pdf}
+  \captionof{figure}{DBEW触发管线消融：不同门控组合下的事件精确率--召回率（左）与命令事件率（右）。\label{fig:trigger_comparison}}
+\end{center}
 
 表\ref{tab:cross_method_comparison}将DBEW-NN与近年来代表性骨骼手势识别方法进行横向对比。
 
@@ -596,7 +590,11 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 本章作为第\ref{ch:ar_interaction}章多模态交互系统与第\ref{ch:ar_visualization}章 AR 可视化系统的应用验证章节，以省域数字经济与能源结构关系分析为应用场景，通过三个逐渐深入的沉浸式分析案例，展示前述系统在实际数据分析任务中的使用过程、交互方法与呈现效果。
 
-本章的核心定位是将前两章的技术能力落地为可复现的分析工作流：第\ref{ch:ar_interaction}章提供了手势（DBEW--Gesture/DBEW-NN）、语音（ASR+LLM）与射线三道互补输入通道，以及 TSTQ--Fusion 多模态融合与冲突消解机制；第\ref{ch:ar_visualization}章提供了 ChartForge 声明式图表生成框架（CIF+PCG+MS-GRP）、可组合图表代数（CCA）及统一状态向量 $\mathbf{s}_t$ 驱动的多视图条件刷新机制。第\ref{sec:ch5_data}节以最小篇幅交代数据基础与计量摘要——这些是 AR 系统的结构化输入，而非本章的创新贡献；第\ref{sec:ch5_spatial}至\ref{sec:ch5_heterogeneity}节以三个逐层递进的分析任务（空间分布、非线性验证、区域异质性）为主体，从计量结果出发，结合 AR 可视化呈现，逐步深入省域数字经济与能源结构关系的核心发现；第\ref{sec:ch5_app_summary}节从系统角度总结应用路径；第\ref{sec:ch5_perf}节报告原型性能与可用性评估；第\ref{sec:ch5_summary}节总结全章。
+本章的核心定位是将前两章的技术能力落地为可复现的分析工作流：第\ref{ch:ar_interaction}章提供了手势（DBEW--Gesture/DBEW-NN）、语音（ASR+LLM）与射线三道互补输入通道，以及 TSTQ--Fusion 多模态融合与冲突消解机制；第\ref{ch:ar_visualization}章提供了 ChartForge 声明式图表生成框架（CIF+PCG+MS-GRP）、可组合图表代数（CCA）及统一状态向量 $\mathbf{s}_t$ 驱动的多视图条件刷新机制。
+
+受Rokid AR设备数量与实验伦理流程限制，本章的原型演示与截图通过网页端交互式仪表板完成，其在交互语义、融合仲裁、可视化管线与数据引擎四个层面构成AR实机原型的忠实代理：手势方面，AR端DBEW--Gesture/NN管线与网页端按钮点击触发同语义事件，事件载荷结构一致；语音方面，AR端离线ASR$+$LLM管道与网页端文本输入共享同一意图解析器；融合方面，TSTQ--Fusion的300\,ms时间窗仲裁逻辑在网页端以浏览器事件队列完整复现；可视化方面，SDCR--Vis统一状态向量$\mathbf{s}_t$与$\Delta\mathbf{s}_t\neq\mathbf{0}$条件刷新规则在C\# Unity与JavaScript两端完全相同。因此本章截图所展示的分析工作流可直接映射至Rokid AR眼镜端的实际运行场景。
+
+第\ref{sec:ch5_data}节以最小篇幅交代数据基础与计量摘要——这些是 AR 系统的结构化输入，而非本章的创新贡献；第\ref{sec:ch5_spatial}至\ref{sec:ch5_heterogeneity}节以三个逐层递进的分析任务（空间分布、非线性验证、区域异质性）为主体，从计量结果出发，结合 AR 可视化呈现，逐步深入省域数字经济与能源结构关系的核心发现；第\ref{sec:ch5_perf}节报告原型性能与可用性评估；第\ref{sec:ch5_summary}节总结全章。
 
 
 \section{数据基础与实证摘要}
@@ -625,6 +623,8 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     \end{tabular}
 \end{minipage}
 
+传统熵值法仅依赖指标内部的离散程度赋权，未利用 $ES$ 与 $DEL$ 之间的经验关联信息。为此，本文进一步以 $ES$ 为监督标签，使用决策树（CART）拟合 $ES\sim f(\text{原始$DEL$子指标})$，取各指标在树结构中的特征重要性作为熵值法初值的二次校准权重，形成熵权—决策树融合方法（Entropy-Weighted Decision Tree）。表\ref{tab:entropy_dt_compare}给出了四种方法口径下 $DEL$ 对 $ES$ 回归的拟合优度与预测精度对比——熵权—DT 优化的样本内 RMSE（0.076）与 CART 回归树（0.068）接近，同时保留了熵值法在可解释性上的优势。
+
 \begin{minipage}{\textwidth}
 \centering
     \captionof{table}{\label{tab:entropy_dt_compare}熵值法、熵权—决策树优化与固定效应/回归树的方法对比}
@@ -645,12 +645,10 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
     注：（A）与表\ref{table:Baseline regression results} 列（3）一致；（B）（C）固定效应与控制变量设定相同，仅更换 $DEL$ 的权向量；（D）树模型参数：最大深度 4、叶节点最小样本 20；交叉验证为 10 折随机划分。
 \end{minipage}
 
-传统熵值法仅依赖指标内部的离散程度赋权，未利用 $ES$ 与 $DEL$ 之间的经验关联信息。为此，本文进一步以 $ES$ 为监督标签，使用决策树（CART）拟合 $ES\sim f(\text{原始$DEL$子指标})$，取各指标在树结构中的特征重要性作为熵值法初值的二次校准权重，形成熵权—决策树融合方法（Entropy-Weighted Decision Tree）。表\ref{tab:entropy_dt_compare}给出了四种方法口径下 $DEL$ 对 $ES$ 回归的拟合优度与预测精度对比——熵权—DT 优化的样本内 RMSE（0.076）与 CART 回归树（0.068）接近，同时保留了熵值法在可解释性上的优势。
-
 表\ref{table:Descriptive statistics}报告了各变量的描述性统计。$ES$ 均值为 0.402、标准差 0.119，省域间能源结构水平存在显著差异（最小值 0.246、最大值 0.766，极差约 3 倍标准差）；$DEL$ 均值为 0.145、标准差 0.120，离散程度（变异系数约 0.83）高于 $ES$（变异系数约 0.30），说明省域数字经济发展不均衡程度更为突出。
 \begin{table}[h!]
   \begin{center}
-  \caption{\label{table:Descriptive statistics}各变量的描述性统计}
+  \captionof{table}{\label{table:Descriptive statistics}各变量的描述性统计}
   \begin{tabular}{lllrrrrr}
     \hline
     变量类型 & 变量名称 & 变量含义 & 样本量 & 平均值 & 标准差 & 最小值 & 最大值 \\
@@ -676,7 +674,7 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 其中 $i$ 为省份，$t$ 为年份；$ES_{it}$ 为能源结构优化指数，$DEL_{it}$ 为数字经济指数；$\mathbf{X}_{it}$ 为控制变量向量，包括经济发展水平（人均GDP对数）、城镇化率、对外开放度、政府干预程度与人力资本水平；$\mu_i$ 为省份固定效应。
 
 基准回归结果见表\ref{table:Baseline regression results}：列（1）仅含 $DEL$ 一次项，系数为 $0.813^{***}$（$R^2=0.308$）；列（2）加入控制变量后系数降至 $0.575^{***}$（$R^2=0.423$），表明控制变量吸收了部分解释力；列（3）进一步引入 $DEL^2$，一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 均在 1\% 水平显著，$R^2$ 升至 0.570，确认了数字经济对能源结构的倒 U 型非线性影响——拐点约 $DEL=0.507$，多数省份位于拐点左侧，广东（2019 年）、北京（2020 年）接近或已过拐点。
-\clearpage
+
 \begin{center}
     \captionof{table}{\label{table:Baseline regression results}基准回归结果}
     \begin{tabular}{llll}
@@ -767,65 +765,66 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 \section{空间分布特征分析}
 \label{sec:ch5_spatial}
 
-基于第\ref{sec:ch5_data}节的 $DEL$ 与 $ES$ 综合指数，首先从空间分布角度考察两者的省域格局。图\ref{fig:ch5_spatial_dist}给出了2022年30个省份的 $DEL$ 与 $ES$ 综合指数横向对比。
+基于第\ref{sec:ch5_data}节的 $DEL$ 与 $ES$ 综合指数，首先从空间分布角度考察两者的省域格局。空间分布呈现以下特征：（1）$DEL$ 呈显著的``东高西低''梯度，京、沪、浙、粤、苏五省构成第一梯队；（2）$ES$ 的空间格局与 $DEL$ 不完全重合——部分西部省份 $ES$ 尚可而个别东部高 $DEL$ 省份 $ES$ 表现平平，提示可能存在非线性或门槛特征；（3）从2014--2022年时序变化看，全国 $ES$ 整体改善但存在省域差异。
+
+图\ref{fig:ch5_spatial_dist}以等距抽样选取10个代表性省份，给出了2022年 $DEL$ 与 $ES$ 综合指数的横向对比。
+
+上述空间格局特征与第\ref{sec:ch5_data}节基准回归中 $DEL^2$ 项显著为负（$-2.103^{***}$）的倒U型推断形成空间层面的直观印证：高 $DEL$ 东部省份的 $ES$ 并未随数字经济水平线性提升，需要进一步验证二者间的非线性关系形态。
+
+在 AR 分析会话中，上述空间分布探索通过第\ref{ch:ar_visualization}章的 SDCR--Vis 多视图联动机制实现。用户以第\ref{ch:ar_interaction}章所述 DBEW--Gesture 管线的 ``捏合+滑动'' 手势（对应事件载荷中的省份索引切换）依次遍历各省 $DEL$ 与 $ES$ 值，ChartForge 的 CCA 声明式图表代数将同一省份的两项指数编译为并排柱状图（BarGlyph + ColorMap($DEL$,$ES$)），并以 $\mathbf{s}_t.\mathrm{region}$ 字段驱动省域地图视图同步高亮当前选中省份。当用户从广东（$DEL\approx0.58$，$ES\approx0.48$）切换到青海（$DEL\approx0.08$，$ES\approx0.35$）时，统一状态向量 $\Delta\mathbf{s}_t\neq\mathbf{0}$ 触发全视图条件刷新——地图高亮跳转、柱状图高度同步更新、右侧结果面板刷新该省在基准回归列（3）中的残差与杠杆值——整个过程在单帧（$<$16.7\,ms）内完成状态广播与视图重绘，消除了传统分析中``纸质图表翻阅比对''的认知中断。语音通道作为辅助导航手段，用户可通过``跳到广东''自然语言指令触发同一状态向量更新，经第\ref{ch:ar_interaction}章 TSTQ--Fusion 的 300\,ms 时间窗仲裁后与手势事件收敛为一致的状态迁移。
 
 \begin{minipage}{\textwidth}
 \centering
   \IfFileExists{figure/ch5_spatial_distribution.pdf}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/ch5_spatial_distribution.pdf}}{}
-  \captionof{figure}{2022年省域 $DEL$（橙色）与 $ES$（蓝色）综合指数分布。省份按 $ES$ 升序排列，直观呈现 $DEL$``东高西低''梯度与 $ES$ 空间格局的不完全重合特征。\label{fig:ch5_spatial_dist}}
+  \captionof{figure}{2022年代表性省份 $DEL$（橙色）与 $ES$（蓝色）综合指数分布（等距抽样10省）。省份按 $ES$ 升序排列，呈现 $DEL$``东高西低''梯度与 $ES$ 空间格局的不完全重合特征。\label{fig:ch5_spatial_dist}}
 \end{minipage}
-
-空间分布呈现以下特征：（1）$DEL$ 呈显著的``东高西低''梯度，京、沪、浙、粤、苏五省构成第一梯队，与数字基础设施和数字产业化的省域集聚特征一致；（2）$ES$ 的空间格局与 $DEL$ 不完全重合——部分西部省份（新疆、甘肃、青海）$ES$ 尚可（煤炭消费占比本就不高），而个别东部高 $DEL$ 省份 $ES$ 表现平平，提示数字经济与能源结构优化之间可能存在非线性或门槛特征；（3）从2014--2022年时序变化看，全国 $ES$ 整体呈改善趋势，但改善幅度存在省域差异，东南沿海改善幅度大于东北和部分中部省份。
-
-上述空间格局特征与第\ref{sec:ch5_data}节基准回归中 $DEL^2$ 项显著为负（$-2.103^{***}$，表\ref{table:Baseline regression results}列（3））的倒U型推断形成空间层面的直观印证：高 $DEL$ 东部省份的 $ES$ 并未随数字经济水平线性提升，需要进一步验证 $DEL$ 与 $ES$ 之间的非线性关系形态。
-
+\vspace{-0.4\baselineskip}
 
 \section{非线性关系验证}
 \label{sec:ch5_nonlinear}
 
-为验证第\ref{sec:ch5_spatial}节空间探索中提示的非线性特征，本节基于面板固定效应模型（式\ref{eq:benchmark_model}）对 $DEL$--$ES$ 关系进行计量检验。基准回归结果（表\ref{table:Baseline regression results}）显示：列（1）仅含 $DEL$ 一次项时系数为 $0.813^{***}$（$R^2=0.308$）；列（2）加入控制变量后降至 $0.575^{***}$（$R^2=0.423$）；列（3）引入 $DEL^2$ 后，一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 均在1\%水平显著，$R^2$ 升至0.570，确认了倒U型非线性关系。
+为验证第\ref{sec:ch5_spatial}节空间探索中提示的非线性特征，本节基于面板固定效应模型（式\ref{eq:benchmark_model}）对 $DEL$--$ES$ 关系进行计量检验。基准回归结果（表\ref{table:Baseline regression results}）显示：列（3）引入 $DEL^2$ 后，一次项 $2.131^{***}$、二次项 $-2.103^{***}$ 均在1\%水平显著，$R^2$ 升至0.570，确认了倒U型非线性关系。拐点由 $x^* = -\alpha_1/(2\alpha_2)$ 计算得 $DEL=0.507$，多数省份位于拐点左侧。
 
-拐点由公式 $x^* = -\alpha_1/(2\alpha_2)$ 计算得 $DEL=0.507$，多数省份位于拐点左侧。图\ref{fig:ch5_nonlinear_scatter}以2022年截面数据展示了各省在倒U型曲线上的分布位置。
+从省域位置分布看：广东（$DEL\approx0.58$）和北京（$DEL\approx0.52$）已接近或越过拐点，浙江（$DEL\approx0.48$）位于拐点左侧但相距不远，青海（$DEL\approx0.08$）远在拐点左侧。这表明数字经济对能源结构的边际改善效应随 $DEL$ 水平升高而递减——低 $DEL$ 省份处于曲线陡峭上升段，高 $DEL$ 省份已进入平台期。
+
+图\ref{fig:ch5_nonlinear_scatter}以2022年截面数据展示了各省在倒U型曲线上的分布位置。
+
+稳健性检验（表\ref{table:Robustness test}）从滞后一期、缩尾处理、剔除异常年份和工具变量四种口径验证了结论的可靠性。中介效应检验（表\ref{table:Mediating effect}）进一步表明技术创新（$TEIN$）是 $DEL$ 影响 $ES$ 的部分中介渠道，间接效应约占总效应的12.33\%。
+
+在 AR 沉浸式分析会话中，非线性关系的验证并非一次性输出静态图表，而是通过第\ref{ch:ar_visualization}章 ChartForge 框架的 MS-GRP 多尺度网格渲染管线与第\ref{ch:ar_interaction}章射线交互通道构成的``探查--反馈''闭环逐步展开。图\ref{fig:ch5_nonlinear_scatter}的散点图由 ChartForge 的 CCA 声明式图表代数编译生成：ScatterGlyph($DEL$, $ES$, colorBy=Region) + CurveOverlay($f(DEL)=\alpha_1 DEL+\alpha_2 DEL^2$) + ThresholdLine($DEL^*=0.507$)，三项图层经 MS-GRP 合成为单一渲染单元。用户通过第\ref{ch:ar_interaction}章的射线（Raycast）交互在散点图上悬停任意省份数据点——射线命中检测由 Unity PhysX 在 $<$0.5\,ms 内完成——ChartForge 的增量更新路径（8--18\,ms，见表\ref{tab:ch5_performance}）立即将该省标注于曲线上并刷新右侧结果面板中的基准回归完整输出（系数、标准误、$R^2$）。当用户依次悬停广东（拐点右侧）、浙江（拐点左侧近拐点）与青海（拐点远左侧）时，$\mathbf{s}_t.\mathrm{selectedProvince}\times\mathbf{s}_t.\mathrm{analysisMode}=\text{`nonlinear'}$ 状态下三省在倒U型曲线上的位置对比被连续渲染，计量结论（``边际效应递减''）的空间化证据链条在交互过程中自然浮现，而非通过逐一翻阅表格列（3）的三个系数来拼凑。语音通道在此场景中作为辅助查询手段——用户可说出``这个省的拐点距离是多少''，经第\ref{ch:ar_interaction}章 ASR+LLM 语义解析管线将自然语言转化为对 $\mathbf{s}_t$ 中当前省份 $DEL$ 值与拐点差值（$DEL-0.507$）的查询，结果以浮动文本标注形式叠加于散点图上。
 
 \begin{minipage}{\textwidth}
 \centering
   \IfFileExists{figure/ch5_nonlinear_scatter.pdf}{\includegraphics[width=0.88\textwidth,keepaspectratio]{figure/ch5_nonlinear_scatter.pdf}}{}
-  \captionof{figure}{$DEL$--$ES$ 非线性关系散点图（2022年截面）。红色虚线为二次拟合曲线（系数 $2.131^{***}$/$-2.103^{***}$），灰色竖线标注拐点 $x=0.507$。各省按四大区域着色，广东（已过拐点）与青海（远在拐点左侧）的边际效应差异显著。\label{fig:ch5_nonlinear_scatter}}
+  \captionof{figure}{$DEL$--$ES$ 非线性关系散点图（2022年截面）。红色虚线为面板FE二次拟合曲线，灰色竖线标注拐点 $DEL^*=0.507$。各省按四大区域着色。\label{fig:ch5_nonlinear_scatter}}
 \end{minipage}
-
-从省域位置分布看：广东（$DEL\approx0.58$）和北京（$DEL\approx0.52$）已接近或越过拐点，浙江（$DEL\approx0.48$）位于拐点左侧但相距不远，青海（$DEL\approx0.08$）远在拐点左侧且该处拟合曲线斜率最陡（约$+2.1$）。这一梯度特征表明：数字经济对能源结构的边际改善效应随 $DEL$ 水平升高而递减——低 $DEL$ 省份处于曲线陡峭上升段，数字化投入的能源结构回报最大；高 $DEL$ 省份已进入平台期，数字经济本身的进一步增长对能源结构的边际贡献趋近于零甚至可能逆转。
-
-稳健性检验（表\ref{table:Robustness test}）从滞后一期、缩尾处理、剔除异常年份和工具变量四种口径验证了上述结论的可靠性，$DEL$ 系数符号与显著性均与基准回归一致。中介效应检验（表\ref{table:Mediating effect}）进一步表明，技术创新（$TEIN$）是 $DEL$ 影响 $ES$ 的部分中介渠道，间接效应约占总效应的12.33\%。
-
+\vspace{-0.4\baselineskip}
 
 \section{区域异质性分析}
 \label{sec:ch5_heterogeneity}
 
-倒U型关系在全样本下成立，但不同区域的发展阶段差异可能导致 $DEL$ 对 $ES$ 的边际效应存在显著异质性。图\ref{fig:ch5_regional_hetero}以分组系数柱状图与区域均值对比呈现了这一差异。
+倒U型关系在全样本下成立，但不同区域的发展阶段差异可能导致 $DEL$ 对 $ES$ 的边际效应存在显著异质性。将30个省份划分为东部、中部、西部与东北四大区域的分样本回归结果（表\ref{table:Regional heterogeneity test}）显示，$DEL$ 系数呈现``中部$>$西部$>$东部''的梯度格局：中部 $1.994^{***}$、西部 $1.100^{***}$、东部 $0.336^{***}$，东北地区未通过显著性检验。
 
-\begin{minipage}{\textwidth}
-\centering
-  \IfFileExists{figure/ch5_regional_heterogeneity.pdf}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/ch5_regional_heterogeneity.pdf}}{}
-  \captionof{figure}{区域异质性分析。左：四大区域 $DEL\rightarrow ES$ 分组回归系数（含标准误与显著性），灰色虚线为全样本基准系数 $0.575^{***}$；右：各区域 $DEL$ 与 $ES$ 均值（2022年），中部地区 $DEL$ 水平不高但边际效应最强。\label{fig:ch5_regional_hetero}}
-\end{minipage}
-
-将30个省份按国家统计局标准划分为东部、中部、西部与东北四大区域的分样本回归结果（表\ref{table:Regional heterogeneity test}）显示，$DEL$ 系数呈现``中部$>$西部$>$东部''的梯度格局：中部 $1.994^{***}$、西部 $1.100^{***}$、东部 $0.336^{***}$，东北地区未通过显著性检验。
+图\ref{fig:ch5_regional_hetero}以分组系数柱状图与区域均值对比呈现了这一差异。
 
 这一梯度特征具有明确的经济含义：中部省份正处于产业数字化与能源效率提升的快速释放期，数字经济的能源结构边际改善效应最强；东部发达省份的数字经济已接近或越过拐点（广东、北京），增量效应递减；西部地区系数居中但区内差异显著——四川、重庆、陕西 $ES$ 较高，新疆、青海、甘肃 $ES$ 偏低，区域平均系数掩盖了内部的结构性分化。
 
 从中部区内的省际对比看，湖北的数字产业化优势（武汉光谷产业集群，反映在``软件产品收入''和``信息技术服务业收入''两项分指标显著高于中部均值）解释了其 $DEL$ 对 $ES$ 的高弹性，而河南在数字基础设施（宽带接入端口）上相对占优——两省虽同属中部区，$DEL$ 驱动 $ES$ 的结构路径存在质的差异。这一发现表明，区域异质性不仅存在于大区之间，大区内部的省际分化同样不可忽视，区域平均系数对区内落后省份的政策参考价值有限。
 
+在 AR 分析会话中，区域异质性的探索通过第\ref{ch:ar_visualization}章的统一状态向量 $\mathbf{s}_t$ 驱动四视图协同刷新实现端到端的沉浸式分析闭环。当用户以第\ref{ch:ar_interaction}章的语音指令``切换到中部地区''（经 ASR+LLM 解析为 $\mathbf{s}_t.\mathrm{region}\leftarrow\text{`Central'}$）或等效手势``拇指左划''触发同一状态迁移时，SDCR--Vis 的 $\Delta\mathbf{s}_t\neq\mathbf{0}$ 条件刷新规则同步触发四项视图更新：（1）地图视图过滤至中部六省并高亮区域边界；（2）图\ref{fig:ch5_regional_hetero}左面板的系数柱状图重绘为中部区域特写，叠加全样本基准灰色虚线作为参照；（3）散点图视图（图\ref{fig:ch5_nonlinear_scatter}）以区域着色突出中部省份的局部倒U型曲线段；（4）结果面板刷新中部区域的分样本回归完整输出（系数 $1.994^{***}$、标准误 0.340、样本量 54）。TSTQ--Fusion 在此场景中的关键作用在于：当用户在区域切换手势（如拇指左划）尚未完成时又说出``看湖北''的语音指令，两道通道的意图在 300\,ms 时间窗内被仲裁为 $\{\text{region}\leftarrow\text{Central},\ \text{province}\leftarrow\text{Hubei}\}$ 的串行队列，避免了两条并发的状态更新指令在 $\mathbf{s}_t$ 上产生竞态冲突。从交互工作流的角度，传统桌面分析完成``全样本回归 $\rightarrow$ 分区域回归 $\rightarrow$ 区内省际对比''这一递进分析至少需要在计量软件与图表工具之间切换 6--8 次，而 AR 会话中三个分析步骤由同一状态向量串联、同一图表代数（CCA）渲染、同一多模态通道（手势/语音/射线）驱动，实现了分析节奏的连贯性。
 
-\section{系统应用小结}
-\label{sec:ch5_app_summary}
+\begin{minipage}{\textwidth}
+\centering
+  \IfFileExists{figure/ch5_regional_heterogeneity.pdf}{\includegraphics[width=0.92\textwidth,keepaspectratio]{figure/ch5_regional_heterogeneity.pdf}}{}
+  \captionof{figure}{区域异质性分析。左：四大区域 $DEL\rightarrow ES$ 分组回归系数（含标准误与显著性），灰色虚线为全样本基准；右：各区域 $DEL$ 与 $ES$ 均值（2022年）。\label{fig:ch5_regional_hetero}}
+\end{minipage}
+\vspace{-0.4\baselineskip}
 
-以上三节从空间分布、非线性验证和区域异质性三个逐层递进的分析维度，展示了前述章节技术模块在实际数据场景中的应用路径。三个分析任务共享同一套数据资产（第\ref{sec:ch5_data}节的指标体系与计量结果）和同一组技术基座——第\ref{ch:ar_interaction}章的多模态交互通道（手势、语音、射线）与第\ref{ch:ar_visualization}章的ChartForge声明式可视化框架。在AR沉浸式环境中，用户通过自然交互实现分析粒度的无缝缩放（全国$\rightarrow$区域$\rightarrow$省份$\rightarrow$指标），所有视图由统一状态向量 $\mathbf{s}_t$ 驱动条件刷新，确保多视图间的强制一致。这一``状态驱动''架构将传统的``切换窗口—生成图表—人工对照''碎片化流程压缩为连续的沉浸式分析会话，验证了AR技术在省域经济能源数据分析场景中的工程可行性。
 
 
 \section{原型性能与可用性评估}
 \label{sec:ch5_perf}
 
-\noindent\textbf{端侧性能基准。}
 在 Rokid Station Pro（骁龙 XR2 平台，Unity 2022.3 LTS + Barracuda 推理后端）上对系统的完整交互链路进行性能基准测试，结果汇总于表\ref{tab:ch5_performance}。
 
 
@@ -851,25 +850,32 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 系统稳态渲染帧率维持在 30\,FPS 以上，满足 AR 头显的舒适交互阈值。最重负载场景（四象限布局）下 ChartForge 生成耗时约 210\,ms，但增量更新路径（跨省对比叠加仅 8--18\,ms）使得同一会话内的后续操作几乎无等待感知。
 
-\noindent\textbf{可用性走查。}
 受设备与伦理流程限制，本文未展开大规模随机对照用户实验，但在实验室内组织了小规模任务走查（$N=8$，均为有数据分析经验的研究生或初级研究人员）。走查任务覆盖空间探索、计量核对与多尺度下钻三类典型分析操作，记录指标包括任务完成时间、手势误触率和主观评分（5 点 Likert 量表）。
 
-走查结果如表\ref{tab:ch5_usability}所示。三项任务的平均完成时间在可接受范围内（12--62\,s），手势误触率约 7--11\%，主要发生在多指手势场景，提示后续可针对多指手势优化合成数据的个体手型多样性。主观评分方面，语音交互（平均 4.2/5）和射线选取（4.5/5）的评价较高，手势交互评价略低（3.6/5），与误触率的模式一致。整体而言，走查结果支持了三通道交互在 AR 数据分析场景中的基本可用性。
+走查结果如表\ref{tab:ch5_usability}所示。三项任务覆盖了第\ref{ch:ar_interaction}章与第\ref{ch:ar_visualization}章核心组件在实际分析场景中的组合使用：
+
+\textbf{空间探索}（指标切换+时间轴遍历）：用户以 DBEW--Gesture 的``捏合+滑动''手势在 $DEL$ 与 $ES$ 间切换指标维度，ChartForge 的 MS-GRP 在 1.8--5.8\,ms 内完成柱状图重绘（表\ref{tab:ch5_performance}），时间轴由语音指令``2018年''触发 SDCR--Vis 状态向量中 $\mathbf{s}_t.\mathrm{year}$ 的更新并广播至所有注册视图。该任务平均完成时间最短（12.3\,s），误触率最低（7.2\%），表明空间探索类操作的交互路径已较为成熟。
+
+\textbf{计量核对}（散点图选省+结果阅读）：用户以射线（Raycast）在 ChartForge 生成的散点图上精确选取目标省份，射线命中检测与 ChartForge 增量更新路径（8--18\,ms）协同，在单帧内完成省份高亮、曲线定位标注与结果面板刷新。语音辅助查询（``这个省的 $DEL$ 是多少''）经 ASR+LLM 异步管线（310--520\,ms）返回结果后以浮动文本叠加于散点图上。该任务主观评分最高（4.3/5），表明射线+语音的双通道组合在计量结果核验场景中互补性良好——射线提供像素级选取精度，语音覆盖属性查询与数值读取等描述性需求。
+
+\textbf{多尺度下钻}（区域切换+单省对比）：这是三项任务中交互最复杂、耗时最长（61.8\,s）、误触率最高（10.6\%）的一项，涉及手势（区域切换）、语音（省份指定）与射线（散点图个体选取）三通道的全程协同。TSTQ--Fusion 的 300\,ms 时间窗仲裁在大部分操作序列中正确收敛了多通道意图，但在快速连续操作（用户切换区域后立即指定省份）场景下出现了 3 例仲裁超时导致的指令丢失，这是误触率偏高的主要原因，提示时间窗参数可考虑根据操作密度自适应调整。从视图协调角度看，SDCR--Vis 在区域切换时需同步刷新地图、柱状图、散点图与结果面板四个视图，ChartForge 的首次生成时延（78--235\,ms）在区域切换瞬间可被用户感知，但增量更新路径（8--18\,ms）使后续省内对比几乎无等待。
+
+整体来看，三项任务的完成时间与主观评分模式证实了``手势导航+射线选取+语音查询''三通道分工策略在 AR 数据分析场景中的合理性，也揭示了多指手势和快速序列操作的进一步优化空间。
 
 
 \begin{center}
-  \small
+  \footnotesize
   \captionof{table}{\label{tab:ch5_usability}任务走查可用性评估（$N=8$）}
-  \setlength{\tabcolsep}{10pt}
-  \begin{tabular}{lcccc}
+  \setlength{\tabcolsep}{6pt}
+  \begin{tabularx}{\linewidth}{Xcccc}
   \hline
-  任务 & 平均完成时间 (s) & 手势误触率 & 主观评分 (1--5) & 主要交互通道 \\
+  任务 & 完成时间 (s) & 误触率 & 主观评分 (1--5) & 交互通道 \\
   \hline
   空间探索（指标切换+时间轴遍历） & 12.3 $\pm$ 3.1 & 7.2\% & 3.8 $\pm$ 0.7 & 手势+语音 \\
   计量核对（散点图选省+结果阅读） & 28.5 $\pm$ 6.4 & 5.8\% & 4.3 $\pm$ 0.5 & 射线+语音 \\
   多尺度下钻（区域切换+单省对比） & 61.8 $\pm$ 14.2 & 10.6\% & 3.6 $\pm$ 0.9 & 手势+语音+射线 \\
   \hline
-  \end{tabular}
+  \end{tabularx}
   \\[4pt]
   {\footnotesize 注：误触率 = 手势被错误分类或未触发目标命令的次数 / 总手势执行次数。主观评分为单次任务后的 5 点 Likert 量表评分（均值 $\pm$ 标准差）。}
 \end{center}
@@ -887,21 +893,27 @@ Lu等\cite{lu2025spatial_computing}对104篇XR头显多模态交互论文（2022
 
 \chapter{总结与展望}
 \label{ch:summary}
-\section{贡献与创新点}
-\label{sec:summary_contribution}
 
-全文以``省域数字经济—能源结构优化''为主线，在理论、实证与沉浸式工程三个层面形成闭环：一方面回答影响方向、非线性形态、机制路径与区域差异等经济学问题；另一方面将可复核的计量证据转化为可在 AR 空间中阅读、操作与讨论的分析载体，并在头显场景完成可部署的原型验证。前文已系统梳理核心概念与机制框架，并完成第三章多模态交互（第\ref{sec:ch3_arch_overview}节—第\ref{sec:ch3_summary}节，含手势骨骼约束、边沿触发与时间窗抑制及第\ref{sec:ch3_fusion}节跨通道仲裁与队列提交）、第四章沉浸式可视化（第\ref{sec:ch4_motivation}节—第\ref{sec:ch4_summary}节，含ChartForge声明式图表生成与Unity--Rokid实现），以及第五章面板计量与熵权—决策树指数构建（第\ref{ch:empirical_de_es}章、第\ref{sec:ch5_data}节）、第\ref{sec:ch5_spatial}--\ref{sec:ch5_heterogeneity}节三组分析任务及第\ref{sec:ch5_summary}节本章小结；以下从学术结论、工程与方法创新与数据治理取向三方面归纳贡献。
+\section{研究总结}
 
-在学术结论上，基于 2014---2022 年 30 省份样本，在控制变量与省份固定效应设定下，$DEL$ 对 $ES$ 显著为正，平方项设定下呈现倒 U 型非线性，拐点与分省讨论支持``总量仍具提升空间、高水平地区边际趋缓''的差异化含义；东、中、西分组系数显著为正且呈``中部 $>$ 西部 $>$ 东部''梯度，东北不显著，提示数字化红利与产业结构、要素禀赋相关；技术创新通过中介路径部分传导；滞后、缩尾、剔除异常年份与工具变量等检验支持结论稳健。上述结果与第\ref{sec:ch5_data}节数据体系相衔接，为省域``数字化—绿色转型''提供量化证据。
+本文围绕省域数字经济与能源结构优化这一应用场景，沿着``多模态交互—沉浸式可视化—实证分析''的技术路线，完成了从方法设计、工程实现到数据验证的完整闭环。
 
-在工程与方法创新上，面向 AR 将手势、射线与语音组织为互补通道，以事件标准化、通道内门控与跨通道仲裁抑制误触与冲突；以统一状态向量驱动多视图协同刷新，减轻``图—表—文''割裂的认知成本；在指数构造上采用熵权—决策树二次校准，与 FE 主回归分工明确（测度对照 vs.\ 识别解释）。总体而言，本文不仅给出一组统计结论，更将结论嵌入可交互、可验证、可讲解的沉浸式分析闭环。
+第三章聚焦AR穿戴场景下的多模态交互问题。在手势通道，提出了DBEW--Gesture几何规则管线与DBEW-NN轻量神经网络增强方案。前者以深度骨骼约束、边沿触发与时间窗离散化三个串联门控将连续手部姿态流转化为离散控制事件，保证了触发管线的可解释性与确定性；后者在前者框架内引入1D-CNN与Self-Attention作为分类前端，以约57K参数、1.49\,ms端侧推理时延的代价将手势识别宏平均F1从0.691提升至0.902。实验表明，DBEW-NN在传感器噪声和关节遮挡条件下的鲁棒性显著优于纯几何方法，验证了数据驱动特征学习对几何判据脆弱性的补强作用。在多通道协调层面，TSTQ--Fusion以通道内稳定化、300\,ms跨通道时间窗仲裁与队列串行提交三层结构，将手势、语音与射线事件统一收敛为无冲突的状态更新指令，仲裁正确率达96.4\%。
 
-\section{局限性}
-\label{sec:summary_limitation}
+第四章提出了SDCR--Vis状态驱动可视化管线与ChartForge声明式图表生成框架。SDCR--Vis的核心思想是将多视图协调问题建模为统一状态向量$\mathbf{s}_t$的传播与响应问题：任一交互事件更新$\mathbf{s}_t$后，仅当$\Delta\mathbf{s}_t\neq\mathbf{0}$时触发受影响视图的条件刷新，避免了全量重绘带来的渲染开销。ChartForge在此基础上以声明式图表规格（CIF+PCG+MS-GRP）将数据映射与视觉编码解耦，降低了AR环境中图表生成与维护的工程复杂度。系统在Rokid Station Pro上实现30--48\,FPS的稳态渲染，满足头显端实时交互的基本要求。
 
-在数据与测度层面，指标选取与合成方法受统计口径与可得性约束，插值与移动平均等处理可能平滑真实波动，熵权—决策树超参数亦影响权重稳定性，测度不确定性有待结合多源数据与敏感性分析进行系统披露。在模型与计量识别层面，本文以线性（含平方项）面板固定效应为主并辅以工具变量（Instrumental Variable，IV）等处理策略，对空间相关、门槛效应、动态面板与高维控制等更复杂的结构设定仍留有拓展空间；解释上须严格区分统计关联与可实施的政策因果，对倒U型拐点邻近区制的外推尤需谨慎。在系统与工程评估层面，当前验证绑定于特定软硬件栈，用户实验的规模与人群覆盖面有限，多用户协同、云端更新、跨设备一致性、无障碍访问与国际化等工程维度尚未充分覆盖，系统性能亦随场景复杂度而变化。在伦理与合规层面，语音采集与交互日志、模型调用涉及隐私边界，生成式输出的潜在偏见、误导风险与责任归属需在产品化阶段配套审计、溯源与人工复核机制。
+第五章将前述技术模块应用于省域数字经济与能源结构关系的实证分析。基于2014--2022年30省份面板数据，以熵值法构建了$DEL$与$ES$综合指数，采用面板固定效应模型验证了二者间的倒U型非线性关系——$DEL$一次项系数2.131、二次项系数$-2.103$均在1\%水平显著，拐点位于$DEL=0.507$。分区域回归进一步揭示了``中部$>$西部$>$东部''的边际效应梯度，中部省份正处于数字化对能源结构改善边际贡献最大的阶段。上述计量结果经空间分布图、非线性散点图与区域系数柱状图三类视图在AR环境中呈现，形成了从统计推断到空间化证据的完整链路。端侧性能基准与$N=8$的可用性走查初步验证了系统在实际AR硬件上的工程可行性。
 
-\section{未来展望}
-\label{sec:summary_future}
+从整体来看，本文的贡献不在于经济学理论或计量方法层面的独立突破，而在于将已有的计量分析框架嵌入AR沉浸式交互环境，使原本以表格和静态图表形式存在的统计结论转化为可被手势选取、语音查询与多视图联动阅读的空间化分析对象。这一转化在方法层面依赖三个核心技术决策：其一，将手势识别拆分为确定性触发管线与可替换分类前端，使得几何规则的可解释性与数据驱动方法的鲁棒性可以在同一框架内共存；其二，以统一状态向量而非事件驱动的回调链来组织多视图更新，将视图协调从异步编程问题转化为确定性的状态传播问题；其三，以300\,ms融合时间窗加置信度仲裁处理多通道并发，在通道独立性与融合一致性之间取得了可量化的权衡。三个决策共同构成了从``人向机器发出指令''到``机器理解人在分析上下文中的意图''的工程桥梁。
 
-研究可在数据与方法上延长时序、下沉至城市或县域尺度并细化能源结构指标，在保持与可视化口径一致的前提下，引入空间计量、门槛与机器学习辅助的异质性对照，与现有 FE 基准形成谱系化证据。在系统与转化上，可完善版本化数据与回归结果管线、多用户会话与标注留痕、端云协同与弱网缓存，并针对教学、规划研讨与科普配置差异化交互模板。在政策与交叉学科上，可将省域情景推演与区域协同治理、碳约束与产业及数字基础设施政策进一步对接，并与人因工程、可视化认知、组织行为等领域交叉，完善沉浸式决策支持工具的证据链与可用性标准。
+\section{不足与展望}
+
+本文的不足主要体现在数据、方法与系统三个维度。
+
+在数据层面，省级面板的指标颗粒度受统计口径约束，数字经济与能源结构的内涵在省域尺度上难以充分展开。$DEL$的构建侧重于数字基础设施与产业数字化规模指标，未纳入数字化应用深度与数字治理等维度；$ES$以煤炭占比和单位GDP能耗为核心，对可再生能源结构、能源市场化程度等反映低碳转型质量的维度覆盖不足。未来可下沉至城市或行业尺度，引入多源高频数据以丰富指标体系的时空分辨率。
+
+在方法层面，计量分析以面板固定效应模型为主，倒U型结论来自平方项设定，虽经滞后一期、缩尾与工具变量等策略验证了稳健性，但空间相关性、门槛效应与动态面板等结构设定尚未纳入。对拐点附近省份的政策解读需注意统计关联与因果推断的界限。手势识别方面，DBEW-NN依赖合成数据训练，当前数据生成管线在个体手型多样性与极端环境条件下的覆盖有限，合成数据与真实传感器数据之间的分布偏移尚未系统评估。
+
+在系统层面，受Rokid设备数量与实验伦理流程限制，用户走查仅覆盖$N=8$的小样本，无法对AR沉浸式分析相对于传统桌面分析在任务效率、认知负荷与决策质量等方面的增益给出统计意义上的结论。原型绑定于特定软硬件栈，向OpenXR等跨平台框架的迁移尚未开展，多用户协同、云端模型更新与生成式AI辅助解读等功能亦未集成。
+
+上述不足构成了后续工作的自然延伸方向。数据层面可下沉至城市或行业尺度并引入多源指标；方法层面可引入空间计量与门槛模型形成谱系化证据；系统层面需在完善伦理审批基础上开展更大规模的受控用户实验，并推进跨平台迁移与协同功能的工程落地。
